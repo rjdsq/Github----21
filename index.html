@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聆听忏悔的幽影</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(
+                45deg,
+                hsl(var(--a, 360), 70%, 60%),
+                hsl(var(--b, 180), 60%, 65%),
+                hsl(var(--c, 90), 50%, 70%)
+            );
+            transition: background 2s ease;
+        }
+
+        .player-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            margin: 20px;
+        }
+
+        .title {
+            color: white;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        #prev-btn { content: '◀'; }
+        #play-btn { content: '▶'; }
+        #next-btn { content: '▶▶'; }
+    </style>
+</head>
+<body onload="init()">
+    <div class="player-container">
+        <div class="title">自适应音乐播放器</div>
+        <audio id="music" controls autoplay>
+            <source src="https://rjdsq.github.io/歌曲/1.mp3" type="audio/mpeg">
+            <source src="https://rjdsq.github.io/歌曲/2.mp3" type="audio/mpeg">
+            <source src="https://rjdsq.github.io/歌曲/3.mp3" type="audio/mpeg">
+        </audio>
+        <div class="button-group">
+            <button id="prev-btn" class="control-btn"></button>
+            <button id="play-btn" class="control-btn"></button>
+            <button id="next-btn" class="control-btn"></button>
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById('music');
+        const btn = document.getElementById('play-btn');
+        let currentIndex = 0;
+        const totalSongs = 3; // 歌曲总数
+
+        // 初始化背景渐变
+        function init() {
+            setRandomGradient();
+            setInterval(setRandomGradient, 5000); // 每5秒切换渐变
+        }
+
+        // 随机渐变生成
+        function setRandomGradient() {
+            document.body.style.setProperty('--a', Math.random() * 360);
+            document.body.style.setProperty('--b', Math.random() * 360);
+            document.body.style.setProperty('--c', Math.random() * 360);
+        }
+
+        // 播放控制
+        btn.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                btn.textContent = '❚❚';
+            } else {
+                music.pause();
+                btn.textContent = '▶';
+            }
+        });
+
+        // 切换歌曲
+        function switchSong(direction) {
+            currentIndex = (currentIndex + direction + totalSongs) % totalSongs;
+            music.src = `https://example.com/music${currentIndex + 1}.mp3`;
+            music.load();
+            music.play();
+        }
+
+        document.getElementById('prev-btn').addEventListener('click', () => switchSong(-1));
+        document.getElementById('next-btn').addEventListener('click', () => switchSong(1));
+    </script>
+</body>
+</html>
