@@ -238,15 +238,18 @@
     <div id="particles-js"></div>
     
     <div class="container">
+    <!--
         <header>
             <h1>隆重展示</h1>
-            <p class="subtitle">优雅的设计 · 完美的体验 · 永恒的记忆</p>
+           <p class="subtitle">优雅的设计 · 完美的体验 · 永恒的记忆</p>
         </header>
-        
+        -->
         <div class="theme-selector">
             <button class="theme-btn" data-theme="blue">蓝紫主题</button>
             <button class="theme-btn" data-theme="green">森林主题</button>
-            <button class="theme-btn" data-theme="sunset">日落主题</button>
+            
+<!--<button class="theme-btn" data-theme="sunset">日落主题</button>-->
+
             <button class="theme-btn" data-theme="purple">紫红主题</button>
         </div>
         
@@ -402,14 +405,15 @@
                 let primary, secondary;
                 
                 switch(themeName) {
+                        case 'green':
+                        primary = '#134E5E';
+                        secondary = '#71B280';
+                        break;
                     case 'blue':
                         primary = '#1a2a6c';
                         secondary = '#b21f1f';
                         break;
-                    case 'green':
-                        primary = '#134E5E';
-                        secondary = '#71B280';
-                        break;
+
                     case 'sunset':
                         primary = '#FF512F';
                         secondary = '#F09819';
