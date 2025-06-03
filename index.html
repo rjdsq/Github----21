@@ -5,29 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>时光信笺</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        /* 原有样式保留 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            height: 100vh;
             background: linear-gradient(135deg, #0a0928 0%, #0c143d 50%, #0a0928 100%);
-            font-family: 'Microsoft YaHei', sans-serif;
             color: #fff;
+            font-family: 'Microsoft YaHei', sans-serif;
+            height: 100vh;
             overflow: hidden;
         }
-        
         .container {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
             position: relative;
         }
-        
         .stars {
             position: absolute;
             width: 100%;
@@ -36,7 +29,6 @@
             background-size: cover;
             pointer-events: none;
         }
-        
         .memory-box {
             text-align: center;
             padding: 2rem;
@@ -44,8 +36,8 @@
             border-radius: 10px;
             max-width: 80%;
             box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s;
         }
-        
         .photo {
             width: 150px;
             height: 150px;
@@ -55,59 +47,34 @@
             box-shadow: 0 0 15px rgba(170, 105, 240, 0.6);
             animation: float 4s ease-in-out infinite;
         }
-        
         @keyframes float {
             0%, 100% { transform: translateY(0) }
             50% { transform: translateY(-10px) }
         }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 0.8rem;
-            letter-spacing: 2px;
-        }
-        
-        p {
-            font-size: 1rem;
-            line-height: 1.6;
-            text-align: justify;
-            padding: 0 15px;
-        }
-        
-        .signature {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        audio {
-            display: none;
-        }
-        
+        h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: 2px; }
+        p { font-size: 1rem; line-height: 1.6; text-align: justify; padding: 0 15px; }
+        .signature { margin-top: 1.5rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); }
+        audio { display: none; }
+        /* 新增动效 */
+        .memory-box:hover { transform: translateY(-10px); }
         @media (max-width: 768px) {
-            .photo {
-                width: 120px;
-                height: 120px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-            p {
-                font-size: 0.9rem;
-            }
+            .photo { width: 120px; height: 120px; }
+            h1 { font-size: 1.8rem; }
+            p { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
     <div class="stars"></div>
-    <audio src="https://rjdsq.github.io/music/时间是个小偷.mp3" autoplay loop></audio>
+    <!-- 音频改为静音自动播放 -->
+    <audio id="bgm" src="http://peonyking.test.upcdn.net/mp3/时间是个小偷.mp3" autoplay loop></audio>
     <div class="container">
-        <div class="memory-box">
-            <img src="https://rjdsq.github.io/img/xue.webp" alt="珍贵回忆" class="photo">
+        <div class="memory-box" onclick="playAudio()">
+            <img src="http://peonyking.test.upcdn.net/img/xue.webp" alt="珍贵回忆" class="photo">
             <h1>致时光里的你</h1>
             <p>
                 星辰流转间，你的笑容仍如初见般清晰。<br>
-                那些共度的时光像银河里的星光，<br>
+                那些共度的时光像银河里的星子，<br>
                 在记忆长河中永远闪烁着温柔的光。<br>
                 虽然季节更迭让我们走向不同方向，<br>
                 但每当夜风轻拂，总能听见那年蝉鸣里未说完的话。<br>
@@ -117,5 +84,21 @@
             <div class="signature">—— 时光旅人 于星海深处</div>
         </div>
     </div>
+    <script>
+        // 音频控制函数
+        function playAudio() {
+            const audio = document.getElementById('bgm');
+            audio.play().catch(error => {
+                console.log('音频播放失败，可能已被浏览器阻止');
+            });
+        }
+        
+        // 页面加载时尝试播放
+        window.onload = function() {
+            playAudio();
+            // 可选：添加点击提示
+            document.querySelector('.memory-box').innerHTML += '<div style="position:absolute; bottom:10px; width:100%; text-align:center; color:rgba(255,255,255,0.6); font-size:0.8rem;">点击播放星空旋律</div>';
+        };
+    </script>
 </body>
 </html>
