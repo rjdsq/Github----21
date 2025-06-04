@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>时光的礼物 - 致最爱的你</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fff8f8, #ffedf0, #f8f2ff, #f0f9ff);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            color: #555;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 装饰元素 */
+        .decor {
+            position: absolute;
+            z-index: 0;
+        }
+        
+        .decor-1 {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255,182,193,0.15), rgba(221,160,221,0.1));
+            top: -70px;
+            left: -70px;
+        }
+        
+        .decor-2 {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(152,251,152,0.1), rgba(135,206,250,0.15));
+            bottom: -50px;
+            right: -50px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(to right, rgba(255, 240, 245, 0.6), rgba(240, 248, 255, 0.6));
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: #b76e79;
+            margin-bottom: 15px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #e8b4b8, transparent);
+            border-radius: 50%;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #d4a5a5;
+            font-weight: 300;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 500px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .image-section {
+            flex: 1;
+            min-width: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .image-frame {
+            position: relative;
+            max-width: 90%;
+            max-height: 500px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(144, 144, 144, 0.15);
+            transition: transform 0.5s ease;
+        }
+        
+        .featured-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+            filter: brightness(1.02) contrast(1.05);
+        }
+        
+        .image-frame:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            pointer-events: none;
+        }
+        
+        .image-frame:after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, rgba(232, 180, 184, 0.2), rgba(152, 251, 152, 0.15), rgba(221, 160, 221, 0.1));
+            z-index: -1;
+            border-radius: 10px;
+            animation: glow 4s infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
+        
+        .image-frame:hover {
+            transform: translateY(-10px);
+        }
+        
+        .image-frame:hover .featured-image {
+            transform: scale(1.03);
+        }
+        
+        .text-section {
+            flex: 1;
+            min-width: 350px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(255, 250, 250, 0.6);
+        }
+        
+        .message-container {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 40px 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .message {
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.15rem;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .message:before {
+            content: "♥";
+            position: absolute;
+            left: 0;
+            top: 5px;
+            color: #e8b4b8;
+            font-size: 1.3rem;
+        }
+        
+        .message:last-child {
+            margin-bottom: 0;
+        }
+        
+        .music-player {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8b4b8, #d4a5a5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(232, 180, 184, 0.35);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid white;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(232, 180, 184, 0.5);
+        }
+        
+        .play-btn i {
+            color: white;
+            font-size: 32px;
+            margin-left: 5px;
+        }
+        
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #e8b4b8;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+        
+        .music-text {
+            margin-left: 20px;
+            color: #b76e79;
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #b76e79;
+            font-size: 1rem;
+            background: rgba(255, 240, 245, 0.6);
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
+        }
+        
+        @media (max-width: 900px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .image-section, .text-section {
+                min-width: 100%;
+            }
+            
+            .image-section {
+                padding: 30px 20px 10px;
+            }
+            
+            .text-section {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .message {
+                font-size: 1.05rem;
+                padding-left: 25px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+                padding-left: 22px;
+            }
+            
+            .message-container {
+                padding: 25px 20px;
+            }
+            
+            .play-btn {
+                width: 70px;
+                height: 70px;
+            }
+        }
+        
+        /* 花瓣飘落效果 */
+        .petal {
+            position: absolute;
+            background: rgba(255, 182, 193, 0.5);
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.7;
+            z-index: 0;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰元素 -->
+    <div class="decor decor-1"></div>
+    <div class="decor decor-2"></div>
+    
+    <!-- 花瓣 -->
+    <div id="petals-container"></div>
+    
+    <div class="container">
+        <header>
+            <h1>时光的礼物</h1>
+            <div class="subtitle">致我永远珍惜的人</div>
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="image-section">
+                <div class="image-frame">
+                    <img src="https://rjdsq.github.io/img/xue.webp" alt="珍贵的回忆" class="featured-image">
+                </div>
+            </div>
+         
+            
+               
+                  <div class="music-player">
+            <div class="play-btn" id="playButton">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="music-text">时间是个小偷 - 但偷不走我的思念</div>
+            <audio id="bgMusic" loop>
+                <source src="https://rjdsq.github.io/mp3/时间是个小偷.mp3" type="audio/mp3">
+            </audio>
+        </div>
+        
+              
+            <div class="text-section">
+                <div class="message-container">
+                    <div class="message">
+                        每当夜深人静，我总会想起你的笑容。那如春风般温暖的瞬间，是我记忆中最明亮的星辰。时间或许带走了我们的日常，却带不走你在我心中的印记。
+                    </div>
+                    
+                    <div class="message">
+                        我怀念我们一起走过的每一条街道，怀念你说话时微微上扬的嘴角，怀念你眼中闪烁的光芒。原来在不知不觉中，你早已成为我生命中最动人的诗篇。
+                    </div>
+                    
+                    <div class="message">
+                        如果时光可以倒流，我想回到那个雨天，再次为你撑起伞。这次我会靠得更近，不让任何距离存在我们之间，不让任何误会模糊我们的心意。
+                    </div>
+                    
+                    <div class="message">
+                        你知道吗？每次听到这首歌，我都会想起我们一起看过的日落。那时你靠在我肩头，世界仿佛静止，只有晚霞为我们的故事染上金色。
+                    </div>
+                    
+                    <div class="message">
+                        我一直在成长，学着更温柔地去爱，更真诚地去理解。如果你愿意再给我一次机会，我会用余生证明，你是我唯一的选择，这份爱从未改变。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        
+        <footer>
+            <p>有些相遇是命中注定，有些分离是为了更好的重逢</p>
+            <p>愿时光温柔，许我们再次相拥</p>
+        </footer>
+    </div>
+
+    <script>
+        // 音乐播放器功能
+        const playButton = document.getElementById('playButton');
+        const bgMusic = document.getElementById('bgMusic');
+        const playIcon = playButton.querySelector('i');
+        let isPlaying = false;
+        
+        
+        playButton.addEventListener('click', function() {
+            if (isPlaying) {
+                
+                bgMusic.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                
+            } else {
+            
+                bgMusic.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+
+            }
+            isPlaying = !isPlaying;
+
+            
+        });
+        
+        
+
+        
+
+// 页面加载时检查播放状态
+document.addEventListener('DOMContentLoaded', function() {
+    const savedState = localStorage.getItem('isPlaying');
+    if (savedState === 'true') {
+        bgMusic.play();
+        playIcon.classList.remove('fa-play');
+        playIcon.classList.add('fa-pause');
+        isPlaying = true;
+    }
+});
+
+
+        
+        // 花瓣飘落效果
+        function createPetals() {
+            const container = document.getElementById('petals-container');
+            const petalCount = 25;
+            
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                // 随机大小
+                const size = Math.random() * 15 + 5;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                
+                // 随机位置
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.top = `-${size}px`;
+                
+                // 随机动画时长
+                const duration = Math.random() * 10 + 10;
+                petal.style.animationDuration = `${duration}s`;
+                
+                // 随机延迟
+                const delay = Math.random() * 5;
+                petal.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(petal);
+            }
+        }
+        
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 淡入效果
+            document.body.style.opacity = '1';
+            
+            // 创建花瓣
+            createPetals();
+        });
+        
+        // 设置初始透明度
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 1.5s ease-in-out';
+    </script>
+    
+    
+
+</body>
+</html>
