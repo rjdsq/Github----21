@@ -499,48 +499,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         
-        // 花瓣飘落效果
-        function createPetals() {
-            const container = document.getElementById('petals-container');
-            const petalCount = 25;
-            
-            for (let i = 0; i < petalCount; i++) {
-                const petal = document.createElement('div');
-                petal.classList.add('petal');
-                
-                // 随机大小
-                const size = Math.random() * 15 + 5;
-                petal.style.width = `${size}px`;
-                petal.style.height = `${size}px`;
-                
-                // 随机位置
-                petal.style.left = `${Math.random() * 100}vw`;
-                petal.style.top = `-${size}px`;
-                
-                // 随机动画时长
-                const duration = Math.random() * 10 + 10;
-                petal.style.animationDuration = `${duration}s`;
-                
-                // 随机延迟
-                const delay = Math.random() * 5;
-                petal.style.animationDelay = `${delay}s`;
-                
-                container.appendChild(petal);
-            }
-        }
         
-        // 页面加载后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 淡入效果
-            document.body.style.opacity = '1';
-            
-            // 创建花瓣
-            createPetals();
-        });
-        
-        // 设置初始透明度
-        document.body.style.opacity = '0';
-        document.body.style.transition = 'opacity 1.5s ease-in-out';
     </script>
     
     
