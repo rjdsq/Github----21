@@ -353,7 +353,23 @@
             }
         }
         
+                /* 花瓣飘落效果 */
+        .petal {
+            position: absolute;
+            background: rgba(255, 182, 193, 0.5);
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.7;
+            z-index: 0;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
         
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -361,7 +377,9 @@
     <div class="decor decor-1"></div>
     <div class="decor decor-2"></div
     
-    
+       <!-- 花瓣 -->
+    <div id="petals-container"></div>
+
     <div class="container">
         <header>
             <h1>阚双雪</h1>
