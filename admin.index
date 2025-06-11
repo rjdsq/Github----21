@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站消息管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        .form-section, .messages-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #4a6fa5;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e8f0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3a5ca5;
+        }
+        
+        button.secondary {
+            background-color: #f0f0f0;
+            color: #555;
+            margin-left: 10px;
+        }
+        
+        button.secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .messages-list {
+            margin-top: 20px;
+        }
+        
+        .message-item {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+        
+        .message-content {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .message-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        
+        .action-button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .delete-button {
+            background-color: #e74c3c;
+        }
+        
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .success-message, .error-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .import-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .import-section p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>网站消息管理后台</h1>
+        </header>
+        
+        <div id="notification" class="success-message" style="display: none;"></div>
+        
+        <div class="form-section">
+            <h2>添加新消息</h2>
+            <div class="form-group">
+                <label for="message-content">消息内容</label>
+                <textarea id="message-content" placeholder="输入要显示的消息内容..."></textarea>
+            </div>
+            <button id="add-message">添加消息</button>
+        </div>
+        
+        <div class="messages-section">
+            <h2>现有消息管理</h2>
+            <div class="messages-list" id="messages-list">
+                <!-- 消息将在这里动态加载 -->
+                <p style="color: #777; padding: 15px;">暂无消息，请添加新消息</p>
+            </div>
+        </div>
+        
+        <div class="form-section import-section">
+            <h2>从网站导入现有消息</h2>
+            <p>输入你的网站地址，系统将尝试导入现有消息：</p>
+            <div class="form-group">
+                <label for="website-url">网站地址</label>
+                <input type="text" id="website-url" placeholder="https://你的网站地址.com" value="https://rjdsq.github.io/index.html">
+            </div>
+            <button id="import-messages">导入消息</button>
+        </div>
+    </div>
+
+    <script>
+        // 消息数据管理
+        class MessageManager {
+            constructor() {
+                this.messagesKey = 'websiteMessages';
+                this.messages = this.loadMessages();
+                this.renderMessages();
+            }
+            
+            // 从本地存储加载消息
+            loadMessages() {
+                const savedMessages = localStorage.getItem(this.messagesKey);
+                return savedMessages ? JSON.parse(savedMessages) : [];
+            }
+            
+            // 保存消息到本地存储
+            saveMessages() {
+                localStorage.setItem(this.messagesKey, JSON.stringify(this.messages));
+            }
+            
+            // 添加新消息
+            addMessage(content) {
+                if (!content.trim()) {
+                    this.showNotification('消息内容不能为空', 'error');
+                    return false;
+                }
+                
+                const newMessage = {
+                    id: Date.now().toString(), // 使用时间戳作为唯一ID
+                    content: content,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.messages.unshift(newMessage);
+                this.saveMessages();
+                this.renderMessages();
+                this.showNotification('消息添加成功', 'success');
+                return true;
+            }
+            
+            // 删除消息
+            deleteMessage(id) {
+                this.messages = this.messages.filter(msg => msg.id !== id);
+                this.saveMessages();
+                this.renderMessages();
+                this.showNotification('消息删除成功', 'success');
+            }
+            
+            // 编辑消息
+            editMessage(id, newContent) {
+                const messageIndex = this.messages.findIndex(msg => msg.id === id);
+                if (messageIndex === -1) return false;
+                
+                this.messages[messageIndex].content = newContent;
+                this.messages[messageIndex].updatedAt = new Date().toISOString();
+                this.saveMessages();
+                this.renderMessages();
+                this.showNotification('消息更新成功', 'success');
+                return true;
+            }
+            
+            // 渲染消息列表
+            renderMessages() {
+                const messagesList = document.getElementById('messages-list');
+                
+                if (this.messages.length === 0) {
+                    messagesList.innerHTML = '<p style="color: #777; padding: 15px;">暂无消息，请添加新消息</p>';
+                    return;
+                }
+                
+                messagesList.innerHTML = '';
+                
+                this.messages.forEach(message => {
+                    const messageItem = document.createElement('div');
+                    messageItem.className = 'message-item';
+                    messageItem.dataset.id = message.id;
+                    
+                    messageItem.innerHTML = `
+                        <div class="message-content" contenteditable="true">${message.content}</div>
+                        <div class="message-actions">
+                            <button class="action-button save-button">保存</button>
+                            <button class="action-button delete-button">删除</button>
+                        </div>
+                    `;
+                    
+                    messagesList.appendChild(messageItem);
+                });
+                
+                this.attachEventListeners();
+            }
+            
+            // 附加事件监听器
+            attachEventListeners() {
+                // 保存按钮点击事件
+                document.querySelectorAll('.save-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const messageItem = e.target.closest('.message-item');
+                        const id = messageItem.dataset.id;
+                        const content = messageItem.querySelector('.message-content').textContent;
+                        this.editMessage(id, content);
+                    });
+                });
+                
+                // 删除按钮点击事件
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        if (confirm('确定要删除这条消息吗？')) {
+                            const messageItem = e.target.closest('.message-item');
+                            const id = messageItem.dataset.id;
+                            this.deleteMessage(id);
+                        }
+                    });
+                });
+                
+                // 内容可编辑
+                document.querySelectorAll('.message-content[contenteditable="true"]').forEach(element => {
+                    element.addEventListener('focus', function() {
+                        this.style.border = '1px solid #4a6fa5';
+                        this.style.padding = '9px';
+                        this.style.borderRadius = '3px';
+                    });
+                    
+                    element.addEventListener('blur', function() {
+                        this.style.border = 'none';
+                        this.style.padding = '0';
+                    });
+                });
+            }
+            
+            // 显示通知
+            showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = type === 'success' ? 'success-message' : 'error-message';
+                notification.style.display = 'block';
+                
+                // 3秒后隐藏通知
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+            
+            // 从网站导入消息
+            importMessagesFromWebsite(url) {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', url, true);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                resolve(xhr.responseText);
+                            } else {
+                                reject(new Error(`获取网站内容失败: ${xhr.status}`));
+                            }
+                        }
+                    };
+                    xhr.onerror = function() {
+                        reject(new Error('获取网站内容时发生错误'));
+                    };
+                    xhr.send();
+                });
+            }
+            
+            // 解析HTML获取消息
+            parseMessagesFromHTML(html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const messageContainers = doc.querySelectorAll('.message-container');
+                const messages = [];
+                
+                messageContainers.forEach(container => {
+                    const messageElements = container.querySelectorAll('.message');
+                    messageElements.forEach(messageElement => {
+                        const content = messageElement.textContent.trim();
+                        if (content) {
+                            messages.push({
+                                id: Date.now().toString() + messages.length,
+                                content: content,
+                                createdAt: new Date().toISOString(),
+                                imported: true
+                            });
+                        }
+                    });
+                });
+                
+                return messages;
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageManager = new MessageManager();
+            
+            // 添加消息按钮事件
+            document.getElementById('add-message').addEventListener('click', function() {
+                const content = document.getElementById('message-content').value;
+                messageManager.addMessage(content);
+                document.getElementById('message-content').value = '';
+            });
+            
+            // 导入消息按钮事件
+            document.getElementById('import-messages').addEventListener('click', function() {
+                const url = document.getElementById('website-url').value;
+                if (!url) {
+                    messageManager.showNotification('请输入网站地址', 'error');
+                    return;
+                }
+                
+                messageManager.showNotification('正在从网站导入消息...', 'success');
+                
+                messageManager.importMessagesFromWebsite(url)
+                    .then(html => {
+                        const importedMessages = messageManager.parseMessagesFromHTML(html);
+                        
+                        if (importedMessages.length === 0) {
+                            messageManager.showNotification('未找到任何消息', 'error');
+                            return;
+                        }
+                        
+                        // 合并导入的消息（不重复添加）
+                        const existingIds = messageManager.messages.map(msg => msg.id);
+                        const newMessages = importedMessages.filter(msg => !existingIds.includes(msg.id));
+                        
+                        if (newMessages.length === 0) {
+                            messageManager.showNotification('所有消息已存在，无需导入', 'success');
+                            return;
+                        }
+                        
+                        messageManager.messages = [...newMessages, ...messageManager.messages];
+                        messageManager.saveMessages();
+                        messageManager.renderMessages();
+                        messageManager.showNotification(`成功导入 ${newMessages.length} 条消息`, 'success');
+                    })
+                    .catch(error => {
+                        messageManager.showNotification(`导入失败: ${error.message}`, 'error');
+                    });
+            });
+            
+            // 按Enter键添加消息
+            document.getElementById('message-content').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    document.getElementById('add-message').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
