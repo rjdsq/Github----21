@@ -8,357 +8,7 @@
     <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #ff9bb3;
-            --secondary: #f8c6d0;
-            --accent: #ffc7d2;
-            --text: #5d4037;
-            --light: #fff9f5;
-            --decor: #ffebee;
-        }
-        
-        * {margin: 0;padding: 0;box-sizing: border-box;}
-        body {
-            background: linear-gradient(135deg, var(--light), var(--decor));
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text);
-            line-height: 1.8;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            font-family: 'Noto Serif SC', serif;
-            overflow-x: hidden;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .container {
-            max-width: 1200px;
-            width: 92%;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(255, 155, 179, 0.15);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-        
-        /* 装饰元素 */
-        .decor {position: absolute;z-index: 0;opacity: 0.8;}
-        .decor-1 {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-            top: -100px;
-            left: -50px;
-        }
-        .decor-2 {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
-            bottom: -80px;
-            right: -30px;
-        }
-        .decor-3 {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-            top: 30%;
-            right: 5%;
-        }
-        
-        header {
-            text-align: center;
-            padding: 50px 20px 30px;
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(to right, rgba(255, 249, 245, 0.8), rgba(255, 238, 238, 0.8));
-            border-bottom: 1px solid rgba(255, 155, 179, 0.2);
-        }
-        h1 {
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: 3.8rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: normal;
-            letter-spacing: 3px;
-            text-shadow: 0 4px 8px rgba(255, 155, 179, 0.2);
-            position: relative;
-            display: inline-block;
-        }
-        h1:after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 25%;
-            width: 50%;
-            height: 4px;
-            background: linear-gradient(to right, transparent, var(--primary), transparent);
-            border-radius: 2px;
-        }
-        .subtitle {
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-top: 15px;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(255, 200, 210, 0.8);
-            opacity: 0.8;
-        }
-        
-        .content-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            min-height: 500px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .image-section {
-            flex: 1;
-            min-width: 350px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 60px 30px 30px;
-            position: relative;
-        }
-        .image-frame {
-            position: relative;
-            max-width: 100%;
-            max-height: 550px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(255, 155, 179, 0.1);
-            transition: transform 0.6s ease;
-            border: 5px solid white;
-        }
-        .featured-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.6s ease;
-            filter: brightness(1.05) contrast(1.05);
-        }
-        .image-frame:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 155, 179, 0.1), rgba(248, 198, 208, 0.1));
-            z-index: 1;
-            border-radius: 15px;
-            animation: borderGlow 6s infinite alternate;
-        }
-        @keyframes borderGlow {
-            0% { box-shadow: 0 0 20px rgba(255, 155, 179, 0.3); }
-            100% { box-shadow: 0 0 35px rgba(255, 155, 179, 0.5); }
-        }
-        .image-frame:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 40px 70px rgba(255, 155, 179, 0.2);
-        }
-        .image-frame:hover .featured-image {
-            transform: scale(1.05);
-        }
-        
-        .text-section {
-            flex: 1;
-            min-width: 350px;
-            padding: 60px 50px 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .message-container {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 15px 35px rgba(255, 249, 245, 0.7);
-            border: 1px solid rgba(255, 155, 179, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-        .message-container:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--secondary), var(--primary));
-        }
-        .message {
-            margin-bottom: 35px;
-            position: relative;
-            padding-left: 45px;
-            font-size: 1.1rem;
-            color: var(--text);
-            line-height: 2;
-            font-weight: 300;
-        }
-        .message:before {
-            content: "✧";
-            position: absolute;
-            left: 0;
-            top: 0px;
-            color: var(--primary);
-            font-size: 1.6rem;
-            font-weight: bold;
-        }
-        .message:last-child {
-            margin-bottom: 0;
-        }
-        
-        .music-player {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-top: 1px solid rgba(255, 155, 179, 0.1);
-            border-bottom: 1px solid rgba(255, 155, 179, 0.1);
-            position: relative;
-            z-index: 1;
-        }
-        .play-btn {
-            width: 102px;
-            height: 102px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(255, 155, 179, 0.4);
-            transition: all 0.4s ease;
-            position: relative;
-            border: 2px solid white;
-        }
-        .play-btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 15px 35px rgba(255, 155, 179, 0.6);
-        }
-        .play-btn i {
-            color: white;
-            font-size: 36px;
-            margin-left: 2px;
-        }
-        .play-btn::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            animation: pulse 2.5s infinite;
-            opacity: 0.3;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-        .music-text {
-            margin-left: 25px;
-            color: var(--primary);
-            font-size: 0.9rem;
-            letter-spacing: 1.5px;
-            font-weight: 400;
-            font-family: 'Ma Shan Zheng', cursive;
-            text-shadow: 0 1px 2px rgba(255, 155, 179, 0.3);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 35px 20px;
-            color: var(--primary);
-            font-size: 1.1rem;
-            background: linear-gradient(to right, rgba(255, 249, 245, 0.8), rgba(255, 238, 238, 0.8));
-            border-top: 1px solid rgba(255, 155, 179, 0.2);
-            position: relative;
-            z-index: 1;
-            font-family: 'Ma Shan Zheng', cursive;
-        }
-        footer p {
-            margin: 5px 0;
-        }
-        
-        /* 响应式布局 */
-        @media (max-width: 900px) {
-            .content-wrapper {flex-direction: column;}
-            .image-section, .text-section {min-width: 100%;}
-            .image-section {padding: 40px 20px 20px;}
-            .text-section {padding: 40px 25px 20px;}
-            h1 {font-size: 3rem;}
-            .subtitle {font-size: 1.5rem;}
-            .message {font-size: 1rem;}
-        }
-        @media (max-width: 600px) {
-            h1 {font-size: 2.5rem;}
-            .subtitle {font-size: 1.3rem;}
-            .message {font-size: 1.0rem; padding-left: 35px;}
-            .message-container {padding: 35px 25px;}
-            .play-btn {width: 120px; height: 120px;}
-            .play-btn i {font-size: 30px;}
-            .music-text {margin-left: 15px; font-size: 0.8rem;}
-        }
-        @media (max-width: 480px) {
-            h1 {font-size: 2.2rem;}
-            .subtitle {font-size: 1.2rem;}
-            .image-section, .text-section {padding: 30px 15px 15px;}
-            .message-container {padding: 25px 15px;}
-            .play-btn {width: 70px; height: 70px;}
-            .play-btn i {font-size: 26px;}
-        }
-        
-        /* 爱心粒子动画 */
-        .hearts-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-        .heart {
-            position: absolute;
-            color: var(--primary);
-            font-size: 20px;
-            opacity: 0;
-            animation: floatHeart 6s ease-in-out infinite;
-        }
-        @keyframes floatHeart {
-            0% {
-                opacity: 0;
-                transform: translateY(100vh) scale(0.5);
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-50px) scale(1.2);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://rjdsq.github.io/file/xue.css">
 </head>
 <body>
     <div class="hearts-container" id="heartsContainer"></div>
@@ -366,6 +16,7 @@
     <div class="container">
         <header>
             <h1>阚双雪</h1>
+            <br>
             <div class="subtitle">致我生命中最温暖的光</div>
         </header>
         
@@ -376,100 +27,36 @@
                 </div>
             </div>
             
-                    <div class="music-player">
-            <div class="play-btn" id="playButton">
-                <i class="fas fa-play"></i>
+            <div class="music-player">
+                <div class="play-btn" id="playButton">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="music-text">让我们赞美愚者</div>
+                <audio id="bgMusic" loop>
+                    <source src="https://14826.kstore.space/mp3/赞美愚者.mp3" type="audio/mp3">
+                </audio>
             </div>
-            <div class="music-text">让我们赞美愚者</div>
-            <audio id="bgMusic" loop>
-                <source src="https://14826.kstore.space/mp3/赞美愚者.mp3" type="audio/mp3" >
-            </audio>
-        </div>
-        
+            
             <div class="text-section">
                 <div class="message-container">
-
-<div class="message">其实，我真的很想问问你，有没有那么一瞬间，你心疼过我的执着，体谅过我的卑微，看穿过我的无助，有没有那么一瞬间，你是爱我的。终究是渴望，可念，而不可及。感谢你在我生命中出现一阵子，却让我想念一辈子。
- </div>
-                    <div class="message">
-                        我从未跟你抱怨过什么，哪怕有也只是一闪而过，生活的不愉快我从没有让你为我担心，我自己默默承受。
-                    </div>
-                    <div class="message">
-                        因为在我心里，你的笑容比什么都重要，那些琐碎的烦恼，我想为你遮挡在身后。
-                    </div>
-                    <div class="message">
-                        和你在一起的每一天，都像是时光馈赠的礼物，让我相信平凡的日子也能闪着光。
-                    </div>
+                    <div class="message">其实，我真的很想问问你，有没有那么一瞬间，你心疼过我的执着，体谅过我的卑微，看穿过我的无助，有没有那么一瞬间，你是爱我的。终究是渴望，可念，而不可及。感谢你在我生命中出现一阵子，却让我想念一辈子。</div>
+                    <div class="message">我从未跟你抱怨过什么，哪怕有也只是一闪而过，生活的不愉快我从没有让你为我担心，我自己默默承受。</div>
+                    <div class="message">因为在我心里，你的笑容比什么都重要，那些琐碎的烦恼，我想为你遮挡在身后。</div>
+                    <div class="message">和你在一起的每一天，都像是时光馈赠的礼物，让我相信平凡的日子也能闪着光。</div>
                 </div>
             </div>
         </div>
         
-        
         <footer>
             <p>有些相遇是命中注定</p>
             <p>有些分离是为了更好的重逢</p>
-           <p>愿时光温柔，许我们再次相拥</p>
+            <p>愿时光温柔，许我们再次相拥</p>
             <p>03-05.30｜2001.9.5</p>
             <p>2025.6.8 | @牡丹君</p>
         </footer>
     </div>
-
-          <script>
-          
-        // 音乐播放控制逻辑
-        const playButton = document.getElementById('playButton');
-        const bgMusic = document.getElementById('bgMusic');
-             
-        const playIcon = playButton.querySelector('i');
-        let isPlaying = false;
-        
-        playButton.addEventListener('click', function() {
-            if (isPlaying) {
-                bgMusic.pause();
-                playIcon.classList.remove('fa-pause');
-                playIcon.classList.add('fa-play');
-            } else {
-                bgMusic.play();
-                playIcon.classList.remove('fa-play');
-                playIcon.classList.add('fa-pause');
-            }
-            isPlaying = !isPlaying;
-        });
-        
-                
-        // 爱心粒子动画
-        const heartsContainer = document.getElementById('heartsContainer');
-        const createHearts = () => {
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    heart.innerHTML = '<i class="fas fa-heart"></i>';
-                    
-                    // 随机位置和大小
-                    const size = Math.random() * 20 + 10;
-                    heart.style.fontSize = `${size}px`;
-                    heart.style.left = `${Math.random() * 100}%`;
-                    heart.style.animationDelay = `${Math.random() * 5}s`;
-                    heart.style.animationDuration = `${Math.random() * 8 + 4}s`;
-                    
-                    heartsContainer.appendChild(heart);
-                    
-                    // 移除元素以避免性能问题
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 10000);
-                }, i * 300);
-            }
-        };
-        
-        // 页面加载后创建爱心
-        window.addEventListener('load', createHearts);
-        
-        // 循环创建爱心
-        setInterval(createHearts, 10000);
-        </script>
-        
-    <script src="./file/下雨.js"></script>
+<script src="https://rjdsq.github.io/file/下雨.js"></script>
+<script src="https://rjdsq.github.io/file/音频.js"></script>
+<script src="https://rjdsq.github.io/file/爱心.js"></script>
 </body>
 </html>
