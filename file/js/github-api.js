@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     message.innerHTML = "正在加载图片...";
 
-    fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img')
+    fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
         .then(response => response.json())
         .then(data => {
             message.innerHTML = '';
