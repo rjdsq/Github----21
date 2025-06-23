@@ -693,7 +693,7 @@ footer p {
 
 .tab-item {
     flex-shrink: 0;
-    padding: calc(8px + 0.5vw) calc(10px + 1vw);  /* 响应式内边距 */
+    padding: calc(8px + 0.5vw) calc(8px + 1vw);  /* 响应式内边距 */
     margin: 0 calc(3px + 0.5vw);  /* 响应式外边距 */
     color: var(--primary);
     font-family: 'Noto Serif SC', serif;
