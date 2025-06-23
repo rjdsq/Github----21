@@ -1,77 +1,203 @@
-/* 全局变量定义 */
+
 :root {
+    /* 主题颜色系统 
+     * primary: 主要强调色，用于重要元素
+     * secondary: 次要强调色，用于辅助元素
+     * accent: 点缀色，用于特殊强调
+     * text: 文本颜色
+     * light: 浅色背景
+     * decor: 装饰色
+     */
     --primary: #ff9bb3;
     --secondary: #f8c6d0;
     --accent: #ffc7d2;
     --text: #5d4037;
     --light: #fff9f5;
     --decor: #ffebee;
-    --shadow-color:
-    rgba(255, 155, 179, 0.2);
-    --border-color:
-    rgba(255, 155, 179, 0.15);
+    --shadow-color: rgba(255, 155, 179, 0.2);
+    --border-color: rgba(255, 155, 179, 0.15);
+    
+    /* 全局效果定义
+     * transition-normal: 统一的过渡效果
+     * box-shadow-*: 三个层级的阴影效果，用于不同层级的元素
+     */
+    --transition-normal: all 0.3s ease;
+    --box-shadow-normal: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow-medium: 0 10px 30px var(--shadow-color);
+    --box-shadow-large: 0 25px 50px var(--shadow-color);
 }
 
-/* 基础重置和全局样式 */
+/* 基础样式重置
+ * 移除默认边距和内边距，统一盒模型计算方式
+ * 确保所有元素使用相同的盒模型计算方式，避免布局问题
+ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* 页面基础布局和背景效果
+ * 1. 使用渐变背景创建柔和的视觉效果
+ * 2. 通过animation实现背景渐变动画
+ * 3. 采用flex布局使内容垂直水平居中
+ * 4. 设置最小高度确保页面填充整个视口
+ */
 body {
+    /* 渐变背景设置 */
     background: linear-gradient(135deg, var(--light), var(--decor));
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background-size: 400% 400%; /* 扩大背景尺寸以实现动画效果 */
+    animation: gradientBG 15s ease infinite; /* 应用背景动画 */
+    
+    /* 文本样式 */
     color: var(--text);
     line-height: 1.8;
+    font-family: 'Noto Serif SC', serif;
+    
+    /* 布局设置 */
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px;
-    font-family: 'Noto Serif SC', serif;
-    overflow-x: hidden;
+    overflow-x: hidden; /* 防止水平滚动 */
 }
+
+/* 背景渐变动画
+ * 通过改变背景位置实现柔和的渐变动画效果
+ * 使用三个关键帧创建循环动画
+ */
 @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% { background-position: 0% 50%; }    /* 起始位置 */
+    50% { background-position: 100% 50%; }  /* 中间位置 */
+    100% { background-position: 0% 50%; }   /* 结束位置（回到起点） */
 }
 
 
 /* 主容器样式 */
+/* 主容器样式
+ * 用于包裹页面主要内容的容器
+ * 1. 限制最大宽度确保在大屏幕上的可读性
+ * 2. 使用半透明背景营造磨砂玻璃效果
+ * 3. 添加圆角和阴影提升视觉层次
+ */
 .container {
-    max-width: 1200px;
-    width: 92%;
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 30px;
-    box-shadow: 0 25px 50px var(--shadow-color);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    max-width: 1200px;          /* 限制最大宽度 */
+    width: 92%;                 /* 响应式宽度 */
+    background: rgba(255, 255, 255, 0.85);  /* 半透明背景 */
+    border-radius: 30px;        /* 大圆角创造柔和外观 */
+    box-shadow: var(--box-shadow-large);    /* 大阴影增加深度 */
+    overflow: hidden;           /* 防止内容溢出 */
+    display: flex;              /* 使用弹性布局 */
+    flex-direction: column;     /* 垂直排列子元素 */
+    position: relative;         /* 为内部定位提供参考 */
+    border: 1px solid rgba(255, 255, 255, 0.7); /* 添加微妙边框 */
 }
 
 
+/* 图片容器样式
+ * 用于包装和定位图片元素
+ * 1. 设置相对定位便于内部元素绝对定位
+ * 2. 添加合适的边距和间距
+ */
 .image-container {
   position: relative;
   display: inline-block;
+  margin-left: 4%;    /* 左侧边距 */
+  margin-right: 4%;   /* 右侧边距 */
+  margin-bottom: 20px; /* 底部间距，增加与下一张图片的距离 */
 }
-.file-name {
+
+/* 图片文件名样式 - 一行一张布局 */
+.wjm.subtitle {
   position: absolute;
-  bottom: 4px;
-  left: 4px;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  padding: 2px 6px;
-  font-size: 12px;
-  border-radius: 2px;
-  max-width: 80%;
+  bottom: -12px;      /* 减小与图片的距离 */
+  left: 0;            /* 对齐图片左边缘 */
+  right: 0;           /* 扩展到右边缘 */
+  color: var(--text); /* 使用主题文本颜色 */
+  padding: 2px 0;     /* 上下内边距 */
+  font-size: 0.9rem;  /* 增大字体大小，一行一张时可以更明显 */
+  max-width: 100%;    /* 允许文本占据整个容器宽度 */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center; /* 文本居中 */
+  background: none;   /* 移除背景色 */
+  margin: 0;          /* 移除可能的外边距 */
+  font-family: inherit; /* 使用继承的字体 */
+  letter-spacing: 0.2px; /* 轻微增加字母间距，提高可读性 */
+  line-height: 1.2;   /* 增加行高 */
+  opacity: 0.9;       /* 增加不透明度 */
+  font-weight: 500;   /* 稍微加粗 */
+}
+
+/* 图片悬停时文件名样式变化 */
+.image-container:hover .wjm.subtitle {
+  opacity: 1;         /* 悬停时完全不透明 */
+  color: var(--primary); /* 使用主题主色 */
+  transition: all 0.3s ease; /* 平滑过渡 */
+}
+
+/* 在移动设备上调整文件名样式 */
+@media (max-width: 768px) {
+  .wjm.subtitle {
+    font-size: 0.85rem; /* 在移动设备上减小字体大小 */
+    bottom: -10px;      /* 在移动设备上减小与图片的距离 */
+  }
+}
+
+/* 图片容器和图片样式 - 一行一张布局 */
+.image-container {
+  position: relative;
+  display: block; /* 改为块级元素，确保一行一张 */
+  margin: 0 auto 40px; /* 上右下左边距，增加底部间距 */
+  text-align: center; /* 确保内容居中 */
+  max-width: 90%; /* 控制图片最大宽度 */
+  padding-bottom: 5px; /* 添加底部内边距，为文件名留出空间 */
+  clear: both; /* 确保不会有浮动元素干扰 */
+}
+
+/* 横向图片样式 - 一行一张布局 */
+.landscape-image {
+  max-width: 100%;   /* 确保图片不会溢出容器 */
+  max-height: 80vh;  /* 限制图片最大高度为视口高度的80% */
+  width: auto;       /* 自动调整宽度 */
+  height: 200px;      /* 自动调整高度 */
+  display: block;    /* 移除图片底部的额外空间 */
+  margin: 0 auto;    /* 图片居中 */
+  border-radius: 6px; /* 稍微增加圆角 */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* 增强阴影效果 */
+  object-fit: contain; /* 确保图片完整显示 */
+}
+
+/* 图片悬停效果 - 更柔和的动画 */
+.landscape-image:hover {
+  transform: scale(1.01); /* 减小放大效果 */
+  transition: all 0.3s ease; /* 平滑过渡 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 悬停时增强阴影 */
+}
+
+/* 确保图片容器在移动设备上也有合适的边距 */
+@media (max-width: 768px) {
+  .image-container {
+    max-width: 95%; /* 在移动设备上增加宽度 */
+    margin: 0 auto 30px; /* 减小底部边距 */
+  }
+  
+  .landscape-image {
+    max-height: 70vh; /* 在移动设备上减小最大高度 */
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .wjm.subtitle {
+    font-size: 0.8rem; /* 在小屏幕上减小字体大小 */
+  }
+  
+  .image-container {
+    margin-bottom: 30px; /* 在小屏幕上稍微减少底部间距 */
+  }
 }
 
 
@@ -102,31 +228,43 @@ body {
 }
 
 .decor-3 {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
     background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
     top: 30%;
     right: 5%;
 }
 
+/* 页面头部样式
+ * 用于展示网站标题和副标题的顶部区域
+ * 1. 使用渐变背景创建柔和过渡效果
+ * 2. 居中对齐内容增强视觉平衡
+ * 3. 设置z-index确保内容在装饰元素之上
+ */
 header {
-    text-align: center;
-    padding: 50px 20px 30px;
-    position: relative;
-    z-index: 1;
-    background: linear-gradient(to right, rgba(255, 249, 245, 0.8), rgba(255, 238, 238, 0.8));
-    border-bottom: 1px solid rgba(255, 155, 179, 0.2);
+    text-align: center;          /* 内容居中对齐 */
+    padding: 50px 20px 30px;     /* 上下左右内边距 */
+    position: relative;          /* 相对定位 */
+    z-index: 1;                  /* 层级设置 */
+    background: linear-gradient(to right, rgba(255, 249, 245, 0.8), rgba(255, 238, 238, 0.8)); /* 横向渐变背景 */
+    border-bottom: 1px solid rgba(255, 155, 179, 0.2); /* 微妙的底部边框 */
 }
+/* 主标题样式
+ * 网站的主要标题，使用中文艺术字体
+ * 1. 使用特色字体增强视觉吸引力
+ * 2. 添加文字阴影提升层次感
+ * 3. 设置相对定位为装饰线条做准备
+ */
 h1 {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 3.8rem;
-    color: var(--primary);
-    margin-bottom: 15px;
-    font-weight: normal;
-    letter-spacing: 3px;
-    text-shadow: 0 4px 8px rgba(255, 155, 179, 0.2);
-    position: relative;
-    display: inline-block;
+    font-family: 'Ma Shan Zheng', cursive; /* 中文艺术字体 */
+    font-size: 3.8rem;                     /* 大号字体尺寸 */
+    color: var(--primary);                 /* 使用主题色 */
+    margin-bottom: 15px;                   /* 底部间距 */
+    font-weight: normal;                   /* 标准字重 */
+    letter-spacing: 3px;                   /* 字间距 */
+    text-shadow: 0 4px 8px rgba(255, 155, 179, 0.2); /* 柔和文字阴影 */
+    position: relative;                    /* 相对定位 */
+    display: inline-block;                 /* 行内块显示 */
 }
 h1:after {
     content: '';
@@ -176,8 +314,8 @@ font-family: 'Ma Shan Zheng', cursive;
     max-height: 550px;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(255, 155, 179, 0.1);
-    transition: transform 0.6s ease;
+    box-shadow: var(--box-shadow-medium);
+    transition: var(--transition-normal);
     border: 5px solid white;
 }
 .featured-image {
@@ -222,7 +360,7 @@ font-family: 'Ma Shan Zheng', cursive;
 .message-container {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
-    padding: 50px;
+    padding: 0;
     box-shadow: 0 15px 35px rgba(255, 249, 245, 0.7);
     border: 1px solid rgba(255, 155, 179, 0.15);
     position: relative;
@@ -237,10 +375,23 @@ font-family: 'Ma Shan Zheng', cursive;
     height: 4px;
     background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--secondary), var(--primary));
 }
+/* 消息文本样式
+ * 用于展示主要文本内容
+ * 1. 设置合适的边距和间距
+ * 2. 控制文本的大小和行高
+ */
+/* 消息文本样式
+ * 用于展示主要文本内容
+ * 1. 设置统一的左右边距
+ * 2. 控制文本的大小和行高
+ */
 .message {
     margin-bottom: 35px;
+    margin-left: 12%;        /* 统一左侧边距 */
+    margin-right: 8%;       /* 统一右侧边距 */
     position: relative;
-    padding-left: 45px;
+    padding-left: 0px;     /* 额外的左侧内边距用于装饰元素 */
+    padding-right: 0px;    /* 添加相同的右侧内边距保持平衡 */
     font-size: 1.1rem;
     color: var(--text);
     line-height: 2;
@@ -264,7 +415,7 @@ font-family: 'Ma Shan Zheng', cursive;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 20px;
+    padding: 30px 20px;
     background: rgba(255, 255, 255, 0.9);
     border-top: 1px solid rgba(255, 155, 179, 0.1);
     border-bottom: 1px solid rgba(255, 155, 179, 0.1);
@@ -272,7 +423,7 @@ font-family: 'Ma Shan Zheng', cursive;
     z-index: 1;
 }
 .play-btn {
-    width: 100px;
+    width: 120px;
     height: 120px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -379,8 +530,8 @@ footer p {
     
     .message {
         font-size: 1.0rem;
-        padding-left: 35px;
-        padding-right: 24px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
     
     /* 容器调整 */
@@ -404,13 +555,35 @@ footer p {
     }
     
     /* 选项卡调整 */
+    .tab-nav {
+        padding: 0 3% 8px;  /* 减小内边距 */
+        gap: 5px;  /* 减小间距 */
+        font-size: 0.9rem;  /* 调整字体大小 */
+    }
+    
     .tab-item {
-        padding: 10px 15px;
-        font-size: 1rem;
+        padding: 8px 12px;  /* 减小内边距 */
+        margin: 0 3px;  /* 减小外边距 */
+        font-size: 0.9rem;  /* 调整字体大小 */
     }
     
     .tab-content {
         min-height: 300px;
+    }
+}
+
+@media (max-width: 400px) {
+    /* 选项卡在更小屏幕上的调整 */
+    .tab-nav {
+        padding: 0 2% 6px;
+        gap: 3px;
+        font-size: 0.8rem;
+    }
+    
+    .tab-item {
+        padding: 6px 8px;
+        margin: 0 2px;
+        font-size: 0.8rem;
     }
 }
 
@@ -450,8 +623,9 @@ footer p {
     max-width: 100%;
     border-radius: 10px;
     margin-bottom: 15px;
-    box-shadow: 0 5px 15px var(--shadow-color);
-    transition: transform 0.3s ease;
+    margin-top: 11%;
+    box-shadow: var(--box-shadow-normal);
+    transition: var(--transition-normal);
 }
 
 .landscape-image:hover {
@@ -492,39 +666,54 @@ footer p {
     }
 }
 
+:root {
+    --transition-normal: all 0.3s ease;
+    --box-shadow-normal: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* 选项卡样式 */
 .tab-nav {
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
-    flex-direction: row;
-    flex-wrap: nowrap;
     align-items: center;
-    padding-bottom: 10px;
+    max-width: 100%;
+    padding: 0 4% 10px;  /* 使用百分比代替固定像素 */
+    margin-bottom: 20px;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    font-size: calc(0.9rem + 0.3vw);  /* 响应式字体大小 */
+}
+
+.tab-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .tab-item {
-    padding: 10px 15px;
-    margin: 0 0px;
-    cursor: pointer;
+    flex-shrink: 0;
+    padding: calc(8px + 0.5vw) calc(10px + 1vw);  /* 响应式内边距 */
+    margin: 0 calc(3px + 0.5vw);  /* 响应式外边距 */
     color: var(--primary);
-    transition: all 0.3s ease;
-    border-bottom: 2px solid transparent;
     font-family: 'Noto Serif SC', serif;
     text-align: center;
     white-space: nowrap;
-    /* letter-spacing: 1px; */
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: var(--transition-normal);
     position: relative;
 }
 
 .tab-item:hover {
     color: #ff7b9c;
+    font-size: 1.1rem;
 }
 
 .tab-item.active {
     color: hsl(0deg 66% 46%);
     border-bottom: 1px solid #ff7b9c;
+    font-size: 1.2rem;
 }
 
 .tab-content {
@@ -539,41 +728,64 @@ footer p {
 }
 
 /* 通用按钮样式 */
+/* 按钮基础样式
+ * 用于各种交互元素的按钮组件
+ * 1. 使用渐变背景创建现代感
+ * 2. 圆角和阴影增强立体感
+ * 3. 添加过渡效果提升交互体验
+ * 4. 统一的文本样式确保可读性
+ */
 .btn {
-    display: inline-block;
-    padding: 12px 25px;
-    border-radius: 25px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 5px 15px var(--shadow-color);
+    display: inline-block;       /* 行内块级显示 */
+    padding: 12px 25px;          /* 内部留白 */
+    border-radius: 25px;         /* 圆角效果 */
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); /* 渐变背景 */
+    color: white;                /* 文本颜色 */
+    text-decoration: none;       /* 移除下划线 */
+    font-size: 1rem;             /* 字体大小 */
+    font-weight: 500;            /* 字体粗细 */
+    letter-spacing: 1px;         /* 字间距 */
+    transition: var(--transition-normal); /* 过渡效果 */
+    border: none;                /* 移除边框 */
+    cursor: pointer;             /* 鼠标指针样式 */
+    box-shadow: var(--box-shadow-normal); /* 阴影效果 */
 }
 
+/* 按钮悬停效果
+ * 当用户鼠标悬停在按钮上时的交互反馈
+ * 1. 轻微上浮效果提供触觉反馈
+ * 2. 阴影变化强调可点击状态
+ */
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px var(--shadow-color);
+    transform: translateY(-2px);           /* 向上浮动2像素 */
+    box-shadow: var(--box-shadow-medium);  /* 增强阴影效果 */
 }
 
 /* 卡片样式 */
+/* 卡片组件样式
+ * 用于展示独立内容块的卡片设计
+ * 1. 使用半透明白色背景增加层次感
+ * 2. 圆角和阴影提供精致的视觉效果
+ * 3. 添加过渡动画增强交互体验
+ */
 .card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 25px;
-    margin: 15px 0;
-    box-shadow: 0 10px 30px var(--shadow-color);
-    border: 1px solid var(--border-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);  /* 半透明背景 */
+    border-radius: 15px;                     /* 圆角效果 */
+    padding: 25px;                           /* 内部留白 */
+    margin: 15px 0;                          /* 垂直间距 */
+    box-shadow: var(--box-shadow-medium);    /* 中等阴影 */
+    border: 1px solid var(--border-color);   /* 微妙边框 */
+    transition: var(--transition-normal);     /* 平滑过渡效果 */
 }
 
+/* 卡片悬停效果
+ * 当用户鼠标悬停在卡片上时的交互反馈
+ * 1. 轻微上浮效果增强立体感
+ * 2. 增大阴影强调悬停状态
+ */
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px var(--shadow-color);
+    transform: translateY(-5px);           /* 向上浮动5像素 */
+    box-shadow: var(--box-shadow-large);   /* 切换为大阴影 */
 }
 
 /* 辅助类 */
