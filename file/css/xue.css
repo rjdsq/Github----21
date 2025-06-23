@@ -162,7 +162,7 @@ body {
   max-width: 100%;   /* 确保图片不会溢出容器 */
   max-height: 80vh;  /* 限制图片最大高度为视口高度的80% */
   width: auto;       /* 自动调整宽度 */
-  height: 200px;      /* 自动调整高度 */
+  height: auto;      /* 自动调整高度 */
   display: block;    /* 移除图片底部的额外空间 */
   margin: 0 auto;    /* 图片居中 */
   border-radius: 6px; /* 稍微增加圆角 */
