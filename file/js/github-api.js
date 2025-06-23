@@ -1,6 +1,6 @@
 // 配置数组：包含所有文本文件的链接和对应的元素ID
 const textConfigs = [
-    { fileUri: 'https://rjdsq.github.io/选项卡1.txt', elementId: 'text1' },
+    { fileUri: 'https://rjdsq.github.com/选项卡1.txt', elementId: 'text1' },
     { fileUri: 'https://rjdsq.github.io/选项卡2.txt', elementId: 'text2' },
     { fileUri: 'https://rjdsq.github.io/选项卡3.txt', elementId: 'text3' }
 ];
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     message.innerHTML = "正在加载图片...";
 
-    fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
+    fetch('https://api.kkgithub.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
         .then(response => response.json())
         .then(data => {
             message.innerHTML = '';
@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     imgContainer.className = 'image-container';
                     
                     const img = document.createElement('img');
-                    img.src = item.download_url;
+                    // 核心修改：替换域名前缀
+                    const kkgithubUrl = item.download_url.replace('https://raw.githubusercontent.com', 'https://raw.kkgithub.com');
+                    img.src = kkgithubUrl;
                     img.alt = item.name;
                     img.loading = 'lazy';
                     img.className = 'landscape-image';
