@@ -8,7 +8,13 @@
     <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://rjdsq.github.io/file/xue.css">
+    <link rel="stylesheet" href="https://rjdsq.github.io/file/css/xue.css">
+    <!-- 引入Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+
+
+    
 </head>
 <body>
     <div class="hearts-container" id="heartsContainer"></div>
@@ -16,37 +22,85 @@
     <div class="container">
         <header>
             <h1>阚双雪</h1>
-            
+            <br>
             <div class="subtitle">致我生命中最温暖的光</div>
         </header>
         
-        <div class="content-wrapper">
-            <div class="image-section">
-                <div class="image-frame">
-                    <img src="https://14826.kstore.space/img/aa.jpg" alt="阚双雪 - 时光礼物主角" class="featured-image">
-                </div>
-            </div>
-            
-            <div class="music-player">
+                    <div class="music-player">
                 <div class="play-btn" id="playButton">
                     <i class="fas fa-play"></i>
                 </div>
                 <div class="music-text">让我们赞美愚者</div>
                 <audio id="bgMusic" loop>
-                    <source src="https://14826.kstore.space/mp3/赞美愚者.mp3" type="audio/mp3">
+                    <source src="https://rjdsq.github.io/mp3/赞美愚者.mp3" type="audio/mp3">
                 </audio>
             </div>
             
-            <div class="text-section">
-                <div class="message-container">
-<div class="message">原来爱藏得太深，会变成一场独角戏，而我连谢幕时的掌声都无人给予。</div>
-<div class="message">我笨拙地表达爱意，你却在字里行间找破绽，我现在才明白，不被信任的深情，连解释都是多余。</div>
-                    <div class="message">其实，我真的很想问问你，有没有那么一瞬间，你心疼过我的执着，体谅过我的卑微，看穿过我的无助，有没有那么一瞬间，你是爱我的。</div>
-                    <div class="message">我偷偷羡慕着别人被官宣的仪式感，却只能把合照锁在手机相册，像藏着一个无人知晓的秘密。</div>
-                    <div class="message">当你用"不合适"告别时，我突然看透了：哪有什么突如其来的不爱，不过是热情耗尽后的权衡利弊。就像杯子里的水凉了，不是瞬间的事，是从你没注意的第一口温度流失开始的。</div>
-                    <div class="message">从亲密无间到形同陌路，这场分手来得猝不及防。我像被世界遗弃，走在人潮中，却感受不到一丝温暖，只剩满心的孤独与哀伤。</div>
+        <div class="content-wrapper">
+            <div class="image-section">
+                <div class="image-frame">
+                    <img src="https://pic.netbian.com/uploads/allimg/250516/145513-1747378513e316.jpg" alt="阚双雪 - 时光礼物主角" class="featured-image">
                 </div>
             </div>
+            
+
+            
+            <div class="text-section">
+                <div class="message-container" id="tab-app">
+                    <!-- 选项卡导航 -->
+                    <div class="tab-nav">
+                        <div v-for="(tab, index) in tabs" 
+                             :key="index" 
+                             class="tab-item" 
+                             :class="{ active: currentTab === index }"
+                             @click="currentTab = index">
+                            {{ tab.title }}
+                        </div>
+                    </div>
+        
+                    <!-- 选项卡内容 -->
+                    <div class="tab-content">
+                        <div v-show="currentTab === 0" class="tab-pane">
+                            <div class="message">原来爱藏得太深，会变成一场独角戏，而我连谢幕时的掌声都无人给予。</div>
+                            <div class="message">我笨拙地表达爱意，你却在字里行间找破绽，我现在才明白，不被信任的深情，连解释都是多余。</div>
+                            <div class="message">其实，我真的很想问问你，有没有那么一瞬间，你心疼过我的执着，体谅过我的卑微，看穿过我的无助，有没有那么一瞬间，你是爱我的。</div>                                       <div class="message">我偷偷羡慕着别人被官宣的仪式感，却只能把合照锁在手机相册，像藏着一个无人知晓的秘密。</div>
+                            <div class="message">当你用"不合适"告别时，我突然看透了：哪有什么突如其来的不爱，不过是热情耗尽后的权衡利弊。就像杯子里的水凉了，不是瞬间的事，是从你没注意的第一口温度流失开始的。</div>
+                            <div class="message">从亲密无间到形同陌路，这场分手来得猝不及防。我像被世界遗弃，走在人潮中，却感受不到一丝温暖，只剩满心的孤独与哀伤。</div>
+                            <div class="message">我偷偷羡慕着别人被官宣的仪式感，却只能把合照锁在手机相册，像藏着一个无人知晓的秘密。</div>
+                            <div class="message">当你用"不合适"告别时，我突然看透了：哪有什么突如其来的不爱，不过是热情耗尽后的权衡利弊。就像杯子里的水凉了，不是瞬间的事，是从你没注意的第一口温度流失开始的。</div>
+                            <div class="message">从亲密无间到形同陌路，这场分手来得猝不及防。我像被世界遗弃，走在人潮中，却感受不到一丝温暖，只剩满心的孤独与哀伤。</div>
+                        </div>
+
+                    
+                        <div v-show="currentTab === 1" class="tab-pane">
+
+                        </div>
+            
+                        <div v-show="currentTab === 2" class="tab-pane">
+                            
+                        </div>
+            
+                        <div v-show="currentTab === 3" class="tab-pane">
+<div id="message" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                new Vue({
+                    el: '#tab-app',
+                    data: {
+                        currentTab: 0,
+                        tabs: [
+                            { title: '随笔' },
+                            { title: '诗词' },
+                            { title: '故事' },
+                            { title: '相册' }
+                        ]
+                    }
+                });
+            </script>
         </div>
         
         <footer>
@@ -57,11 +111,9 @@
             <p class="t"></p>         
         </footer>
     </div>
+       <!-- 外部脚本 -->
 
-<script src="https://rjdsq.github.io/file/音频.js"></script>
-<script src="https://rjdsq.github.io/file/爱心.js"></script>
-<script src="https://rjdsq.github.io/file/时间.js"></script>
-<script src="https://rjdsq.github.io/file/樱花1.js"></script>
-
+    
+    <script src="https://rjdsq.github.io/file/js/xue.js"></script>
 </body>
 </html>
