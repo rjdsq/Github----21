@@ -9,7 +9,7 @@
 </p>
 
 <div align="center">
-  <img src="https://rjdsq.github.io" width="70%" alt="项目预览">
+  <img src="https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/IMG_20250601_181913.jpg" width="70%" alt="阚双雪">
 </div>
 
 ---
