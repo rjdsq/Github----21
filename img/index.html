@@ -62,7 +62,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       const gallery = document.getElementById('gallery');
 
-      fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img')
+      fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunan/')
         .then(response => response.json())
         .then(data => {
           data.forEach(item => {
