@@ -1,6 +1,6 @@
 // 配置数组：包含所有文本文件的链接和对应的元素ID
 const textConfigs = [
-    { fileUri: 'https://rjdsq.github.com/选项卡1.txt', elementId: 'text1' },
+    { fileUri: 'https://rjdsq.github.io/选项卡1.txt', elementId: 'text1' },
     { fileUri: 'https://rjdsq.github.io/选项卡2.txt', elementId: 'text2' },
     { fileUri: 'https://rjdsq.github.io/选项卡3.txt', elementId: 'text3' }
 ];
