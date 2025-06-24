@@ -10,23 +10,20 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
-              background-image : linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+      background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
     }
-    
-   
     
     .gallery {
       display: flex;
       flex-direction: column;
-      gap:5px ;
-          
-            
+      gap: 5px;
     }
     .gallery-item {
-    text-align: center;
+    font-size: 1em;
+      text-align: center;
       border-radius: 5px;
       padding: 15px;
-      background-image : linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+      background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .gallery-item img {
@@ -38,7 +35,7 @@
     }
     .gallery-item h3 {
       margin: 10px 0 5px;
-      font-size: 1.2em;
+      font-size: 0.8em;
     }
     .copy-btn {
       background-color: #00c9a7;
@@ -47,7 +44,7 @@
       padding: 5px 10px;
       border-radius: 3px;
       cursor: pointer;
-      font-size: 0.5em;
+      font-size: 0.6em;
       transition: background-color 0.3s;
     }
     .copy-btn:hover {
@@ -56,35 +53,35 @@
   </style>
 </head>
 <body>
-  <div class="gallery" id="gallery"></div>
-
+  <div class="gallery" id="kkk"></div>
   <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const gallery = document.getElementById('gallery');
+  const gallery = document.getElementById('kkk');
   fetch('https://api.kkgithub.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
     .then(response => response.json())
     .then(data => {
-      // 核心修改：逆序排列数组（从新到旧）
       const reversedData = data.reverse();
       
       reversedData.forEach(item => {
         if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
-          // 转换图片地址为 kkgithub 链接
           const kkgithubUrl = item.download_url.replace('https://raw.githubusercontent.com', 'https://raw.kkgithub.com');
           const name = item.name;
+          // 新增：去除后缀处理（保留最后一个点之前的内容）
+          const fileNameWithoutExt = name.lastIndexOf('.') > 0 ? name.substring(0, name.lastIndexOf('.')) : name;
+          
           const galleryItem = document.createElement('div');
           galleryItem.className = 'gallery-item';
           const img = document.createElement('img');
-          img.src = kkgithubUrl; // 使用转换后的地址
-          img.alt = name;
+          img.src = kkgithubUrl;
+          img.alt = fileNameWithoutExt; // 图片alt文本也使用无后缀名
           img.loading = 'lazy';
           const title = document.createElement('h3');
-          title.textContent = name;
+          title.textContent = fileNameWithoutExt; // 标题显示无后缀名
           const copyButton = document.createElement('button');
           copyButton.className = 'copy-btn';
           copyButton.textContent = '复制地址';
           copyButton.addEventListener('click', () => {
-            navigator.clipboard.writeText(kkgithubUrl).then(() => { // 复制转换后的地址
+            navigator.clipboard.writeText(kkgithubUrl).then(() => {
               copyButton.textContent = '已复制';
               setTimeout(() => {
                 copyButton.textContent = '复制地址';
@@ -105,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
       gallery.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
     });
 });
-
   </script>
 </body>
 </html>
