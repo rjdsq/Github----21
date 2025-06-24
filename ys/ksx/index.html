@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片展示</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="https://p0.qhimg.com/t0197960b4a26c3b9a2.png" alt="Logo" class="nav-logo">
+                <span class="nav-title">图片展示</span>
+            </div>
+            <button class="hamburger" aria-label="菜单">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">首页</a>
+                <a href="#" class="nav-link">图库</a>
+                <a href="#" class="nav-link">关于</a>
+                <a href="#" class="nav-link">联系</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- 轮播图 -->
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-slides">
+                    <!-- 轮播图片将通过JavaScript动态添加 -->
+                </div>
+            </div>
+            <button class="carousel-button prev" aria-label="上一张">&lt;</button>
+            <button class="carousel-button next" aria-label="下一张">&gt;</button>
+            <div class="carousel-dots">
+                <!-- 轮播指示点将通过JavaScript动态添加 -->
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('text1')">选项卡1</button>
+            <button class="tab-button" onclick="showTab('text2')">选项卡2</button>
+            <button class="tab-button" onclick="showTab('text3')">选项卡3</button>
+            <button class="tab-button" onclick="showTab('message')">选项卡4</button>
+        </div>
+
+        <div id="text1" class="tab-content active">
+            <h2>内容1</h2>
+            <p>这是第一个选项卡的内容...</p>
+        </div>
+
+        <div id="text2" class="tab-content">
+            <h2>内容2</h2>
+            <p>这是第二个选项卡的内容...</p>
+        </div>
+
+        <div id="text3" class="tab-content">
+            <h2>内容3</h2>
+            <p>这是第三个选项卡的内容...</p>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <!-- 音乐播放器 -->
+    <audio id="music-player" loop>
+        <source src="https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/mp3/赞美愚者.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 音乐播放按钮 -->
+    <button id="music-button" class="music-button" title="播放/暂停音乐">
+        <span class="icon icon-play"></span>
+    </button>
+
+    <script src="./api.js"></script>
+    <script src="./script.js"></script>
+    
+    <!-- 简单的JS功能直接放在HTML中 -->
+    <script>
+        // 选项卡切换功能
+        function showTab(tabId) {
+            // 隐藏所有标签内容和图片区域
+            document.querySelectorAll('.tab-content, #message').forEach(element => {
+                element.classList.remove('active');
+            });
+            
+            // 取消所有按钮的活动状态
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // 显示选中的内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 设置对应按钮的活动状态
+            document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认显示第一个选项卡
+            showTab('text1');
+
+            // 音乐播放控制
+            const musicPlayer = document.getElementById('music-player');
+            const musicButton = document.getElementById('music-button');
+            const musicIcon = musicButton.querySelector('.icon');
+            
+            // 设置音乐循环播放
+            musicPlayer.loop = true;
+            
+            musicButton.addEventListener('click', function() {
+                if (musicPlayer.paused) {
+                    // 播放音乐
+                    musicPlayer.play().then(() => {
+                        musicIcon.classList.remove('icon-play');
+                        musicIcon.classList.add('icon-pause');
+                        musicButton.classList.add('playing');
+                    }).catch(error => {
+                        console.error('播放失败:', error);
+                    });
+                } else {
+                    // 暂停音乐
+                    musicPlayer.pause();
+                    musicIcon.classList.remove('icon-pause');
+                    musicIcon.classList.add('icon-play');
+                    musicButton.classList.remove('playing');
+                }
+            });
+
+            // 音乐结束时重置按钮状态
+            musicPlayer.addEventListener('ended', function() {
+                musicIcon.classList.remove('icon-pause');
+                musicIcon.classList.add('icon-play');
+                musicButton.classList.remove('playing');
+            });
+        });
+    </script>
+    <script src="./mobile-menu.js"></script>
+</body>
+</html>
