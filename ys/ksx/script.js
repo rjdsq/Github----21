@@ -126,7 +126,7 @@ function resetSlideShow() {
 // 从GitHub获取图片
 async function fetchImages() {
     try {
-        const response = await fetch('https://api.kkgithub.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/');
+        const response = await fetch('https://j.1lin.dpdns.org/https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/');
         if (!response.ok) {
             throw new Error('网络响应不正常');
         }
@@ -136,7 +136,7 @@ async function fetchImages() {
         return data.reverse()
             .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name))
             .map(item => ({
-                url: item.download_url.replace('https://raw.githubusercontent.com', 'https://raw.kkgithub.com'),
+                url: item.download_url.replace('', ''),// 第一个原网站，第二个 三方api
                 name: item.name.replace(/\.\w+$/, '')
             }))
             .slice(0, 10); // 最多取10张图片用于轮播
