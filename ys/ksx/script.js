@@ -139,7 +139,7 @@ async function fetchImages() {
                 url: item.download_url.replace('', ''),// 第一个原网站，第二个 三方api
                 name: item.name.replace(/\.\w+$/, '')
             }))
-            .slice(0, 10); // 最多取10张图片用于轮播
+            .slice(0, 2); // 最多取10张图片用于轮播
     } catch (error) {
         console.error('获取图片失败:', error);
         return [];
