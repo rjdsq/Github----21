@@ -42,13 +42,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             message.innerHTML = '';
-            data.forEach(item => {
+            // 核心修改：逆序排列数组（从新到旧）
+            const reversedData = data.reverse();
+            
+            reversedData.forEach(item => {
                 if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
                     const imgContainer = document.createElement('div');
                     imgContainer.className = 'image-container';
                     
                     const img = document.createElement('img');
-                    // 核心修改：替换域名前缀
                     const kkgithubUrl = item.download_url.replace('https://raw.githubusercontent.com', 'https://raw.kkgithub.com');
                     img.src = kkgithubUrl;
                     img.alt = item.name;
@@ -74,3 +76,4 @@ document.addEventListener('DOMContentLoaded', function() {
             message.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
         });
 });
+
