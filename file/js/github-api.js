@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(fileUri)
             .then(response => response.ok ? response.text() : Promise.reject('文件获取失败'))
             .then(text => { element.innerHTML = processText(text); })
-            .catch(error => { element.innerHTML = `获取文件失败: ${error}`; });
+            .catch(error => { element.innerHTML = `加载错误，请检查是否联网`; });
     });
 });
 
