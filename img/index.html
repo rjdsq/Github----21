@@ -59,55 +59,53 @@
   <div class="gallery" id="gallery"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const gallery = document.getElementById('gallery');
-
-      fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunan/')
-        .then(response => response.json())
-        .then(data => {
-          data.forEach(item => {
-            if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
-              const imageUrl = item.download_url;
-              const name = item.name;
-
-              const galleryItem = document.createElement('div');
-              galleryItem.className = 'gallery-item';
-
-              const img = document.createElement('img');
-              img.src = imageUrl;
-              img.alt = name;
-              img.loading = 'lazy';
-
-              const title = document.createElement('h3');
-              title.textContent = name;
-
-              const copyButton = document.createElement('button');
-              copyButton.className = 'copy-btn';
-              copyButton.textContent = '复制地址';
-              copyButton.addEventListener('click', () => {
-                navigator.clipboard.writeText(imageUrl).then(() => {
-                  copyButton.textContent = '已复制';
-                  setTimeout(() => {
-                    copyButton.textContent = '复制地址';
-                  }, 2000);
-                }).catch(err => {
-                  console.error('复制失败:', err);
-                });
-              });
-
-              galleryItem.appendChild(img);
-              galleryItem.appendChild(title);
-              galleryItem.appendChild(copyButton);
-
-              gallery.appendChild(galleryItem);
-            }
+document.addEventListener('DOMContentLoaded', function() {
+  const gallery = document.getElementById('gallery');
+  fetch('https://api.kkgithub.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
+    .then(response => response.json())
+    .then(data => {
+      // 核心修改：逆序排列数组（从新到旧）
+      const reversedData = data.reverse();
+      
+      reversedData.forEach(item => {
+        if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
+          // 转换图片地址为 kkgithub 链接
+          const kkgithubUrl = item.download_url.replace('https://raw.githubusercontent.com', 'https://raw.kkgithub.com');
+          const name = item.name;
+          const galleryItem = document.createElement('div');
+          galleryItem.className = 'gallery-item';
+          const img = document.createElement('img');
+          img.src = kkgithubUrl; // 使用转换后的地址
+          img.alt = name;
+          img.loading = 'lazy';
+          const title = document.createElement('h3');
+          title.textContent = name;
+          const copyButton = document.createElement('button');
+          copyButton.className = 'copy-btn';
+          copyButton.textContent = '复制地址';
+          copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(kkgithubUrl).then(() => { // 复制转换后的地址
+              copyButton.textContent = '已复制';
+              setTimeout(() => {
+                copyButton.textContent = '复制地址';
+              }, 2000);
+            }).catch(err => {
+              console.error('复制失败:', err);
+            });
           });
-        })
-        .catch(error => {
-          console.error('Error fetching images:', error);
-          gallery.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
-        });
+          galleryItem.appendChild(img);
+          galleryItem.appendChild(title);
+          galleryItem.appendChild(copyButton);
+          gallery.appendChild(galleryItem);
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching images:', error);
+      gallery.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
     });
+});
+
   </script>
 </body>
 </html>
