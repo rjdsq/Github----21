@@ -1,8 +1,8 @@
 // 配置数组：包含所有文本文件的链接和对应的元素ID
 const textConfigs = [
-    { fileUri: 'https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/选项卡1.txt', elementId: 'text1' },
-    { fileUri: 'https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/选项卡2.txt', elementId: 'text2' },
-    { fileUri: 'https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/选项卡3.txt', elementId: 'text3' }
+    { fileUri: 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/选项卡1.txt', elementId: 'text1' },
+    { fileUri: 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/选项卡2.txt', elementId: 'text2' },
+    { fileUri: 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/选项卡3.txt', elementId: 'text3' }
 ];
 
 // 处理文本格式，仅将换行符转换为<br>
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     message.innerHTML = "正在加载图片...";
 
-    fetch('https://api.kkgithub.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
+    fetch('https://j.1lin.dpdns.org/https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/')
         .then(response => response.json())
         .then(data => {
             message.innerHTML = '';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     imgContainer.className = 'image-container';
                     
                     const img = document.createElement('img');
-                    const kkgithubUrl = item.download_url.replace('https://raw.githubusercontent.com', 'https://raw.kkgithub.com');
+                    const kkgithubUrl = item.download_url.replace('https://raw.githubusercontent.com', 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com');
                     img.src = kkgithubUrl;
                     img.alt = item.name;
                     img.loading = 'lazy';
