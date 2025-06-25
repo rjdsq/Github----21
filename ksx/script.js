@@ -1,12 +1,99 @@
+// 文本处理函数 - 将换行符转换为<br>
+function processText(text) {
+    return text
+        // 统一所有换行符为\n
+        .replace(/\r\n|\r|\u2028|\u2029/g, '\n')
+        // 将换行符转换为<br>
+        .replace(/\n/g, '<br>');
+}
+
+// 加载文本内容
+function loadTextContents() {
+    apiConfig.textFiles.files.forEach(({id, path}) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+        
+        element.innerHTML = "正在加载...";
+        
+        fetch(`${apiConfig.textFiles.baseUrl}${path}`)
+            .then(response => response.ok ? response.text() : Promise.reject('文件获取失败'))
+            .then(text => { element.innerHTML = processText(text); })
+            .catch(error => { element.innerHTML = `加载错误，请检查是否联网`; });
+    });
+}
+
+// 加载图片内容
+function loadImageContents() {
+    const message = document.getElementById('message');
+    if (!message) return;
+
+    message.innerHTML = "正在加载图片...";
+
+    fetch(`${apiConfig.images.baseUrl}${apiConfig.images.path}`)
+        .then(response => response.json())
+        .then(data => {
+            message.innerHTML = '';
+            // 核心修改：逆序排列数组（从新到旧）
+            const reversedData = data.reverse();
+            
+            reversedData.forEach(item => {
+                if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'image-container';
+                    
+                    const img = document.createElement('img');
+                    const kkgithubUrl = apiConfig.domainReplace.reduce((currentUrl, rule) => {
+                        return currentUrl.replace(rule.from, rule.to);
+                    }, item.download_url);
+                    img.src = kkgithubUrl;
+                    img.alt = item.name;
+                    img.loading = 'lazy';
+                    img.className = 'landscape-image';
+                    
+                    const fileName = document.createElement('div');
+                    fileName.className = 'wjm subtitle';
+                    fileName.textContent = item.name.replace(/\.\w+$/, '');
+                    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(fileName);
+                    message.appendChild(imgContainer);
+                }
+            });
+            
+            if (message.children.length === 0) {
+                message.innerHTML = '<p>没有找到图片</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching images:', error);
+            message.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
+        });
+}
+
 // 轮播图控制
 let currentSlide = 0;
 let slideInterval;
-const slideDelay = 5000; // 5秒切换一次
+let slideDelay = 5000; // 默认值5秒
 
 // 初始化轮播图
 function initCarousel(images) {
+    console.log('初始化轮播图，图片数量:', images.length);
+    if (!apiConfig.carousel) {
+        console.warn('缺少轮播图配置，使用默认值');
+        apiConfig.carousel = {
+            slideDelay: 5000,
+            maxSlides: 5
+        };
+    }
+    slideDelay = apiConfig.carousel.slideDelay || 5000;
+    
     const slidesContainer = document.querySelector('.carousel-slides');
     const dotsContainer = document.querySelector('.carousel-dots');
+    
+    if (!slidesContainer || !dotsContainer) {
+        console.error('轮播图容器元素未找到');
+        return;
+    }
     
     // 清空现有内容
     slidesContainer.innerHTML = '';
@@ -58,9 +145,45 @@ function initCarousel(images) {
     // 设置初始状态
     updateCarousel();
     
-    // 添加按钮事件监听
-    document.querySelector('.carousel-button.prev').addEventListener('click', prevSlide);
-    document.querySelector('.carousel-button.next').addEventListener('click', nextSlide);
+    // 添加轮播控制功能
+    const carouselContainer = document.querySelector('.carousel');
+    
+    // 鼠标悬停控制
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', () => {
+            console.log('鼠标进入，暂停轮播');
+            stopSlideShow();
+        });
+        
+        carouselContainer.addEventListener('mouseleave', () => {
+            console.log('鼠标离开，恢复轮播');
+            startSlideShow();
+        });
+    }
+    
+    // 按钮控制（可选）
+    const prevButton = document.querySelector('.carousel-prev, .carousel-button.prev, .prev-button');
+    const nextButton = document.querySelector('.carousel-next, .carousel-button.next, .next-button');
+    
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            console.log('上一张按钮点击');
+            prevSlide();
+            resetSlideShow();
+        });
+    } else {
+        console.warn('上一张按钮未找到，自动轮播仍可工作');
+    }
+    
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            console.log('下一张按钮点击');
+            nextSlide();
+            resetSlideShow();
+        });
+    } else {
+        console.warn('下一张按钮未找到，自动轮播仍可工作');
+    }
     
     // 启动自动轮播
     startSlideShow();
@@ -106,19 +229,26 @@ function goToSlide(index) {
 
 // 开始自动轮播
 function startSlideShow() {
+    console.log('启动轮播，间隔:', slideDelay);
     stopSlideShow();
-    slideInterval = setInterval(nextSlide, slideDelay);
+    slideInterval = setInterval(() => {
+        console.log('自动切换到下一张');
+        nextSlide();
+    }, slideDelay);
 }
 
 // 停止自动轮播
 function stopSlideShow() {
     if (slideInterval) {
+        console.log('停止轮播');
         clearInterval(slideInterval);
+        slideInterval = null;
     }
 }
 
 // 重置自动轮播计时器
 function resetSlideShow() {
+    console.log('重置轮播计时器');
     stopSlideShow();
     startSlideShow();
 }
@@ -126,9 +256,9 @@ function resetSlideShow() {
 // 从GitHub获取图片轮播图
 async function fetchImages() {
     try {
-        const response = await fetch('https://j.1lin.dpdns.org/https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan/');
+        const response = await fetch(`${apiConfig.carouselImages.baseUrl}${apiConfig.carouselImages.path}`);
         if (!response.ok) {
-            throw new Error('网络响应不正常');
+            throw new Error('轮播图图片加载失败');
         }
         const data = await response.json();
         
@@ -136,20 +266,29 @@ async function fetchImages() {
         return data.reverse()
             .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name))
             .map(item => ({
-                url: item.download_url.replace('https://raw.githubusercontent.com', 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com'),// 第一个原网站，第二个 三方api
+                url: apiConfig.domainReplace.reduce((currentUrl, rule) => {
+                    return currentUrl.replace(rule.from, rule.to);
+                }, item.download_url),
                 name: item.name.replace(/\.\w+$/, '')
             }))
-            .slice(0, 2); // 最多取10张图片用于轮播
+            .slice(0, apiConfig.carousel.maxSlides); // 使用配置中的最大显示张数
     } catch (error) {
-        console.error('获取图片失败:', error);
+        console.error('获取轮播图图片失败:', error);
         return [];
     }
 }
 
-// 初始化轮播图
-window.onload = async function() {
+// 页面加载完成后初始化所有功能
+document.addEventListener('DOMContentLoaded', async () => {
+    // 加载文本内容
+    loadTextContents();
+    
+    // 加载图片内容
+    loadImageContents();
+    
+    // 初始化轮播图
     const images = await fetchImages();
     if (images.length > 0) {
         initCarousel(images);
     }
-};
+});

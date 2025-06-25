@@ -1,11 +1,19 @@
 * {
-    margin: 0;
+    /*margin: 0;*/
     padding: 0;
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'default'; /* 自定义字体名称 */
+    src: url('default.ttf') format('truetype'); /* 字体文件路径及格式 */
+    font-weight: normal; /* 字体粗细 */
+    font-style: normal; /* 字体样式 */
+    
+}
+
 body {
-    font-family: 'Microsoft YaHei', sans-serif;
+    font-family: 'default', sans-serif; /* 使用自定义字体 */
     line-height: 1.6;
     color: #333;
     background-color: #f5f5f5;
@@ -27,7 +35,7 @@ body {
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -45,7 +53,7 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(45, 216, 136, 0.815);
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -328,60 +336,6 @@ body {
     z-index: 2;
 }
 
-/* 图片加载中的样式 */
-.carousel-slide img:not([src]), 
-.carousel-slide img[src=""] {
-    background: linear-gradient(135deg, #3498db, #2ecc71);
-    animation: gradientShift 2s ease infinite;
-    position: relative;
-}
-
-.carousel-slide img:not([src])::after, 
-.carousel-slide img[src=""]::after {
-    content: "加载中...";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 1.2rem;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-/* 图片加载失败的样式 */
-.carousel-slide img.error,
-.carousel-slide img:not([src]).error, 
-.carousel-slide img[src=""].error {
-    background: linear-gradient(135deg, #3498db, #2ecc71);
-    position: relative;
-}
-
-.carousel-slide img.error::before {
-    content: "⚠️";
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2rem;
-    color: white;
-}
-
-.carousel-slide img.error::after {
-    content: "图片加载失败";
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 1rem;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
 
 /* 删除重复的carousel-caption定义 */
 
@@ -532,16 +486,18 @@ body {
 }
 
 .tab-content {
-    background-color: white;
+    font-size: 1.4rem;
+    color: #144238;
+    background-color: rgba(0, 0, 0, 0.01); 
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.01);
     margin-bottom: 30px;
     display: none;
     transform: translateY(10px);
     opacity: 0;
     transition: all 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    /*border: 1px solid rgba(0, 0, 0, 0.05); */
 }
 
 .tab-content.active {
@@ -719,34 +675,27 @@ body {
 
 /* 页面整体美化 */
 .main-content {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 90px auto 30px auto; /* 调整上边距适应新导航栏 */
     padding: 30px 20px;
-    background-color: rgba(255, 255, 255, 0.95);
+  /*  background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);*/
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    
     backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
 }
 
-.main-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-}
+
 
 /* 美化滚动条 */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 2px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background:#19d367;
     border-radius: 5px;
 }
 
