@@ -23,12 +23,12 @@ const apiConfig = {
     // 全局域名替换规则
     domainReplace: [
         {
-            from: 'https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main',
-            to: 'https://rjdsq.netlify.app'
+            from: 'https://raw.githubusercontent.com',
+            to: 'https://jiashu.1win.eu.org/https://api.github.com'
         },
         {
-            from: '',
-            to: ''
+            from: 'https://api.github.com',
+            to: 'https://jiashu.1win.eu.org/https://api.github.com'
         }
     ],
     // 轮播图配置
