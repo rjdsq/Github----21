@@ -2,7 +2,8 @@
 const apiConfig = {
     // 文本文件API地址
     textFiles: {
-        baseUrl: 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/',
+        baseUrl: 'https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/',
+        path: '',
         files: [
             { id: 'text1', path: '选项卡1.txt' },
             { id: 'text2', path: '选项卡2.txt' },
@@ -22,12 +23,12 @@ const apiConfig = {
     // 全局域名替换规则
     domainReplace: [
         {
-            from: 'https://raw.githubusercontent.com',
-            to: 'https://j.1lin.dpdns.org/https://raw.githubusercontent.com'
+            from: 'https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main',
+            to: 'https://rjdsq.netlify.app'
         },
         {
-            from: 'https://api.github.com',
-            to: 'https://j.1lin.dpdns.org/https://api.github.com'
+            from: '',
+            to: ''
         }
     ],
     // 轮播图配置
