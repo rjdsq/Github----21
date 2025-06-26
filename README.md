@@ -13,6 +13,3 @@
 | Netlify    | [https://rjdsq.netlify.app/](https://rjdsq.netlify.app/)   |  
 | github.io    | [https://rjdsq.github.io/](https://rjdsq.git.hub.io/)   |  
 
-
-## 📦 项目结构  
-| 根目录| [index.html]
