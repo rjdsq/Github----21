@@ -1,5 +1,5 @@
 your-project/
-├─ ksx/  # 你的目标文件夹
+├─ ksx/
 ├─ index.html
-├─ netlify.toml  # 放在这里！
+├─ netlify.toml
 └─ ...
