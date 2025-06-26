@@ -11,6 +11,7 @@
 | 平台       | 链接                          |  
 |------------|-----------------------------|  
 | Netlify    | [https://rjdsq.netlify.app/](https://rjdsq.netlify.app/)   |  
+| github.io    | [https://rjdsq.github.io/](https://rjdsq.git.hub.io/)   |  
 
 
 ## 📦 项目结构  
