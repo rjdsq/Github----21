@@ -1,5 +1,1 @@
-your-project/
-├─ ksx/
-├─ index.html
-├─ netlify.toml
-└─ ...
+base = "ksx"
