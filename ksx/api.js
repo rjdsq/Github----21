@@ -24,11 +24,11 @@ const apiConfig = {
     domainReplace: [
         {
             from: 'https://raw.githubusercontent.com',
-            to: 'https://jiashu.1win.eu.org/https://api.github.com'
+            to: 'https://raw.kkgithub.com'
         },
         {
             from: 'https://api.github.com',
-            to: 'https://jiashu.1win.eu.org/https://api.github.com'
+            to: 'https://raw.kkgithub.com'
         }
     ],
     // 轮播图配置
