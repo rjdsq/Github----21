@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自动查找各文件夹中的1.jpg</title>
+  <style>
+    /* 样式与方案一相同，此处省略以简化代码 */
+    .gallery { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; }
+    .image-card { border: 1px solid #ddd; border-radius: 8px; padding: 10px; text-align: center; width: 240px; }
+    .image-card img { max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>查找并展示各文件夹中的1.jpg</h1>
+  <button id="searchButton">点击查找所有文件夹中的1.jpg</button>
+  <div class="gallery" id="imageGallery"></div>
+  <div id="status" style="margin: 20px; color: #666;"></div>
+
+  <script>
+    const gallery = document.getElementById('imageGallery');
+    const status = document.getElementById('status');
+    const searchButton = document.getElementById('searchButton');
+    let foundImages = [];
+
+    searchButton.addEventListener('click', async () => {
+      gallery.innerHTML = '';
+      status.textContent = '正在查找文件夹中的1.jpg...';
+      
+      try {
+        // 申请根目录访问权限（用户需手动选择一个根目录）
+        const root = await window.showDirectoryPicker({
+          mode: 'readwrite',
+          startIn: 'documents'
+        });
+        
+        // 递归查找所有文件夹中的1.jpg
+        await findImagesInFolders(root);
+        
+        if (foundImages.length === 0) {
+          status.textContent = '未找到任何文件夹中的1.jpg';
+          return;
+        }
+        
+        // 展示找到的图片
+        foundImages.forEach(({ path, file }) => {
+          const card = document.createElement('div');
+          card.className = 'image-card';
+          card.innerHTML = `
+            <img src="" alt="1.jpg in ${path}">
+            <p>路径: ${path}</p>
+          `;
+          const img = card.querySelector('img');
+          
+          // 读取图片文件并显示
+          file.file((fileObj) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileObj);
+          });
+          
+          gallery.appendChild(card);
+        });
+        
+        status.textContent = `共找到 ${foundImages.length} 个文件夹中的1.jpg`;
+        
+      } catch (error) {
+        status.textContent = `查找失败: ${error.message}`;
+        console.error(error);
+      }
+    });
+
+    // 递归查找目录及其子目录中的1.jpg
+    async function findImagesInFolders(directory, currentPath = '') {
+      const reader = directory.createReader();
+      try {
+        const entries = await reader.read();
+        for (const entry of entries) {
+          const path = currentPath ? `${currentPath}/${entry.name}` : entry.name;
+          
+          if (entry.isFile && entry.name === '1.jpg') {
+            // 找到1.jpg，记录路径和文件对象
+            foundImages.push({ path, file: entry });
+          } else if (entry.isDirectory) {
+            // 递归查找子目录
+            await findImagesInFolders(entry, path);
+          }
+        }
+      } catch (error) {
+        console.error(`读取目录 ${currentPath} 失败: ${error}`);
+      }
+    }
+  </script>
+</body>
+</html>
