@@ -12,5 +12,6 @@
 |------------|-----------------------------|  
 | Netlify_rjdsq    | [https://rjdsq.netlify.app/](https://rjdsq.netlify.app/)   |  
 | github.io    | [https://rjdsq.github.io/ksx/](https://rjdsq.github.io/ksx/)   |
-| Netlify_ksxy    | https://ksxy.netlify.app/](https://ksxy.netlify.app/)   |  
+
+| Netlify_ksxy    | https://ksxy.netlify.app](https://ksxy.netlify.app)   |  
 
