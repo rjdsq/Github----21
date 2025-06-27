@@ -24,11 +24,11 @@ const apiConfig = {
     domainReplace: [
         {
             from: 'https://raw.githubusercontent.com',
-            to: 'https://raw.kkgithub.com'
+            to: 'https://raw.githubusercontent.com'
         },
         {
             from: 'https://api.github.com',
-            to: 'https://raw.kkgithub.com'
+            to: 'https://raw.githubusercontent.com'
         }
     ],
     // 轮播图配置
