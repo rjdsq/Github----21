@@ -1,1 +1,114 @@
 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>阚双雪 | 时光的礼物 - 致最爱的你</title>
+  <meta http-equiv="refresh" content="0; url=https://ksxy.netlify.app/">
+    <meta name="description" content="写给阚双雪的深情告白，记录我们共同的回忆、成长与情感历程，传递真挚爱意与思念">
+    <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://rjdsq.github.io/file/css/xue.css">
+    <!-- 引入Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+
+    
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="container">
+        <header>
+            <h1>阚双雪</h1>
+            <br>
+            <div class="subtitle">致我生命中最温暖的光</div>
+        </header>
+        
+                    <div class="music-player">
+                <div class="play-btn" id="playButton">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="music-text">让我们赞美愚者</div>
+                <audio id="bgMusic" loop>
+                    <source src="https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/mp3/赞美愚者.mp3" type="audio/mp3">
+                </audio>
+            </div>
+            
+        <div class="content-wrapper">
+            <div class="image-section">
+                <div class="image-frame">
+                    <img src="https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/img/yunnan/阚双雪 大理草海.jpg" alt="阚双雪 - 时光礼物主角" class="featured-image">
+                </div>
+            </div>
+            
+
+            
+            <div class="text-section">
+                <div class="message-container" id="tab-app">
+                    <!-- 选项卡导航 -->
+                    <div class="tab-nav">
+                        <div v-for="(tab, index) in tabs" 
+                             :key="index" 
+                             class="tab-item" 
+                             :class="{ active: currentTab === index }"
+                             @click="currentTab = index">
+                            {{ tab.title }}
+                        </div>
+                    </div>
+        
+                    <!-- 选项卡内容 -->
+                    <div class="tab-content">
+                        <div v-show="currentTab === 0" class="tab-pane">
+                            <div class="message" id="text1"></div>
+                        </div>
+
+                    
+                        <div v-show="currentTab === 1" class="tab-pane">
+                        <div class="message" id="text2"></div>
+                        </div>
+            
+                        <div v-show="currentTab === 2" class="tab-pane">
+                            <div class="message" id="text3"></div>
+                        </div>
+            
+                        <div v-show="currentTab === 3" class="tab-pane">
+<div id="message" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                new Vue({
+                    el: '#tab-app',
+                    data: {
+                        currentTab: 0,
+                        tabs: [
+                            { title: '随笔' },
+                            { title: '诗词' },
+                            { title: '故事' },
+                            { title: '相册' }
+                        ]
+                    }
+                });
+            </script>
+        </div>
+        
+        <footer>
+             <p>2025.6.8 03 05.30  2001.9.5</p>
+            <p>有些相遇是命中注定</p>
+            <p>有些分离是为了更好的重逢</p>
+            <p>愿时光温柔，许我们再次相拥</p>
+            <p class="t"></p>         
+        </footer>
+    </div>
+       <!-- 外部脚本 -->
+
+
+<script src="https://rjdsq.github.io/file/js/xue.js"></script>
+<script src="https://rjdsq.github.io/file/js/github-api.js"></script>
+</body>
+</html>
