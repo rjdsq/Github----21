@@ -2,112 +2,195 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>阚双雪 | 时光的礼物 - 致最爱的你</title>
-  <meta http-equiv="refresh" content="0; url=https://ksxy.netlify.app/">
     <meta name="description" content="写给阚双雪的深情告白，记录我们共同的回忆、成长与情感历程，传递真挚爱意与思念">
     <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://rjdsq.github.io/file/css/xue.css">
-    <!-- 引入Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-
-
-    
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preload" as="style" crossorigin
+    href="https://fontsapi.zeoseven.com/488/main/result.css"
+    onload="this.rel='stylesheet'"
+    onerror="this.href='https://fontsapi-storage.zeoseven.com/488/main/result.css'" />
+<noscript>
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/488/main/result.css" />
+</noscript>
+<style>
+    body {
+       
+        font-family: "STDongGuanTi";
+        font-weight: normal;
+    }
+</style>
+ <!-- https://fonts.zeoseven.com/ -->
 </head>
+
 <body>
-    <div class="hearts-container" id="heartsContainer"></div>
-    
-    <div class="container">
-        <header>
-            <h1>阚双雪</h1>
-            <br>
-            <div class="subtitle">致我生命中最温暖的光</div>
-        </header>
-        
-                    <div class="music-player">
-                <div class="play-btn" id="playButton">
-                    <i class="fas fa-play"></i>
-                </div>
-                <div class="music-text">让我们赞美愚者</div>
-                <audio id="bgMusic" loop>
-                    <source src="https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/mp3/赞美愚者.mp3" type="audio/mp3">
-                </audio>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                
+                <span class="nav-title">❄️</span>
             </div>
-            
-        <div class="content-wrapper">
-            <div class="image-section">
-                <div class="image-frame">
-                    <img src="https://raw.kkgithub.com/rjdsq/rjdsq.github.io/main/img/yunnan/阚双雪 大理草海.jpg" alt="阚双雪 - 时光礼物主角" class="featured-image">
-                </div>
+            <button class="hamburger" aria-label="菜单">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">首页</a>
+                <a href="#" class="nav-link">图库</a>
+                <a href="#" class="nav-link">关于</a>
+                <a href="#" class="nav-link">联系</a>
             </div>
-            
-
-            
-            <div class="text-section">
-                <div class="message-container" id="tab-app">
-                    <!-- 选项卡导航 -->
-                    <div class="tab-nav">
-                        <div v-for="(tab, index) in tabs" 
-                             :key="index" 
-                             class="tab-item" 
-                             :class="{ active: currentTab === index }"
-                             @click="currentTab = index">
-                            {{ tab.title }}
-                        </div>
-                    </div>
-        
-                    <!-- 选项卡内容 -->
-                    <div class="tab-content">
-                        <div v-show="currentTab === 0" class="tab-pane">
-                            <div class="message" id="text1"></div>
-                        </div>
-
-                    
-                        <div v-show="currentTab === 1" class="tab-pane">
-                        <div class="message" id="text2"></div>
-                        </div>
-            
-                        <div v-show="currentTab === 2" class="tab-pane">
-                            <div class="message" id="text3"></div>
-                        </div>
-            
-                        <div v-show="currentTab === 3" class="tab-pane">
-<div id="message" ></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <script>
-                new Vue({
-                    el: '#tab-app',
-                    data: {
-                        currentTab: 0,
-                        tabs: [
-                            { title: '随笔' },
-                            { title: '诗词' },
-                            { title: '故事' },
-                            { title: '相册' }
-                        ]
-                    }
-                });
-            </script>
         </div>
-        
-        <footer>
-             <p>2025.6.8 03 05.30  2001.9.5</p>
-            <p>有些相遇是命中注定</p>
-            <p>有些分离是为了更好的重逢</p>
-            <p>愿时光温柔，许我们再次相拥</p>
-            <p class="t"></p>         
-        </footer>
+    </nav>
+
+    <div class="main-content">
+        <!-- 轮播图 -->
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-slides">
+                    <!-- 轮播图片将通过JavaScript动态添加 -->
+                </div>
+            </div>
+            <button class="carousel-button prev" aria-label="上一张">&lt;</button>
+            <button class="carousel-button next" aria-label="下一张">&gt;</button>
+            <div class="carousel-dots">
+                <!-- 轮播指示点将通过JavaScript动态添加 -->
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('text1')">随笔</button>
+            <button class="tab-button" onclick="showTab('text2')">诗词</button>
+            <button class="tab-button" onclick="showTab('text3')">故事</button>
+            <button class="tab-button" onclick="showTab('message')">相册</button>
+        </div>
+
+        <div id="text1" class="tab-content active">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="text2" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="text3" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="message" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载图片内容...</p>
+        </div>
     </div>
-       <!-- 外部脚本 -->
 
+    <!-- 音乐播放器 -->
+    <audio id="music-player" loop>
+        <source src="https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 音乐播放按钮 -->
+    <button id="music-button" class="music-button" title="播放/暂停音乐">
+        <span class="icon icon-play"></span>
+    </button>
+  
+    <script src="https://d.kstore.dev/download/14826/api/api.js"></script> 
+    <script src="./script.js"></script>
+    
+    
+    <!-- 简单的JS功能直接放在HTML中 -->
+    <script>
+        // 移动端菜单交互逻辑
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            // 切换菜单显示状态
+            navMenu.classList.toggle('active');
+            // 切换汉堡菜单动画
+            this.classList.toggle('active');
+        });
+        
+        // 点击菜单外部关闭菜单
+        document.addEventListener('click', function(event) {
+            if (!navMenu.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    }
+});
 
-<script src="https://rjdsq.github.io/file/js/xue.js"></script>
-<script src="https://rjdsq.github.io/file/js/github-api.js"></script>
+        // 选项卡切换功能
+        function showTab(tabId) {
+            // 隐藏所有标签内容和图片区域
+            document.querySelectorAll('.tab-content, #message').forEach(element => {
+                element.classList.remove('active');
+            });
+            
+            // 取消所有按钮的活动状态
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // 显示选中的内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 设置对应按钮的活动状态
+            document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认显示第一个选项卡
+            showTab('text1');
+
+            // 音乐播放控制
+            const musicPlayer = document.getElementById('music-player');
+            const musicButton = document.getElementById('music-button');
+            const musicIcon = musicButton.querySelector('.icon');
+            
+            // 设置音乐循环播放
+            musicPlayer.loop = true;
+            
+            musicButton.addEventListener('click', function() {
+                if (musicPlayer.paused) {
+                    // 播放音乐
+                    musicPlayer.play().then(() => {
+                        musicIcon.classList.remove('icon-play');
+                        musicIcon.classList.add('icon-pause');
+                        musicButton.classList.add('playing');
+                    }).catch(error => {
+                        console.error('播放失败:', error);
+                    });
+                } else {
+                    // 暂停音乐
+                    musicPlayer.pause();
+                    musicIcon.classList.remove('icon-pause');
+                    musicIcon.classList.add('icon-play');
+                    musicButton.classList.remove('playing');
+                }
+            });
+
+            // 音乐结束时重置按钮状态
+            musicPlayer.addEventListener('ended', function() {
+                musicIcon.classList.remove('icon-pause');
+                musicIcon.classList.add('icon-play');
+                musicButton.classList.remove('playing');
+            });
+        });
+    </script>
+
+  
+    
 </body>
 </html>
