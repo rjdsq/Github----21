@@ -805,7 +805,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 920;
     transition: all 0.3s ease;
 }
 .music-button:hover {
@@ -1035,45 +1035,7 @@ body {
     <button id="music-button" class="music-button" title="播放/暂停音乐">
         <span class="icon icon-play"></span>
     </button>
-    
-    
-<script>
-    // 加载动画
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!window.loaderAnimated) {
-            window.loaderAnimated = true;
-            window.addEventListener('load', function() {
-                clearTimeout(window.loaderTimeout);
-                hideLoader();
-            });
-            window.loaderTimeout = setTimeout(function() {
-                hideLoader();
-            }, 5000); // 最多等待5秒
-        }
-    });
-    
-    // 隐藏加载动画的函数
-    function hideLoader() {
-        var loaderContainer = document.getElementById('loaderContainer');
-        var carouselContainer = document.querySelector('.carousel-container');
-        
-        if (loaderContainer && carouselContainer) {
-            loaderContainer.style.opacity = '0';
-            setTimeout(function() {
-                if (loaderContainer) {
-                    loaderContainer.style.display = 'none';
-                }
-                // 显示轮播图
-                if (carouselContainer) {
-                    carouselContainer.style.opacity = '1';
-                }
-            }, 500);
-        }
-    }
-</script>
-
-
-<script>
+    <script>
 document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
@@ -1138,6 +1100,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+    
+<script>
+    // 加载动画
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.loaderAnimated) {
+            window.loaderAnimated = true;
+            window.addEventListener('load', function() {
+                clearTimeout(window.loaderTimeout);
+                hideLoader();
+            });
+            window.loaderTimeout = setTimeout(function() {
+                hideLoader();
+            }, 15000); // 最多等待5秒
+        }
+    });
+    
+    // 隐藏加载动画的函数
+    function hideLoader() {
+        var loaderContainer = document.getElementById('loaderContainer');
+        var carouselContainer = document.querySelector('.carousel-container');
+        
+        if (loaderContainer && carouselContainer) {
+            loaderContainer.style.opacity = '0';
+            setTimeout(function() {
+                if (loaderContainer) {
+                    loaderContainer.style.display = 'none';
+                }
+                // 显示轮播图
+                if (carouselContainer) {
+                    carouselContainer.style.opacity = '1';
+                }
+            }, 500);
+        }
+    }
+</script>
+
+
 <script>
 //相册
 
