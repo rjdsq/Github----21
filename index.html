@@ -826,6 +826,7 @@ body {
 .music-button.playing {
     animation: pulse 2s infinite;
     background: linear-gradient(to right, #2ecc71, #3498db);
+    
 }
 
 /* 添加图标字体 */
@@ -846,6 +847,99 @@ body {
 .icon-pause {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
 }
+
+
+    
+    .loader-container {
+        position: relative; /* 改为相对定位 */
+        width: 100%; /* 宽度100% */
+        height: 100%; /* 高度100% */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10; 
+        transition: opacity 0.5s ease;
+    }
+    
+
+    
+    /* 现代化加载动画主体 */
+    .modern-loader {
+        position: relative;
+        width: 120px;
+        height: 120px;
+    }
+    
+    /* 中心圆 */
+    .modern-loader::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        border-radius: 50%;
+        animation: pulse 1.5s ease-in-out infinite;
+        box-shadow: 0 0 20px rgba(107, 142, 251, 0.5);
+    }
+    
+    /* 粒子效果 */
+    .particle {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        border-radius: 50%;
+        animation: particle-animation 2s ease-in-out infinite;
+    }
+    
+    /* 8个粒子位置 */
+    .particle:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.2s; }
+    .particle:nth-child(3) { top: 60%; left: 90%; animation-delay: 0.4s; }
+    .particle:nth-child(4) { top: 85%; left: 50%; animation-delay: 0.6s; }
+    .particle:nth-child(5) { top: 60%; left: 10%; animation-delay: 0.8s; }
+    .particle:nth-child(6) { top: 25%; left: 15%; animation-delay: 1s; }
+    .particle:nth-child(7) { top: 10%; left: 50%; animation-delay: 1.2s; }
+    .particle:nth-child(8) { top: 40%; left: 85%; animation-delay: 1.4s; }
+    
+    /* 加载文字 */
+    .loader-text {
+        position: absolute;
+        margin-top: 140px;
+        color: #555;
+        font-size: 16px;
+        letter-spacing: 2px;
+        font-weight: 500;
+    }
+    
+    /* 脉冲动画 */
+    @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -50%) scale(1.1); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    /* 粒子动画 */
+    @keyframes particle-animation {
+        0% { 
+            transform: scale(0.8) translate(0, 0); 
+            opacity: 0.5;
+        }
+        50% { 
+            transform: scale(1.2) translate(20px, -20px); 
+            opacity: 1;
+        }
+        100% { 
+            transform: scale(0.8) translate(0, 0); 
+            opacity: 0.5;
+        }
+    }
+    
+
+
 </style>
  <!-- https://fonts.zeoseven.com/ -->
 </head>
@@ -870,13 +964,30 @@ body {
             </div>
         </div>
     </nav>
+    
+    
 
     <div class="main-content">
+    
         <!-- 轮播图 -->
         <div class="carousel-container">
+        <div class="loader-container" id="loaderContainer">
+    <div class="modern-loader">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="loader-text">系统加载中...</div>
+</div>
             <div class="carousel-wrapper">
+                
                 <div class="carousel-slides">
-
+                
                 </div>
             </div>
             <button class="carousel-button prev" aria-label="上一张">&lt;</button>
@@ -924,27 +1035,55 @@ body {
     <button id="music-button" class="music-button" title="播放/暂停音乐">
         <span class="icon icon-play"></span>
     </button>
-  
-
     
-     <script> 
-  (function(_0x2283ff,_0x34552a){const _0x270550={_0x161c12:0x14e,_0x4008fd:0x155,_0x47a441:0x31f,_0x448197:0x31e,_0x500e30:0x2fc,_0x56d6f3:0x329,_0x4044d3:0x149,_0x58754d:0x148,_0x1b8347:0x154,_0x304a18:0x314,_0x2e667e:0x31d,_0x161023:0x165,_0x264020:0x173,_0xa3ec0a:0x157,_0x58c7fb:0x175,_0x550c09:0x15b,_0xcf0cf8:0x33b,_0x585977:0x353,_0x28fde7:0x33e,_0x469eeb:0x170,_0x30c1d6:0x17e,_0x7b90e6:0x15d,_0x2aa30f:0x31f,_0xfa7ff0:0x351,_0x268572:0x308,_0x29822e:0x30e,_0x1659b:0x174,_0x47cf0d:0x18b,_0x1167c4:0x191,_0x32594d:0x167,_0x48a514:0x146,_0x32b982:0x132,_0x54c535:0x131,_0x394667:0x13d},_0x4867ca={_0x2e43e9:0x15b},_0x550995={_0x506cc1:0x69};function _0x19284f(_0x4cc1ea,_0x4aab4b,_0x29df67,_0x161ab8){return _0x2c02(_0x4cc1ea- -_0x550995._0x506cc1,_0x4aab4b);}function _0x30b97c(_0x14521f,_0x5e763d,_0x3e079f,_0x4f98e6){return _0x2c02(_0x5e763d-_0x4867ca._0x2e43e9,_0x4f98e6);}const _0x3572fb=_0x2283ff();while(!![]){try{const _0x5420e1=-parseInt(_0x19284f(0x14b,0x157,_0x270550._0x161c12,_0x270550._0x4008fd))/(0x4fe+-0x2*-0x856+0x455*-0x5)*(parseInt(_0x30b97c(_0x270550._0x47a441,_0x270550._0x448197,_0x270550._0x500e30,_0x270550._0x56d6f3))/(-0x355+0x7*0xb6+-0x1a3))+-parseInt(_0x19284f(_0x270550._0x4044d3,_0x270550._0x58754d,_0x270550._0x1b8347,0x143))/(0x952*0x2+-0x1f*0xfb+0xbc4)*(-parseInt(_0x30b97c(0x31f,_0x270550._0x304a18,_0x270550._0x2e667e,0x32b))/(0x1e70+0x172c+0x1*-0x3598))+parseInt(_0x19284f(_0x270550._0x161023,_0x270550._0x264020,0x187,_0x270550._0xa3ec0a))/(0x203+0x97d*0x1+-0xb7b)+parseInt(_0x19284f(_0x270550._0x58c7fb,0x18e,_0x270550._0x550c09,_0x270550._0x4008fd))/(0xbf*-0x2+0x1489+-0x1305)*(-parseInt(_0x30b97c(0x329,_0x270550._0xcf0cf8,_0x270550._0x585977,_0x270550._0x28fde7))/(-0x1*-0x25d8+-0x1*-0x1127+0xdbe*-0x4))+parseInt(_0x19284f(_0x270550._0x469eeb,_0x270550._0x30c1d6,_0x270550._0x7b90e6,0x165))/(-0x1*0x158b+0x61e+0xf75)+-parseInt(_0x30b97c(0x328,0x33a,_0x270550._0x2aa30f,_0x270550._0xfa7ff0))/(-0x5cf*-0x6+0xaff*0x3+-0xb4d*0x6)*(-parseInt(_0x30b97c(0x320,_0x270550._0x268572,0x315,_0x270550._0x29822e))/(-0x13bf+0x228e+-0xec5*0x1))+-parseInt(_0x19284f(_0x270550._0x1659b,_0x270550._0x47cf0d,_0x270550._0x1167c4,_0x270550._0x32594d))/(-0x1d*-0x11+0x12f2+-0x14d4)*(parseInt(_0x19284f(_0x270550._0x48a514,_0x270550._0x32b982,_0x270550._0x54c535,_0x270550._0x394667))/(0x1eb3+0x1*-0x1f4b+0xa4));if(_0x5420e1===_0x34552a)break;else _0x3572fb['push'](_0x3572fb['shift']());}catch(_0x5dbaf7){_0x3572fb['push'](_0x3572fb['shift']());}}}(_0x1767,-0x7da2+-0x13bea9+0xf59*0x1f7));const _0x54c1af=(function(){let _0x5d9b42=!![];return function(_0xcb5b11,_0x41da6c){const _0x40149c={_0x10311a:0x72,_0x4a3513:0x78,_0x2f05b8:0x48,_0x25686b:0x69},_0x7baba5=_0x5d9b42?function(){function _0xa8148c(_0x493899,_0x24b1b7,_0x548c29,_0x34b832){return _0x2c02(_0x34b832- -0x22e,_0x24b1b7);}if(_0x41da6c){const _0x1be31a=_0x41da6c[_0xa8148c(-_0x40149c._0x10311a,-_0x40149c._0x4a3513,-_0x40149c._0x2f05b8,-_0x40149c._0x25686b)](_0xcb5b11,arguments);return _0x41da6c=null,_0x1be31a;}}:function(){};return _0x5d9b42=![],_0x7baba5;};}()),_0x53b53e=_0x54c1af(this,function(){const _0x4d9cc3={_0x4b76a2:0x197,_0x181a5d:0x17f,_0x2ceb9e:0x192,_0x2e5617:0x1af,_0x24e01d:0x1bd,_0x255817:0x1cf,_0x30fcbf:0x18a,_0x3ec42b:0x180,_0xf90ddc:0x186,_0x230a6c:0x18a,_0x401b06:0x18c,_0x59f214:0x177,_0x46fda0:0x1a1,_0x378c11:0x199,_0x43ef2:0x164,_0xb76297:0x1a9,_0x2f783c:0x1c3,_0x1e33db:0x1b3,_0x4403e9:0x1cd,_0x54fbbd:0x1a1,_0x1b7178:0x1bf,_0xe34464:0x191,_0x4c0d8c:0x1ba,_0x102ffe:0x1b7,_0x1e8838:0x1a5,_0x2e522c:0x183,_0x3dee74:0x17c,_0x4ddc28:0x1b4,_0x599dd9:0x192,_0x38e891:0x194,_0x3a8213:0x1c1,_0x5cf2fe:0x1b2,_0x4c739b:0x19e,_0x4ed273:0x193,_0x407a36:0x1aa,_0x1bf019:0x1b1,_0x2e707c:0x17d,_0x313798:0x19e,_0x1ed89e:0x1b8,_0x3d3a06:0x18d,_0x4b0610:0x172,_0xda6cad:0x1a2,_0x417b70:0x194,_0x56d597:0x1b5,_0x3a4191:0x1af,_0x2f5228:0x1c5},_0x5e08e0={_0x2f8f28:0x1c},_0x2e5d34={_0x4c8e4f:0x1f8,_0x148780:0x201,_0x1be6aa:0x20f,_0x2acce6:0x208,_0xc3a45e:0x1f5,_0x28bb9f:0x1e2,_0x18a0f0:0x1fe,_0xc0c444:0x3d1,_0x2c3bfc:0x3d6,_0x4a81ec:0x3eb},_0x1d58f6={'qRIJJ':function(_0x81393e,_0x19711c){return _0x81393e(_0x19711c);},'pRCjN':function(_0x52ec42,_0x3ca6fd){return _0x52ec42+_0x3ca6fd;},'TXtui':'return\x20(fu'+_0xc2681d(_0x4d9cc3._0x4b76a2,_0x4d9cc3._0x181a5d,_0x4d9cc3._0x2ceb9e,0x180),'tYUUe':_0x4ff633(-0x1c5,-_0x4d9cc3._0x2e5617,-_0x4d9cc3._0x24e01d,-_0x4d9cc3._0x255817)+_0x4ff633(-_0x4d9cc3._0x30fcbf,-_0x4d9cc3._0x3ec42b,-_0x4d9cc3._0xf90ddc,-_0x4d9cc3._0x230a6c)+'rn\x20this\x22)('+'\x20)','aBBTd':function(_0x377726){return _0x377726();},'JXoMF':'info','UWBpz':'error','LocpR':'exception','MAAxV':'table','HTnGq':'trace','RPIsp':function(_0xca1075,_0x4b8522){return _0xca1075<_0x4b8522;}};function _0x4ff633(_0x3d8be5,_0x24d5e2,_0x47ac97,_0x4e11a5){return _0x2c02(_0x47ac97- -0x35e,_0x3d8be5);}const _0x327e06=function(){const _0x34546c={_0x495903:0xed,_0x5cdd9a:0x581,_0x30c024:0x14f},_0x37e8ab={_0x3586cb:0x3a2,_0x2bb269:0xeb};function _0x4072ce(_0x8f6432,_0x57fbc5,_0x1a026b,_0x3f16cb){return _0xc2681d(_0x1a026b- -_0x37e8ab._0x3586cb,_0x3f16cb,_0x1a026b-0x14b,_0x3f16cb-_0x37e8ab._0x2bb269);}function _0x1071f9(_0xf6f039,_0x2ce675,_0x20204c,_0x4102a3){return _0x4ff633(_0xf6f039,_0x2ce675-_0x34546c._0x495903,_0x2ce675-_0x34546c._0x5cdd9a,_0x4102a3-_0x34546c._0x30c024);}let _0x3a89e1;try{_0x3a89e1=_0x1d58f6[_0x4072ce(-_0x2e5d34._0x4c8e4f,-0x1eb,-_0x2e5d34._0x148780,-0x211)](Function,_0x1d58f6[_0x4072ce(-0x1f7,-_0x2e5d34._0x1be6aa,-_0x2e5d34._0x2acce6,-_0x2e5d34._0xc3a45e)](_0x1d58f6[_0x4072ce(-_0x2e5d34._0x28bb9f,-0x207,-0x1fd,-_0x2e5d34._0x18a0f0)],_0x1d58f6[_0x1071f9(_0x2e5d34._0xc0c444,0x3e1,_0x2e5d34._0x2c3bfc,_0x2e5d34._0x4a81ec)])+');')();}catch(_0x11bb33){_0x3a89e1=window;}return _0x3a89e1;},_0x1b9a2b=_0x1d58f6['aBBTd'](_0x327e06),_0x2bf7ec=_0x1b9a2b['console']=_0x1b9a2b[_0xc2681d(_0x4d9cc3._0x401b06,_0x4d9cc3._0x59f214,_0x4d9cc3._0x46fda0,_0x4d9cc3._0x378c11)]||{},_0x33e46=['log','warn',_0x1d58f6[_0xc2681d(0x184,0x179,0x19a,_0x4d9cc3._0x43ef2)],_0x1d58f6[_0x4ff633(-_0x4d9cc3._0xb76297,-_0x4d9cc3._0x2f783c,-_0x4d9cc3._0x1e33db,-_0x4d9cc3._0x4403e9)],_0x1d58f6[_0x4ff633(-_0x4d9cc3._0x54fbbd,-_0x4d9cc3._0x1b7178,-0x1bb,-0x1a3)],_0x1d58f6[_0x4ff633(-_0x4d9cc3._0xe34464,-_0x4d9cc3._0x4c0d8c,-0x1a7,-0x1bc)],_0x1d58f6[_0xc2681d(_0x4d9cc3._0x102ffe,0x1c0,_0x4d9cc3._0x46fda0,_0x4d9cc3._0x1e8838)]];function _0xc2681d(_0x40c32a,_0x4cd56c,_0x15c045,_0xf12e0){return _0x2c02(_0x40c32a- -_0x5e08e0._0x2f8f28,_0x4cd56c);}for(let _0x54de7c=0xb01+0x4d1+-0xfd2*0x1;_0x1d58f6[_0xc2681d(_0x4d9cc3._0x2ceb9e,_0x4d9cc3._0x2e522c,0x176,_0x4d9cc3._0x3dee74)](_0x54de7c,_0x33e46[_0x4ff633(-_0x4d9cc3._0x4ddc28,-_0x4d9cc3._0x54fbbd,-_0x4d9cc3._0x599dd9,-_0x4d9cc3._0x38e891)]);_0x54de7c++){const _0x14d4b7=_0x54c1af['constructo'+'r'][_0xc2681d(0x1ab,_0x4d9cc3._0x3a8213,0x1b5,0x1b3)][_0x4ff633(-0x1ba,-_0x4d9cc3._0x5cf2fe,-_0x4d9cc3._0x4c739b,-_0x4d9cc3._0x4ed273)](_0x54c1af),_0x47968b=_0x33e46[_0x54de7c],_0x53d4ff=_0x2bf7ec[_0x47968b]||_0x14d4b7;_0x14d4b7[_0xc2681d(0x1b1,0x1c1,_0x4d9cc3._0x407a36,0x1c8)]=_0x54c1af[_0x4ff633(-_0x4d9cc3._0x1bf019,-_0x4d9cc3._0x2e707c,-_0x4d9cc3._0x313798,-_0x4d9cc3._0x1ed89e)](_0x54c1af),_0x14d4b7[_0xc2681d(_0x4d9cc3._0x3d3a06,_0x4d9cc3._0x378c11,_0x4d9cc3._0x4b0610,_0x4d9cc3._0xda6cad)]=_0x53d4ff[_0x4ff633(-_0x4d9cc3._0x5cf2fe,-_0x4d9cc3._0x417b70,-_0x4d9cc3._0x56d597,-0x1a9)][_0xc2681d(0x1a4,_0x4d9cc3._0x1e8838,_0x4d9cc3._0x3a4191,_0x4d9cc3._0x2f5228)](_0x53d4ff),_0x2bf7ec[_0x47968b]=_0x14d4b7;}});_0x53b53e();const _0x501bd9={};_0x501bd9['id']='text1',_0x501bd9['path']='选项卡1.txt';const _0x208c12={};_0x208c12['id']=_0x6f0a84(-0x59,-0x2b,-0x3b,-0x48),_0x208c12['path']=_0x3b1f7f(0x3be,0x3b9,0x3b3,0x3cf);const _0x57bdf6={};_0x57bdf6['id']=_0x6f0a84(-0x56,-0x48,-0x46,-0x51),_0x57bdf6[_0x6f0a84(-0x61,-0x58,-0x58,-0x4f)]='选项卡3.txt';function _0x2c02(_0x5d5a7c,_0x585063){const _0x28afb4=_0x1767();return _0x2c02=function(_0x5101fb,_0x40ab28){_0x5101fb=_0x5101fb-(0x195*-0xd+0x277*-0xb+0x314e);let _0x5ac558=_0x28afb4[_0x5101fb];if(_0x2c02['HOcPTH']===undefined){var _0x1a4b17=function(_0x25e440){const _0x549307='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x595c02='',_0x31e5cd='';for(let _0x1c3912=-0x1*0x303+-0x1669+0x2*0xcb6,_0x2f0fc3,_0x208210,_0x15b3ec=-0x410+0x23be+-0x1fae;_0x208210=_0x25e440['charAt'](_0x15b3ec++);~_0x208210&&(_0x2f0fc3=_0x1c3912%(0x1*-0x27d+-0x159a+0xb*0x231)?_0x2f0fc3*(0x1065+-0x3*0x9f5+0xdba)+_0x208210:_0x208210,_0x1c3912++%(-0xb89*0x3+0x1*-0x1511+-0xc6*-0x48))?_0x595c02+=String['fromCharCode'](0x833+-0x234e+0x1c1a&_0x2f0fc3>>(-(-0x10f9+0x7*0x3fb+-0xae2)*_0x1c3912&0xe*-0xfb+0x903*0x3+-0xd49)):0x1*0x11c+-0x106c+-0xf5*-0x10){_0x208210=_0x549307['indexOf'](_0x208210);}for(let _0x45299c=-0x11*0x134+0x1d9d+-0x929,_0x1b1d42=_0x595c02['length'];_0x45299c<_0x1b1d42;_0x45299c++){_0x31e5cd+='%'+('00'+_0x595c02['charCodeAt'](_0x45299c)['toString'](-0xfa2+0x101e*-0x2+-0xffa*-0x3))['slice'](-(0xef2+-0x190a+0xa1a));}return decodeURIComponent(_0x31e5cd);};_0x2c02['yYqtYA']=_0x1a4b17,_0x5d5a7c=arguments,_0x2c02['HOcPTH']=!![];}const _0x46ef6a=_0x28afb4[0x2c3*-0xe+0x2ca+0x23e0],_0x39a1ab=_0x5101fb+_0x46ef6a,_0x18cdc2=_0x5d5a7c[_0x39a1ab];return!_0x18cdc2?(_0x5ac558=_0x2c02['yYqtYA'](_0x5ac558),_0x5d5a7c[_0x39a1ab]=_0x5ac558):_0x5ac558=_0x18cdc2,_0x5ac558;},_0x2c02(_0x5d5a7c,_0x585063);}const _0x4d7b92={};function _0x3b1f7f(_0x1e77bf,_0x154be2,_0x5a54c9,_0x1c237d){const _0x52aa51={_0x52e276:0x21c};return _0x2c02(_0x1e77bf-_0x52aa51._0x52e276,_0x5a54c9);}_0x4d7b92[_0x3b1f7f(0x3fe,0x40f,0x40c,0x401)]=_0x6f0a84(-0x52,-0x4c,-0x42,-0x50)+_0x3b1f7f(0x3f7,0x415,0x3d7,0x3fe)+_0x6f0a84(-0x58,-0x26,-0x31,-0x3d)+_0x3b1f7f(0x3c3,0x3d0,0x3d9,0x3e0)+_0x6f0a84(-0x6d,-0x7d,-0x70,-0x5f),_0x4d7b92[_0x3b1f7f(0x3e6,0x403,0x3f6,0x3f3)]='text/',_0x4d7b92['files']=[_0x501bd9,_0x208c12,_0x57bdf6];const _0x3677d4={};function _0x1767(){const _0x22ffe1=['x19WCM90B19F','mJu0odG2nuzXyuvcua','Ahr0Chm6lY9NBW','ywDLCW','Dgv4Ddi','B20VCMvWB3mVCG','sfrUr3e','qxv0Ag9YAxPHDa','Aw9U','AgvHzgvYCW','y29T','y3rVCIGICMv0Dq','ody2mZi0ogzpEvjsvW','ywnL','DY5NAxrODwj1CW','zxjJB250zw50lG','mty2otm1mZr3u1nvBuC','nZHswfvHBNe','nJy1mdq2r2fIrKfp','mJmWnZi3uvHHBKXx','B250zw50CY8','yMfZzvvYBa','yxbWBgLJyxrPBW','sLHVtuy','E30Uy29UC3rYDq','6ycj6Ag55y2HmI50Ehq','tg9JCfi','AMrZCs9RC3GVyW','Aw1Hz2vZ','qwnJzxb0','y29Tl3jQzhnXlW','y29UC29Szq','Dg9tDhjPBMC','y2fYB3vZzwXjBq','vvDcChO','y2fYB3vZzwW','mtmWtNHUveDV','uLbjC3a','mtjNzNfnEuq','C2XPzgvezwXHEq','zNjVBq','mtq3mZKYngnPA014EG','BMn0Aw9UkcKG','mLv4ywvbsG','BI92BMqUz2L0Aa','CfjdAK4','tufbEfy','r0vu','oeTeC2LpuW','A3n4l21HAw4V','z2L0AhvIlMnVBq','zg9TywLUuMvWBa','CvjjsKO','DfLvvwu','As5NAxrODwiUyW','yMLUza','vfH0DwK','DhbZoI8VCMf3lG','otm5nJK4Bwv0revj','Ahr0Chm6lY9HCa','yxbWBhK','Bwv0Ag9K','ChjVDg90ExbL','Dgv4Ddm','Ahr0Chm6lY9Yyq','Cgf0Aa','Aw1Nl2X1BMjVlW','BgvUz3rO'];_0x1767=function(){return _0x22ffe1;};return _0x1767();}_0x3677d4[_0x3b1f7f(0x3f0,0x3d7,0x3d6,0x3fc)+_0x3b1f7f(0x3f1,0x3e3,0x3dd,0x3ee)]='';const _0x574053={};_0x574053['baseUrl']=_0x3b1f7f(0x3e0,0x3f3,0x3d9,0x3dc)+_0x3b1f7f(0x3db,0x3d5,0x3cd,0x3f8)+_0x6f0a84(-0x32,-0x40,-0x58,-0x47)+_0x6f0a84(-0x5b,-0x7c,-0x54,-0x75)+_0x3b1f7f(0x3fd,0x403,0x3ea,0x41c),_0x574053[_0x3b1f7f(0x3e6,0x3ed,0x3f7,0x3d1)]='img/yunnan'+'/',_0x574053[_0x3b1f7f(0x3f2,0x410,0x402,0x3da)]=_0x3677d4;const _0x46b6ef={};_0x46b6ef[_0x6f0a84(-0x58,-0x3e,-0x2e,-0x45)+_0x3b1f7f(0x3f1,0x3f7,0x3d5,0x3d1)]='';const _0x221ef8={};_0x221ef8[_0x6f0a84(-0x4a,-0x3e,-0x41,-0x37)]=_0x6f0a84(-0x70,-0x47,-0x70,-0x55)+_0x6f0a84(-0x54,-0x49,-0x3a,-0x5a)+_0x3b1f7f(0x3ee,0x3cd,0x3e6,0x404)+'jdsq/ksx/c'+_0x3b1f7f(0x3fd,0x407,0x3e6,0x3e5),_0x221ef8['path']=_0x3b1f7f(0x3e7,0x400,0x3d8,0x3dd),_0x221ef8[_0x6f0a84(-0x35,-0x60,-0x4e,-0x43)]=_0x46b6ef;const _0x587542={};_0x587542[_0x3b1f7f(0x3cd,0x3e1,0x3d5,0x3ac)]=_0x6f0a84(-0x40,-0x58,-0x4a,-0x50)+'w.githubus'+'ercontent.'+_0x6f0a84(-0x39,-0x56,-0x48,-0x42),_0x587542['to']=_0x3b1f7f(0x3eb,0x3e3,0x3f9,0x3eb)+'ppx.com/ht'+_0x3b1f7f(0x3de,0x3e8,0x3e2,0x3e5)+_0x3b1f7f(0x3d7,0x3b8,0x3d3,0x3f5);const _0x1a9be0={};_0x1a9be0[_0x6f0a84(-0x47,-0x76,-0x78,-0x68)]='',_0x1a9be0['to']='';const _0x3088ad={};_0x3088ad[_0x6f0a84(-0x76,-0x70,-0x6f,-0x69)]=0x1388;function _0x6f0a84(_0xf6a9b,_0x10aa82,_0x19ddd1,_0x2c6095){return _0x2c02(_0x2c6095- -0x219,_0x10aa82);}_0x3088ad['maxSlides']=0x3;const _0x1960b1={};_0x1960b1['textFiles']=_0x4d7b92,_0x1960b1[_0x6f0a84(-0x57,-0x6c,-0x68,-0x74)]=_0x574053,_0x1960b1[_0x6f0a84(-0x69,-0x5e,-0x91,-0x6f)+_0x3b1f7f(0x3ec,0x3cf,0x3e4,0x403)]=_0x221ef8,_0x1960b1[_0x3b1f7f(0x3d8,0x3d8,0x3bd,0x3cf)+_0x6f0a84(-0x34,-0x24,-0x4e,-0x3f)]=[_0x587542,_0x1a9be0],_0x1960b1[_0x3b1f7f(0x3c8,0x3bc,0x3bc,0x3c4)]=_0x3088ad;const apiConfig=_0x1960b1;function fetchWithToken(_0x2e95ac,_0x209a9e={}){const _0x1625bd={_0xf3a130:0x19d,_0xa7aefe:0x1ac,_0x6911bc:0x18a,_0x47e6fe:0x198,_0x821dc5:0x1fe,_0x4a439d:0x1dd,_0x20d805:0x1c9,_0xe95ed9:0x1c1,_0x12782c:0x77,_0xe51be3:0x80,_0x257655:0x65,_0xb40ef:0x91,_0x47ab50:0xd1,_0x3de029:0xc5,_0x11479d:0x71,_0x27ef64:0x8c,_0x23345e:0x82,_0x5a3352:0x98,_0x175e75:0x87,_0x359cca:0x92,_0x4c15c0:0x1d3,_0xc991bf:0x1bf},_0x5b1487={_0x524c66:0x176,_0x59a907:0x7d,_0x405955:0x220},_0x57057d={_0x599fb7:0x342,_0x19b38c:0x110,_0x4a4eeb:0x154},_0x100e48={...apiConfig[_0x3fbace(_0x1625bd._0xf3a130,_0x1625bd._0xa7aefe,_0x1625bd._0x6911bc,_0x1625bd._0x47e6fe)][_0x3fbace(_0x1625bd._0x821dc5,_0x1625bd._0x4a439d,_0x1625bd._0x20d805,_0x1625bd._0xe95ed9)]||{},..._0x209a9e};_0x100e48[_0x54d9ab(_0x1625bd._0x12782c,_0x1625bd._0xe51be3,_0x1625bd._0x257655,_0x1625bd._0xb40ef)]=_0x54d9ab(0xb4,0xbd,_0x1625bd._0x47ab50,_0x1625bd._0x3de029)+_0x54d9ab(_0x1625bd._0x11479d,0x8f,0x7a,_0x1625bd._0x27ef64)+'ub.v3+json';const _0x5afcb6=_0x100e48;function _0x54d9ab(_0x5731cd,_0x4b58f8,_0x2b53d3,_0x31cbda){return _0x3b1f7f(_0x4b58f8- -_0x57057d._0x599fb7,_0x4b58f8-_0x57057d._0x19b38c,_0x5731cd,_0x31cbda-_0x57057d._0x4a4eeb);}function _0x3fbace(_0x1a6ba5,_0x90c216,_0x816ebf,_0x454f9b){return _0x6f0a84(_0x1a6ba5-_0x5b1487._0x524c66,_0x1a6ba5,_0x816ebf-_0x5b1487._0x59a907,_0x90c216-_0x5b1487._0x405955);}const _0x58fe1f={};return _0x58fe1f[_0x54d9ab(_0x1625bd._0x23345e,0xa0,0x92,_0x1625bd._0x5a3352)]=_0x54d9ab(0xad,0x92,_0x1625bd._0x175e75,_0x1625bd._0x359cca),_0x58fe1f[_0x3fbace(_0x1625bd._0x4c15c0,_0x1625bd._0x4a439d,_0x1625bd._0xc991bf,0x1ed)]=_0x5afcb6,fetch(_0x2e95ac,_0x58fe1f);}
-    </script>
-    <script>
-        // 移动端菜单交互逻辑
+    
+<script>
+    // 加载动画
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.loaderAnimated) {
+            window.loaderAnimated = true;
+            window.addEventListener('load', function() {
+                clearTimeout(window.loaderTimeout);
+                hideLoader();
+            });
+            window.loaderTimeout = setTimeout(function() {
+                hideLoader();
+            }, 5000); // 最多等待5秒
+        }
+    });
+    
+    // 隐藏加载动画的函数
+    function hideLoader() {
+        var loaderContainer = document.getElementById('loaderContainer');
+        var carouselContainer = document.querySelector('.carousel-container');
+        
+        if (loaderContainer && carouselContainer) {
+            loaderContainer.style.opacity = '0';
+            setTimeout(function() {
+                if (loaderContainer) {
+                    loaderContainer.style.display = 'none';
+                }
+                // 显示轮播图
+                if (carouselContainer) {
+                    carouselContainer.style.opacity = '1';
+                }
+            }, 500);
+        }
+    }
+</script>
+
+
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', function() {
-            // 切换菜单显示状态
             navMenu.classList.toggle('active');
-            // 切换汉堡菜单动画
             this.classList.toggle('active');
         });
         
-        // 点击菜单外部关闭菜单
         document.addEventListener('click', function(event) {
             if (!navMenu.contains(event.target) && 
                 !hamburger.contains(event.target) && 
@@ -955,410 +1094,103 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-        // 选项卡切换功能
-        function showTab(tabId) {
-            // 隐藏所有标签内容和图片区域
-            document.querySelectorAll('.tab-content, #message').forEach(element => {
-                element.classList.remove('active');
-            });
-            
-            // 取消所有按钮的活动状态
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-            });
-            
-            // 显示选中的内容
-            document.getElementById(tabId).classList.add('active');
-            
-            // 设置对应按钮的活动状态
-            document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
-        }
-
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            // 默认显示第一个选项卡
-            showTab('text1');
-
-            // 音乐播放控制
-            const musicPlayer = document.getElementById('music-player');
-            const musicButton = document.getElementById('music-button');
-            const musicIcon = musicButton.querySelector('.icon');
-            
-            // 设置音乐循环播放
-            musicPlayer.loop = true;
-            
-            musicButton.addEventListener('click', function() {
-                if (musicPlayer.paused) {
-                    // 播放音乐
-                    musicPlayer.play().then(() => {
-                        musicIcon.classList.remove('icon-play');
-                        musicIcon.classList.add('icon-pause');
-                        musicButton.classList.add('playing');
-                    }).catch(error => {
-                        console.error('播放失败:', error);
-                    });
-                } else {
-                    // 暂停音乐
-                    musicPlayer.pause();
-                    musicIcon.classList.remove('icon-pause');
-                    musicIcon.classList.add('icon-play');
-                    musicButton.classList.remove('playing');
-                }
-            });
-
-            // 音乐结束时重置按钮状态
-            musicPlayer.addEventListener('ended', function() {
-                musicIcon.classList.remove('icon-pause');
-                musicIcon.classList.add('icon-play');
-                musicButton.classList.remove('playing');
-            });
-        });
-    
-    
-    
-    
-  // 文本处理函数 - 将换行符转换为<br>
-function processText(text) {
-    return text
-        // 统一所有换行符为\n
-        .replace(/\r\n|\r|\u2028|\u2029/g, '\n')
-        // 将换行符转换为<br>
-        .replace(/\n/g, '<br>');
-}
-
-// 加载文本内容（无需修改，文本文件无需令牌）
-function loadTextContents() {      
-    apiConfig.textFiles.files.forEach(({ id, path }) => {
-        const element = document.getElementById(id);
-        if (!element) return;
-        
-       
-        
-        fetch(`${apiConfig.textFiles.baseUrl}${apiConfig.textFiles.path}${path}`)
-            .then(response => response.ok ? response.text() : Promise.reject('文件获取失败'))
-            .then(text => { element.innerHTML = processText(text); })
-            .catch(error => { element.innerHTML = `网络异常或加载错误.....`; });
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content, #message').forEach(element => {
+        element.classList.remove('active');
     });
-}
-
-// 加载图片内容
-function loadImageContents() {
-    const message = document.getElementById('message');
-    if (!message) return;
-   
     
-    // 核心修改：使用封装的fetchWithToken并传递headers
-    fetchWithToken(`${apiConfig.images.baseUrl}${apiConfig.images.path}`, apiConfig.images.headers)
-        .then(response => response.json())
-        .then(data => {
-            message.innerHTML = '';
-            // 核心修改：逆序排列数组（从新到旧）
-            const reversedData = data.reverse();
-            
-            reversedData.forEach(item => {
-                if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
-                    const imgContainer = document.createElement('div');
-                    imgContainer.className = 'image-container';
-                    
-                    const img = document.createElement('img');
-                    const kkgithubUrl = apiConfig.domainReplace.reduce((currentUrl, rule) => {
-                        return currentUrl.replace(rule.from, rule.to);
-                    }, item.download_url);
-                    img.src = kkgithubUrl;
-                    img.alt = item.name.replace(/\.\w+$/, '');
-                    img.loading = 'lazy';
-                    img.className = 'landscape-image';
-                    
-                    const fileName = document.createElement('div');
-                    fileName.className = 'wjm subtitle';
-                    fileName.textContent = item.name.replace(/\.\w+$/, '');
-                    
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(fileName);
-                    message.appendChild(imgContainer);
-                }
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    document.getElementById(tabId).classList.add('active');
+    
+    document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    showTab('text1');
+    const musicPlayer = document.getElementById('music-player');
+    const musicButton = document.getElementById('music-button');
+    const musicIcon = musicButton.querySelector('.icon');
+    
+    musicPlayer.loop = true;
+    
+    musicButton.addEventListener('click', function() {
+        if (musicPlayer.paused) {
+            musicPlayer.play().then(() => {
+                musicIcon.classList.remove('icon-play');
+                musicIcon.classList.add('icon-pause');
+                musicButton.classList.add('playing');
+            }).catch(error => {
+                console.error('播放失败:', error);
             });
-            
-            if (message.children.length === 0) {
-                message.innerHTML = '<p>没有找到图片</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching images:', error);
-            message.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
-        });
-}
-
-// 轮播图控制
-let currentSlide = 0;
-let slideInterval;
-let slideDelay = 5000; // 默认值5秒
-
-// 创建轮播图幻灯片元素
-function createSlideElement(image, index) {
-    const slide = document.createElement('div');
-    slide.className = 'carousel-slide';
+        } else {
+            musicPlayer.pause();
+            musicIcon.classList.remove('icon-pause');
+            musicIcon.classList.add('icon-play');
+            musicButton.classList.remove('playing');
+        }
+    });
+    musicPlayer.addEventListener('ended', function() {
+        musicIcon.classList.remove('icon-pause');
+        musicIcon.classList.add('icon-play');
+        musicButton.classList.remove('playing');
+    });
+});
+</script>
+<script>
+const textFileUrls = {
+    'text1': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
+    'text2': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
+    'text3': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
+};
+function loadText(elementId, fileKey) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
     
-    const img = document.createElement('img');
-    img.alt = image.name.replace(/\.\w+$/, '');
+    element.innerHTML = '<p class="loading">正在加载内容...</p>';
     
-    // 添加加载错误处理
-    img.onerror = function() {
-        this.classList.add('error');
-        console.error(`图片加载失败: ${image.url}`);
-    };
-    
-    // 添加加载完成处理
-    img.onload = function() {
-        this.classList.remove('error');
-    };
-    
-    // 设置图片源
-    img.src = image.url;
-    
-    // 添加标题
-    if (image.name) {
-        const caption = document.createElement('div');
-        caption.className = 'carousel-caption';
-        caption.textContent = image.name;
-        slide.appendChild(caption);
-    }
-    
-    slide.appendChild(img);
-    return slide;
-}
-
-// 创建轮播图指示点元素
-function createDotElement(index) {
-    const dot = document.createElement('div');
-    dot.className = 'carousel-dot';
-    if (index === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => goToSlide(index));
-    return dot;
-}
-
-// 设置轮播图事件监听器
-function setupCarouselEventListeners() {
-    const carouselContainer = document.querySelector('.carousel');
-    
-    // 鼠标悬停控制
-    if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', () => {
-            console.log('鼠标进入，暂停轮播');
-            stopSlideShow();
-        });
-        
-        carouselContainer.addEventListener('mouseleave', () => {
-            console.log('鼠标离开，恢复轮播');
-            startSlideShow();
-        });
-    }
-    
-    // 按钮控制（可选）
-    const prevButton = document.querySelector('.carousel-prev, .carousel-button.prev, .prev-button');
-    const nextButton = document.querySelector('.carousel-next, .carousel-button.next, .next-button');
-    
-    if (prevButton) {
-        prevButton.addEventListener('click', () => {
-            console.log('上一张按钮点击');
-            prevSlide();
-        });
-    } else {
-        console.warn('上一张按钮未找到，自动轮播仍可工作');
-    }
-    
-    if (nextButton) {
-        nextButton.addEventListener('click', () => {
-            console.log('下一张按钮点击');
-            nextSlide();
-        });
-    } else {
-        console.warn('下一张按钮未找到，自动轮播仍可工作');
-    }
-}
-
-// 初始化轮播图
-function initCarousel(images) {
-    console.log('初始化轮播图，图片数量:', images.length);
-    if (!apiConfig.carousel) {
-        console.warn('缺少轮播图配置，使用默认值');
-        apiConfig.carousel = {
-            slideDelay: 5000,
-            maxSlides: 5
-        };
-    }
-    slideDelay = apiConfig.carousel.slideDelay || 5000;
-    
-    const slidesContainer = document.querySelector('.carousel-slides');
-    const dotsContainer = document.querySelector('.carousel-dots');
-    
-    if (!slidesContainer || !dotsContainer) {
-        console.error('轮播图容器元素未找到');
+    const url = textFileUrls[fileKey];
+    if (!url) {
+        element.innerHTML = `<p class="error">文件路径不存在</p>`;
         return;
     }
     
-    // 清空现有内容
-    slidesContainer.innerHTML = '';
-    dotsContainer.innerHTML = '';
-    
-    // 添加图片到轮播图
-    images.forEach((image, index) => {
-        const slide = createSlideElement(image, index);
-        slidesContainer.appendChild(slide);
-        
-        const dot = createDotElement(index);
-        dotsContainer.appendChild(dot);
-    });
-    
-    // 设置初始状态
-    updateCarousel();
-    
-    // 设置事件监听器
-    setupCarouselEventListeners();
-    
-    // 启动自动轮播
-    startSlideShow();
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error(`请求失败: ${response.status}`);
+            return response.text();
+        })
+        .then(text => {
+            const htmlContent = text.replace(/\n/g, '<br>');
+            element.innerHTML = htmlContent;
+        })
+        .catch(error => {
+            element.innerHTML = `<p class="error">加载失败: ${error.message}</p>`;
+            console.error('文本加载错误:', error);
+        });
 }
-
-// 更新轮播图显示
-function updateCarousel() {
-    const slides = document.querySelector('.carousel-slides');
-    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
-    // 更新指示点
-    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
-        if (index === currentSlide) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
-    });
-}
-
-// 统一的幻灯片切换函数
-function changeSlide(newIndex) {
-    const slides = document.querySelectorAll('.carousel-slide');
-    if (slides.length === 0) return;
-    
-    if (typeof newIndex === 'number') {
-        // 直接跳转到指定索引
-        currentSlide = newIndex;
-    } else if (newIndex === 'next') {
-        // 下一张
-        currentSlide = (currentSlide + 1) % slides.length;
-    } else if (newIndex === 'prev') {
-        // 上一张
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    }
-    
-    updateCarousel();
-    resetSlideShow();
-}
-
-// 下一张幻灯片 - 简化为调用统一函数
-function nextSlide() {
-    changeSlide('next');
-}
-
-// 上一张幻灯片 - 简化为调用统一函数
-function prevSlide() {
-    changeSlide('prev');
-}
-
-// 跳转到指定幻灯片 - 简化为调用统一函数
-function goToSlide(index) {
-    changeSlide(index);
-}
-
-// 统一的轮播控制函数
-function controlSlideShow(action) {
-    switch(action) {
-        case 'start':
-            if (!slideInterval) {
-                console.log('启动轮播，间隔:', slideDelay);
-                slideInterval = setInterval(() => {
-                    nextSlide();
-                }, slideDelay);
-            }
-            break;
-            
-        case 'stop':
-            if (slideInterval) {
-                console.log('停止轮播');
-                clearInterval(slideInterval);
-                slideInterval = null;
-            }
-            break;
-            
-        case 'reset':
-            console.log('重置轮播计时器');
-            controlSlideShow('stop');
-            controlSlideShow('start');
-            break;
-    }
-}
-
-// 开始自动轮播 - 简化为调用统一函数
-function startSlideShow() {
-    controlSlideShow('start');
-}
-
-// 停止自动轮播 - 简化为调用统一函数
-function stopSlideShow() {
-    controlSlideShow('stop');
-}
-
-// 重置自动轮播计时器 - 简化为调用统一函数
-function resetSlideShow() {
-    controlSlideShow('reset');
-}
-
-// 从GitHub获取图片轮播图（修改此处：使用fetchWithToken）
-async function fetchImages() {
-    try {
-        // 核心修改：使用fetchWithToken并传递carouselImages的headers
-        const response = await fetchWithToken(
-            `${apiConfig.carouselImages.baseUrl}${apiConfig.carouselImages.path}`,
-            apiConfig.carouselImages.headers
-        );
-        
-        if (!response.ok) {
-            throw new Error('轮播图图片加载失败');
-        }
-        const data = await response.json();
-        
-        // 将GitHub API返回的数据转换为轮播图需要的格式
-        return data.reverse()
-            .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name))
-            .map(item => ({
-                url: apiConfig.domainReplace.reduce((currentUrl, rule) => {
-                    return currentUrl.replace(rule.from, rule.to);
-                }, item.download_url),
-                name: item.name.replace(/\.\w+$/, '')
-            }))
-            .slice(0, apiConfig.carousel.maxSlides); // 使用配置中的最大显示张数
-    } catch (error) {
-        console.error('获取轮播图图片失败:', error);
-        return [];
-    }
-}
-
-// 页面加载完成后初始化所有功能
-document.addEventListener('DOMContentLoaded', async () => {
-    // 加载文本内容
-    loadTextContents();
-    
-    // 加载图片内容
-    loadImageContents();
-    
-    // 初始化轮播图
-    const images = await fetchImages();
-    if (images.length > 0) {
-        initCarousel(images);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    loadText('text1', 'text1');
+    loadText('text2', 'text2');
+    loadText('text3', 'text3');
 });
-  </script>
- 
+</script>
+
+
+<script>document.write(unescape('%3Cscript%3E%0Aconst%20carouselConfig%20%3D%20%7B%0A%20%20%20%20baseUrl%3A%20%27https%3A//api.github.com/repos/rjdsq/ksx/contents/%27%2C%0A%20%20%20%20carouselPath%3A%20%27img/lunbo/%27%2C%0A%20%20%20%20token%3A%20%27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%27%0A%7D%3B%0Afunction%20fetchWithToken%28url%29%20%7B%0A%20%20%20%20return%20fetch%28url%2C%20%7B%0A%20%20%20%20%20%20%20%20headers%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20Authorization%3A%20%60token%20%24%7BcarouselConfig.token%7D%60%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%27Accept%27%3A%20%27application/vnd.github.v3+json%27%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%29%3B%0A%7D%0Afunction%20initCarousel%28%29%20%7B%0A%20%20%20%20const%20slidesContainer%20%3D%20document.querySelector%28%27.carousel-slides%27%29%3B%0A%20%20%20%20const%20dotsContainer%20%3D%20document.querySelector%28%27.carousel-dots%27%29%3B%0A%20%20%20%20const%20prevButton%20%3D%20document.querySelector%28%27.carousel-button.prev%27%29%3B%0A%20%20%20%20const%20nextButton%20%3D%20document.querySelector%28%27.carousel-button.next%27%29%3B%0A%20%20%20%20%0A%20%20%20%20if%20%28%21slidesContainer%20%7C%7C%20%21dotsContainer%29%20return%3B%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20fetchWithToken%28%60%24%7BcarouselConfig.baseUrl%7D%24%7BcarouselConfig.carouselPath%7D%60%29%0A%20%20%20%20%20%20%20%20.then%28response%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28%21response.ok%29%20throw%20new%20Error%28%60%u8F6E%u64AD%u56FEAPI%u8BF7%u6C42%u5931%u8D25%3A%20%24%7Bresponse.status%7D%60%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20response.json%28%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.then%28data%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.innerHTML%20%3D%20%27%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20dotsContainer.innerHTML%20%3D%20%27%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20const%20carouselImages%20%3D%20data%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.filter%28item%20%3D%3E%20item.type%20%3D%3D%3D%20%27file%27%20%26%26%20/%5C.%28jpg%7Cjpeg%7Cpng%7Cgif%29%24/i.test%28item.name%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.reverse%28%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.slice%280%2C%205%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28carouselImages.length%20%3D%3D%3D%200%29%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.innerHTML%20%3D%20%27%3Cp%20class%3D%22empty%22%3E%u6CA1%u6709%u627E%u5230%u8F6E%u64AD%u56FE%u56FE%u7247%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20carouselImages.forEach%28%28imgItem%2C%20index%29%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20slide%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slide.className%20%3D%20%27carousel-slide%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20img%20%3D%20document.createElement%28%27img%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.src%20%3D%20%27https%3A//goppx.com/%27%20+%20imgItem.download_url%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.alt%20%3D%20imgItem.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.className%20%3D%20%27carousel-slide-img%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.loading%20%3D%20%27lazy%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20caption%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20caption.className%20%3D%20%27carousel-caption%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20caption.textContent%20%3D%20imgItem.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slide.appendChild%28img%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slide.appendChild%28caption%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.appendChild%28slide%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20dot%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dot.className%20%3D%20%60carousel-dot%24%7Bindex%20%3D%3D%3D%200%20%3F%20%27%20active%27%20%3A%20%27%27%7D%60%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dot.addEventListener%28%27click%27%2C%20%28%29%20%3D%3E%20goToSlide%28index%29%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dotsContainer.appendChild%28dot%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20currentSlide%20%3D%200%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20startSlideShow%28%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28prevButton%29%20prevButton.addEventListener%28%27click%27%2C%20prevSlide%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28nextButton%29%20nextButton.addEventListener%28%27click%27%2C%20nextSlide%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.catch%28error%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20console.error%28%27%u8F6E%u64AD%u56FE%u52A0%u8F7D%u9519%u8BEF%3A%27%2C%20error%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.innerHTML%20%3D%20%27%3Cp%20class%3D%22error%22%3E%u65E0%u6CD5%u52A0%u8F7D%u8F6E%u64AD%u56FE%uFF0C%u8BF7%u68C0%u67E5%u7F51%u7EDC%u8FDE%u63A5%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%7D%29%3B%0A%7D%0Alet%20currentSlide%20%3D%200%3B%0Alet%20slideInterval%3B%0Aconst%20slideDelay%20%3D%205000%3B%0Afunction%20updateCarousel%28%29%20%7B%0A%20%20%20%20const%20slides%20%3D%20document.querySelector%28%27.carousel-slides%27%29%3B%0A%20%20%20%20if%20%28%21slides%29%20return%3B%0A%20%20%20%20%0A%20%20%20%20slides.style.transform%20%3D%20%60translateX%28-%24%7BcurrentSlide%20*%20100%7D%25%29%60%3B%0A%20%20%20%20%0A%20%20%20%20document.querySelectorAll%28%27.carousel-dot%27%29.forEach%28%28dot%2C%20index%29%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20dot.classList.toggle%28%27active%27%2C%20index%20%3D%3D%3D%20currentSlide%29%3B%0A%20%20%20%20%7D%29%3B%0A%7D%0Afunction%20goToSlide%28index%29%20%7B%0A%20%20%20%20currentSlide%20%3D%20index%3B%0A%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20resetSlideShow%28%29%3B%0A%7D%0Afunction%20nextSlide%28%29%20%7B%0A%20%20%20%20currentSlide%20%3D%20%28currentSlide%20+%201%29%20%25%20document.querySelectorAll%28%27.carousel-slide%27%29.length%3B%0A%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20resetSlideShow%28%29%3B%0A%7D%0Afunction%20prevSlide%28%29%20%7B%0A%20%20%20%20currentSlide%20%3D%20%28currentSlide%20-%201%20+%20document.querySelectorAll%28%27.carousel-slide%27%29.length%29%20%25%20document.querySelectorAll%28%27.carousel-slide%27%29.length%3B%0A%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20resetSlideShow%28%29%3B%0A%7D%0Afunction%20startSlideShow%28%29%20%7B%0A%20%20%20%20if%20%28slideInterval%29%20clearInterval%28slideInterval%29%3B%0A%20%20%20%20slideInterval%20%3D%20setInterval%28nextSlide%2C%20slideDelay%29%3B%0A%7D%0Afunction%20stopSlideShow%28%29%20%7B%0A%20%20%20%20if%20%28slideInterval%29%20clearInterval%28slideInterval%29%3B%0A%7D%0Afunction%20resetSlideShow%28%29%20%7B%0A%20%20%20%20stopSlideShow%28%29%3B%0A%20%20%20%20startSlideShow%28%29%3B%0A%7D%0Adocument.addEventListener%28%27DOMContentLoaded%27%2C%20%28%29%20%3D%3E%20%7B%0A%20%20%20%20initCarousel%28%29%3B%0A%20%20%20%20%0A%20%20%20%20const%20carouselContainer%20%3D%20document.querySelector%28%27.carousel-container%27%29%3B%0A%20%20%20%20if%20%28carouselContainer%29%20%7B%0A%20%20%20%20%20%20%20%20carouselContainer.addEventListener%28%27mouseenter%27%2C%20stopSlideShow%29%3B%0A%20%20%20%20%20%20%20%20carouselContainer.addEventListener%28%27mouseleave%27%2C%20startSlideShow%29%3B%0A%20%20%20%20%7D%0A%7D%29%3B%0A%3C/script%3E'))</script>
+
+
+
+
+
+
+
+<script>document.write(unescape('%3Cscript%3E%0Aconst%20imageConfig%20%3D%20%7B%0A%20%20%20%20baseUrl%3A%20%27https%3A//api.github.com/repos/rjdsq/ksx/contents/%27%2C%0A%20%20%20%20imagePath%3A%20%27img/yunnan/%27%2C%0A%20%20%20%20token%3A%20%27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%27%0A%7D%3B%0Afunction%20fetchWithToken%28url%29%20%7B%0A%20%20%20%20return%20fetch%28url%2C%20%7B%0A%20%20%20%20%20%20%20%20headers%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20Authorization%3A%20%60token%20%24%7BimageConfig.token%7D%60%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%27Accept%27%3A%20%27application/vnd.github.v3+json%27%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%29%3B%0A%7D%0Afunction%20loadImageGallery%28containerId%29%20%7B%0A%20%20%20%20const%20container%20%3D%20document.getElementById%28containerId%29%3B%0A%20%20%20%20if%20%28%21container%29%20%7B%0A%20%20%20%20%20%20%20%20console.error%28%27%u56FE%u7247%u5BB9%u5668%u5143%u7D20%u4E0D%u5B58%u5728%27%29%3B%0A%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20container.innerHTML%20%3D%20%27%3Cp%20class%3D%22loading%22%3E%u6B63%u5728%u52A0%u8F7D%u56FE%u7247...%3C/p%3E%27%3B%0A%20%20%20%20%0A%20%20%20%20fetchWithToken%28%60%24%7BimageConfig.baseUrl%7D%24%7BimageConfig.imagePath%7D%60%29%0A%20%20%20%20%20%20%20%20.then%28response%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28%21response.ok%29%20throw%20new%20Error%28%60API%u8BF7%u6C42%u5931%u8D25%3A%20%24%7Bresponse.status%7D%60%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20response.json%28%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.then%28data%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20container.innerHTML%20%3D%20%27%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20const%20imageFiles%20%3D%20data.filter%28item%20%3D%3E%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20item.type%20%3D%3D%3D%20%27file%27%20%26%26%20/%5C.%28jpg%7Cjpeg%7Cpng%7Cgif%7Csvg%29%24/i.test%28item.name%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28imageFiles.length%20%3D%3D%3D%200%29%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20container.innerHTML%20%3D%20%27%3Cp%20class%3D%22empty%22%3E%u6CA1%u6709%u627E%u5230%u56FE%u7247%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20imageFiles.reverse%28%29.forEach%28item%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20imgContainer%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20imgContainer.className%20%3D%20%27image-container%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20img%20%3D%20document.createElement%28%27img%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.src%20%3D%20%27https%3A//goppx.com/%27%20+%20item.download_url%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.alt%20%3D%20item.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.loading%20%3D%20%27lazy%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.className%20%3D%20%27landscape-image%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20subtitle%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20subtitle.className%20%3D%20%27subtitle%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20subtitle.textContent%20%3D%20item.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20imgContainer.appendChild%28img%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20imgContainer.appendChild%28subtitle%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20container.appendChild%28imgContainer%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.catch%28error%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20console.error%28%27%u56FE%u7247%u52A0%u8F7D%u9519%u8BEF%3A%27%2C%20error%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20container.innerHTML%20%3D%20%27%3Cp%20class%3D%22error%22%3E%u65E0%u6CD5%u52A0%u8F7D%u56FE%u7247%uFF0C%u8BF7%u68C0%u67E5%u7F51%u7EDC%u8FDE%u63A5%u6216%u4EE4%u724C%u6709%u6548%u6027%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%7D%29%3B%0A%7D%0Adocument.addEventListener%28%27DOMContentLoaded%27%2C%20%28%29%20%3D%3E%20%7B%0A%20%20%20%20loadImageGallery%28%27message%27%29%3B%0A%7D%29%3B%0A%3C/script%3E'))</script>
+
+
+
+
+
 </body>
 </html>
