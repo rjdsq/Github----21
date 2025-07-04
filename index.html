@@ -1139,6 +1139,205 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
+//相册
+
+
+const imageConfig = {
+    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
+    imagePath: 'img/yunnan/',
+    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
+};
+function fetchWithToken(url) {
+    return fetch(url, {
+        headers: {
+            Authorization: `token ${imageConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    });
+}
+function loadImageGallery(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error('图片容器元素不存在');
+        return;
+    }
+    
+    container.innerHTML = '<p class="loading">正在加载图片...</p>';
+    
+    fetchWithToken(`${imageConfig.baseUrl}${imageConfig.imagePath}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`API请求失败: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            container.innerHTML = '';
+            const imageFiles = data.filter(item => 
+                item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)
+            );
+            
+            if (imageFiles.length === 0) {
+                container.innerHTML = '<p class="empty">没有找到图片</p>';
+                return;
+            }
+            
+            imageFiles.reverse().forEach(item => {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'image-container';
+                
+                const img = document.createElement('img');
+                img.src = 'https://goppx.com/' + item.download_url;
+                img.alt = item.name.replace(/\.\w+$/, '');
+                img.loading = 'lazy';
+                img.className = 'landscape-image';
+                
+                const subtitle = document.createElement('div');
+                subtitle.className = 'subtitle';
+                subtitle.textContent = item.name.replace(/\.\w+$/, '');
+                
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(subtitle);
+                container.appendChild(imgContainer);
+            });
+        })
+        .catch(error => {
+            console.error('图片加载错误:', error);
+            container.innerHTML = '<p class="error">无法加载图片，请检查网络连接或令牌有效性</p>';
+        });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    loadImageGallery('message');
+});
+</script>
+<script>
+//轮播
+const carouselConfig = {
+    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
+    carouselPath: 'img/lunbo/',
+    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
+};
+function fetchWithToken(url) {
+    return fetch(url, {
+        headers: {
+            Authorization: `token ${carouselConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    });
+}
+function initCarousel() {
+    const slidesContainer = document.querySelector('.carousel-slides');
+    const dotsContainer = document.querySelector('.carousel-dots');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
+    
+    if (!slidesContainer || !dotsContainer) return;
+    
+    
+    
+    fetchWithToken(`${carouselConfig.baseUrl}${carouselConfig.carouselPath}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`轮播图API请求失败: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            slidesContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            const carouselImages = data
+                .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif)$/i.test(item.name))
+                .reverse()
+                .slice(0, 5);
+            
+            if (carouselImages.length === 0) {
+                slidesContainer.innerHTML = '<p class="empty">没有找到轮播图图片</p>';
+                return;
+            }
+            
+            carouselImages.forEach((imgItem, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                
+                const img = document.createElement('img');
+                img.src = 'https://goppx.com/' + imgItem.download_url;
+                img.alt = imgItem.name.replace(/\.\w+$/, '');
+                img.className = 'carousel-slide-img';
+                img.loading = 'lazy';
+                
+                const caption = document.createElement('div');
+                caption.className = 'carousel-caption';
+                caption.textContent = imgItem.name.replace(/\.\w+$/, '');
+                
+                slide.appendChild(img);
+                slide.appendChild(caption);
+                slidesContainer.appendChild(slide);
+                
+                const dot = document.createElement('div');
+                dot.className = `carousel-dot${index === 0 ? ' active' : ''}`;
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+            
+            currentSlide = 0;
+            updateCarousel();
+            startSlideShow();
+            
+            if (prevButton) prevButton.addEventListener('click', prevSlide);
+            if (nextButton) nextButton.addEventListener('click', nextSlide);
+        })
+        .catch(error => {
+            console.error('轮播图加载错误:', error);
+            slidesContainer.innerHTML = '<p class="error">无法加载轮播图，请检查网络连接</p>';
+        });
+}
+let currentSlide = 0;
+let slideInterval;
+const slideDelay = 5000;
+function updateCarousel() {
+    const slides = document.querySelector('.carousel-slides');
+    if (!slides) return;
+    
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+    resetSlideShow();
+}
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % document.querySelectorAll('.carousel-slide').length;
+    updateCarousel();
+    resetSlideShow();
+}
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + document.querySelectorAll('.carousel-slide').length) % document.querySelectorAll('.carousel-slide').length;
+    updateCarousel();
+    resetSlideShow();
+}
+function startSlideShow() {
+    if (slideInterval) clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, slideDelay);
+}
+function stopSlideShow() {
+    if (slideInterval) clearInterval(slideInterval);
+}
+function resetSlideShow() {
+    stopSlideShow();
+    startSlideShow();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    initCarousel();
+    
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', stopSlideShow);
+        carouselContainer.addEventListener('mouseleave', startSlideShow);
+    }
+});
+</script>
+<script>
 const textFileUrls = {
     'text1': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
     'text2': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
@@ -1176,21 +1375,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadText('text3', 'text3');
 });
 </script>
-
-
-<script>document.write(unescape('%3Cscript%3E%0Aconst%20carouselConfig%20%3D%20%7B%0A%20%20%20%20baseUrl%3A%20%27https%3A//api.github.com/repos/rjdsq/ksx/contents/%27%2C%0A%20%20%20%20carouselPath%3A%20%27img/lunbo/%27%2C%0A%20%20%20%20token%3A%20%27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%27%0A%7D%3B%0Afunction%20fetchWithToken%28url%29%20%7B%0A%20%20%20%20return%20fetch%28url%2C%20%7B%0A%20%20%20%20%20%20%20%20headers%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20Authorization%3A%20%60token%20%24%7BcarouselConfig.token%7D%60%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%27Accept%27%3A%20%27application/vnd.github.v3+json%27%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%29%3B%0A%7D%0Afunction%20initCarousel%28%29%20%7B%0A%20%20%20%20const%20slidesContainer%20%3D%20document.querySelector%28%27.carousel-slides%27%29%3B%0A%20%20%20%20const%20dotsContainer%20%3D%20document.querySelector%28%27.carousel-dots%27%29%3B%0A%20%20%20%20const%20prevButton%20%3D%20document.querySelector%28%27.carousel-button.prev%27%29%3B%0A%20%20%20%20const%20nextButton%20%3D%20document.querySelector%28%27.carousel-button.next%27%29%3B%0A%20%20%20%20%0A%20%20%20%20if%20%28%21slidesContainer%20%7C%7C%20%21dotsContainer%29%20return%3B%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20fetchWithToken%28%60%24%7BcarouselConfig.baseUrl%7D%24%7BcarouselConfig.carouselPath%7D%60%29%0A%20%20%20%20%20%20%20%20.then%28response%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28%21response.ok%29%20throw%20new%20Error%28%60%u8F6E%u64AD%u56FEAPI%u8BF7%u6C42%u5931%u8D25%3A%20%24%7Bresponse.status%7D%60%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20response.json%28%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.then%28data%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.innerHTML%20%3D%20%27%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20dotsContainer.innerHTML%20%3D%20%27%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20const%20carouselImages%20%3D%20data%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.filter%28item%20%3D%3E%20item.type%20%3D%3D%3D%20%27file%27%20%26%26%20/%5C.%28jpg%7Cjpeg%7Cpng%7Cgif%29%24/i.test%28item.name%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.reverse%28%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.slice%280%2C%205%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28carouselImages.length%20%3D%3D%3D%200%29%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.innerHTML%20%3D%20%27%3Cp%20class%3D%22empty%22%3E%u6CA1%u6709%u627E%u5230%u8F6E%u64AD%u56FE%u56FE%u7247%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20carouselImages.forEach%28%28imgItem%2C%20index%29%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20slide%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slide.className%20%3D%20%27carousel-slide%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20img%20%3D%20document.createElement%28%27img%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.src%20%3D%20%27https%3A//goppx.com/%27%20+%20imgItem.download_url%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.alt%20%3D%20imgItem.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.className%20%3D%20%27carousel-slide-img%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.loading%20%3D%20%27lazy%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20caption%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20caption.className%20%3D%20%27carousel-caption%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20caption.textContent%20%3D%20imgItem.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slide.appendChild%28img%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slide.appendChild%28caption%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.appendChild%28slide%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20dot%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dot.className%20%3D%20%60carousel-dot%24%7Bindex%20%3D%3D%3D%200%20%3F%20%27%20active%27%20%3A%20%27%27%7D%60%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dot.addEventListener%28%27click%27%2C%20%28%29%20%3D%3E%20goToSlide%28index%29%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dotsContainer.appendChild%28dot%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20currentSlide%20%3D%200%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20startSlideShow%28%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28prevButton%29%20prevButton.addEventListener%28%27click%27%2C%20prevSlide%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28nextButton%29%20nextButton.addEventListener%28%27click%27%2C%20nextSlide%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.catch%28error%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20console.error%28%27%u8F6E%u64AD%u56FE%u52A0%u8F7D%u9519%u8BEF%3A%27%2C%20error%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20slidesContainer.innerHTML%20%3D%20%27%3Cp%20class%3D%22error%22%3E%u65E0%u6CD5%u52A0%u8F7D%u8F6E%u64AD%u56FE%uFF0C%u8BF7%u68C0%u67E5%u7F51%u7EDC%u8FDE%u63A5%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%7D%29%3B%0A%7D%0Alet%20currentSlide%20%3D%200%3B%0Alet%20slideInterval%3B%0Aconst%20slideDelay%20%3D%205000%3B%0Afunction%20updateCarousel%28%29%20%7B%0A%20%20%20%20const%20slides%20%3D%20document.querySelector%28%27.carousel-slides%27%29%3B%0A%20%20%20%20if%20%28%21slides%29%20return%3B%0A%20%20%20%20%0A%20%20%20%20slides.style.transform%20%3D%20%60translateX%28-%24%7BcurrentSlide%20*%20100%7D%25%29%60%3B%0A%20%20%20%20%0A%20%20%20%20document.querySelectorAll%28%27.carousel-dot%27%29.forEach%28%28dot%2C%20index%29%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20dot.classList.toggle%28%27active%27%2C%20index%20%3D%3D%3D%20currentSlide%29%3B%0A%20%20%20%20%7D%29%3B%0A%7D%0Afunction%20goToSlide%28index%29%20%7B%0A%20%20%20%20currentSlide%20%3D%20index%3B%0A%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20resetSlideShow%28%29%3B%0A%7D%0Afunction%20nextSlide%28%29%20%7B%0A%20%20%20%20currentSlide%20%3D%20%28currentSlide%20+%201%29%20%25%20document.querySelectorAll%28%27.carousel-slide%27%29.length%3B%0A%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20resetSlideShow%28%29%3B%0A%7D%0Afunction%20prevSlide%28%29%20%7B%0A%20%20%20%20currentSlide%20%3D%20%28currentSlide%20-%201%20+%20document.querySelectorAll%28%27.carousel-slide%27%29.length%29%20%25%20document.querySelectorAll%28%27.carousel-slide%27%29.length%3B%0A%20%20%20%20updateCarousel%28%29%3B%0A%20%20%20%20resetSlideShow%28%29%3B%0A%7D%0Afunction%20startSlideShow%28%29%20%7B%0A%20%20%20%20if%20%28slideInterval%29%20clearInterval%28slideInterval%29%3B%0A%20%20%20%20slideInterval%20%3D%20setInterval%28nextSlide%2C%20slideDelay%29%3B%0A%7D%0Afunction%20stopSlideShow%28%29%20%7B%0A%20%20%20%20if%20%28slideInterval%29%20clearInterval%28slideInterval%29%3B%0A%7D%0Afunction%20resetSlideShow%28%29%20%7B%0A%20%20%20%20stopSlideShow%28%29%3B%0A%20%20%20%20startSlideShow%28%29%3B%0A%7D%0Adocument.addEventListener%28%27DOMContentLoaded%27%2C%20%28%29%20%3D%3E%20%7B%0A%20%20%20%20initCarousel%28%29%3B%0A%20%20%20%20%0A%20%20%20%20const%20carouselContainer%20%3D%20document.querySelector%28%27.carousel-container%27%29%3B%0A%20%20%20%20if%20%28carouselContainer%29%20%7B%0A%20%20%20%20%20%20%20%20carouselContainer.addEventListener%28%27mouseenter%27%2C%20stopSlideShow%29%3B%0A%20%20%20%20%20%20%20%20carouselContainer.addEventListener%28%27mouseleave%27%2C%20startSlideShow%29%3B%0A%20%20%20%20%7D%0A%7D%29%3B%0A%3C/script%3E'))</script>
-
-
-
-
-
-
-
-<script>document.write(unescape('%3Cscript%3E%0Aconst%20imageConfig%20%3D%20%7B%0A%20%20%20%20baseUrl%3A%20%27https%3A//api.github.com/repos/rjdsq/ksx/contents/%27%2C%0A%20%20%20%20imagePath%3A%20%27img/yunnan/%27%2C%0A%20%20%20%20token%3A%20%27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%27%0A%7D%3B%0Afunction%20fetchWithToken%28url%29%20%7B%0A%20%20%20%20return%20fetch%28url%2C%20%7B%0A%20%20%20%20%20%20%20%20headers%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20Authorization%3A%20%60token%20%24%7BimageConfig.token%7D%60%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%27Accept%27%3A%20%27application/vnd.github.v3+json%27%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%29%3B%0A%7D%0Afunction%20loadImageGallery%28containerId%29%20%7B%0A%20%20%20%20const%20container%20%3D%20document.getElementById%28containerId%29%3B%0A%20%20%20%20if%20%28%21container%29%20%7B%0A%20%20%20%20%20%20%20%20console.error%28%27%u56FE%u7247%u5BB9%u5668%u5143%u7D20%u4E0D%u5B58%u5728%27%29%3B%0A%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20container.innerHTML%20%3D%20%27%3Cp%20class%3D%22loading%22%3E%u6B63%u5728%u52A0%u8F7D%u56FE%u7247...%3C/p%3E%27%3B%0A%20%20%20%20%0A%20%20%20%20fetchWithToken%28%60%24%7BimageConfig.baseUrl%7D%24%7BimageConfig.imagePath%7D%60%29%0A%20%20%20%20%20%20%20%20.then%28response%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28%21response.ok%29%20throw%20new%20Error%28%60API%u8BF7%u6C42%u5931%u8D25%3A%20%24%7Bresponse.status%7D%60%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20response.json%28%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.then%28data%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20container.innerHTML%20%3D%20%27%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20const%20imageFiles%20%3D%20data.filter%28item%20%3D%3E%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20item.type%20%3D%3D%3D%20%27file%27%20%26%26%20/%5C.%28jpg%7Cjpeg%7Cpng%7Cgif%7Csvg%29%24/i.test%28item.name%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20%28imageFiles.length%20%3D%3D%3D%200%29%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20container.innerHTML%20%3D%20%27%3Cp%20class%3D%22empty%22%3E%u6CA1%u6709%u627E%u5230%u56FE%u7247%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20imageFiles.reverse%28%29.forEach%28item%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20imgContainer%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20imgContainer.className%20%3D%20%27image-container%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20img%20%3D%20document.createElement%28%27img%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.src%20%3D%20%27https%3A//goppx.com/%27%20+%20item.download_url%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.alt%20%3D%20item.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.loading%20%3D%20%27lazy%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20img.className%20%3D%20%27landscape-image%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20const%20subtitle%20%3D%20document.createElement%28%27div%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20subtitle.className%20%3D%20%27subtitle%27%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20subtitle.textContent%20%3D%20item.name.replace%28/%5C.%5Cw+%24/%2C%20%27%27%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20imgContainer.appendChild%28img%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20imgContainer.appendChild%28subtitle%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20container.appendChild%28imgContainer%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%29%3B%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20.catch%28error%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20console.error%28%27%u56FE%u7247%u52A0%u8F7D%u9519%u8BEF%3A%27%2C%20error%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20container.innerHTML%20%3D%20%27%3Cp%20class%3D%22error%22%3E%u65E0%u6CD5%u52A0%u8F7D%u56FE%u7247%uFF0C%u8BF7%u68C0%u67E5%u7F51%u7EDC%u8FDE%u63A5%u6216%u4EE4%u724C%u6709%u6548%u6027%3C/p%3E%27%3B%0A%20%20%20%20%20%20%20%20%7D%29%3B%0A%7D%0Adocument.addEventListener%28%27DOMContentLoaded%27%2C%20%28%29%20%3D%3E%20%7B%0A%20%20%20%20loadImageGallery%28%27message%27%29%3B%0A%7D%29%3B%0A%3C/script%3E'))</script>
-
-
-
-
 
 </body>
 </html>
