@@ -2,1389 +2,395 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>阚双雪 | 时光的礼物 - 致最爱的你</title>
+    <!-- 优化SEO：更清晰的标题结构 -->
     <meta name="description" content="写给阚双雪的深情告白，记录我们共同的回忆、成长与情感历程，传递真挚爱意与思念">
+    <!-- 优化SEO：关键词更精准且符合内容 -->
     <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
-    <link rel="preload" as="style" crossorigin
-    href="https://fontsapi.zeoseven.com/488/main/result.css"
-    onload="this.rel='stylesheet'"
-    onerror="this.href='https://fontsapi-storage.zeoseven.com/488/main/result.css'" />
-<noscript>
-    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/488/main/result.css" />
-</noscript>
-<style>
-    body {
-       
-        font-family: "STDongGuanTi";
-        font-weight: normal;
-    }
-    
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary-blue: #3498db;
-    --primary-green: #2ecc71;
-    --accent-1: #9b59b6;
-    --accent-2: #f1c40f;
-    --accent-3: #e74c3c;
-    --light-gray: #ecf0f1;
-    --dark-gray: #34495e;
-}
-
-body {
-    line-height: 1.6;
-    color: #333;
-    background-color: var(--light-gray);
-}
-
-/* 导航栏样式 */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 520;
-    padding: 0.5rem 2rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.nav-container {
-    max-width: 1000px;
-    height: 36px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.nav-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(45, 216, 136, 0.815);
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.nav-logo:hover {
-    transform: rotate(15deg) scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.nav-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    background: linear-gradient(to right, var(--primary-blue), var(--primary-green));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.nav-menu {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-link {
-    color: #444; /* 默认状态使用深色 */
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    position: relative;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-    background: linear-gradient(to right, #2980b9, #27ae60);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-link:hover::before {
-    width: 60%;
-}
-
-.nav-link.active {
-    background: linear-gradient(to right, #2471a3, #229954);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.nav-link.active::before {
-    width: 60%;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0.5rem 1rem;
-    }
-    
-    .nav-menu {
-        gap: 0.8rem;
-    }
-    
-    .nav-link {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.6rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .nav-brand {
-        gap: 0.5rem;
-        flex-wrap: nowrap;
-        min-width: 0;
-        min-height: 36px;
-    }
-    
-    .nav-title {
-        font-size: 1.1rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 120px;
-        background: linear-gradient(to right, #3498db, #2ecc71);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-    
-    .nav-logo {
-        width: 32px;
-        height: 32px;
-        flex-shrink: 0;
-    }
-    
-    .nav-container {
-        gap: 0.5rem;
-        position: relative;
-       
-    }
-    
-    .hamburger {
-        display: inline-block;
-        cursor: pointer;
-        background: transparent;
-        border: 0;
-        margin: 0;
-        padding: 10px;
-        z-index: 100;
-    }
-    
-    .hamburger-box {
-        width: 24px;
-        height: 24px;
-        display: inline-block;
-        position: relative;
-    }
-    
-    .hamburger-inner {
-        display: block;
-        top: 50%;
-        margin-top: -2px;
-    }
-    
-    .hamburger-inner,
-    .hamburger-inner::before,
-    .hamburger-inner::after {
-        width: 24px;
-        height: 1px;
-        background:linear-gradient(to right, #3498db, #2ecc71);
-        border-radius: 3px;
-        position: absolute;
-        transition: transform 0.2s ease;
-    }
-    
-    .hamburger-inner::before,
-    .hamburger-inner::after {
-        content: "";
-        display: block;
-    }
-    
-    .hamburger-inner::before {
-        top: -8px;
-    }
-    
-    .hamburger-inner::after {
-        bottom: -8px;
-    }
-    
-    .nav-menu {
-        position: absolute;
-        top: calc(100% + 5px);
-        right: 10px;
-        width: 140px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(5px);
-        flex-direction: column;
-        padding: 0.3rem 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border-radius: 6px;
-        display: none;
-        overflow: hidden;
-        transform: translateY(-10px);
-        opacity: 0;
-        transition: all 0.3s ease;
-        text-align: center;
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .nav-menu.active {
-        display: flex;
-        transform: translateY(0);
-        opacity: 1;
-        animation: fadeInUp 0.3s ease forwards;
-    }
-    
-    .nav-link {
-        display: block;
-        padding: 0.6rem 0.8rem;
-        font-size: 0.9rem;
-        color: #444;
-        transition: all 0.2s ease;
-        border-bottom: 1px solid rgba(0,0,0,0.03);
-    }
-    
-    .nav-link:hover {
-        background-color: #f8f9fa;
-        color: #3498db;
-        transform: translateX(4px);
-    }
-    
-    .nav-link:last-child {
-        border-bottom: none;
-    }
-    
-    .hamburger.active .hamburger-inner {
-        transform: rotate(45deg);
-    }
-    
-    .hamburger.active .hamburger-inner::before {
-        transform: rotate(-90deg) translate(-8px, 0);
-    }
-    
-    .hamburger.active .hamburger-inner::after {
-        opacity: 0;
-    }
-}
-
-/* 主要内容区域 */
-
-/* 轮播图样式 */
-.carousel-container {
-    position: relative;
-    width: 98%;
-    margin: 0 auto;
-    height: 400px;
-    margin-bottom: 30px;
-    overflow: hidden;
-    border-radius: 8px;
-   box-shadow: 2px 2px 16px rgb(63 85 133 / 53%);
-}
-
-.carousel-wrapper {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.carousel-slides {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-}
-
-.carousel-slide {
-    min-width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.carousel-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: relative;
-}
-
-.carousel-caption {
-    position: absolute;
-    bottom: 33px;
-    left: 15px;
-    color: white;
-    padding: 5px;
-    text-align: left;
-    font-size: 0.9rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    z-index: 2;
-    box-shadow: 4px 1px 20px rgb(222 221 225 / 24%);
-}
-
-
-.carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: rgba(0, 0, 0, 0.0);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: all 0.3s ease;
-}
-
-.carousel-container:hover .carousel-button {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.carousel-button.prev {
-    left: 20px;
-}
-
-.carousel-button.next {
-    right: 20px;
-}
-
-.carousel-dots {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-}
-
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.carousel-dot.active {
-    background-color: white;
-}
-
-@media (max-width: 768px) {
-    .carousel-container {
-        height: 320px;
-    }
-    
-    .carousel-button {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .carousel-container {
-        height: 194px;
-    }
-    
-    .carousel-button {
-        width: 30px;
-        height: 30px;
-        font-size: 16px;
-    }
-}
-
-/* 选项卡样式 */
-.tabs {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
-    padding: 5px;
-    flex-wrap: nowrap;
-    width: 96%;
-    margin:  auto;
-}
-
-.tab-button {
-    padding: 15px 0;
-    background-color: transparent;
-    color: #555;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex: 1;
-    text-align: center;
-    font-weight: 600;
-    font-size: 1.3rem;
-    position: relative;
-    z-index: 1;
-    border-radius: 8px;
-    margin: 0 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tab-button:hover {
-    color: #2ecc71;
-    background-color: rgba(46, 204, 113, 0.05);
-}
-
-.tab-button.active {
-    color: #fff;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-    transform: translateY(-2px);
-}
-
-.tab-button::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 3px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-    opacity: 0;
-}
-
-.tab-button:hover::after {
-    width: 70%;
-    opacity: 1;
-}
-
-.tab-button.active::after {
-    opacity: 0;
-}
-
-.tab-content {
-    font-size: 1.1rem;
-    color: #144238;
-   margin-top: 15px;
-    
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.01);
-    
-    display: none;
-    transform: translateY(10px);
-    opacity: 0;
-    transition: all 0.3s ease;
-    /*border: 1px solid rgba(0, 0, 0, 0.05); */
-}
-
-.tab-content.active {
-    display: block;
-    transform: translateY(0);
-    opacity: 1;
-    animation: fadeInUp 0.5s ease forwards;
-    padding: 12px;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.tab-content h2 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-    font-weight: 600;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
-    position: relative;
-}
-
-.tab-content h2::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    transition: width 0.3s ease;
-}
-
-.tab-content.active h2::after {
-    width: 100px;
-}
-
-.tab-content p {
-    color:#144238;
-    line-height: 1.8;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    text-align: justify;
-    letter-spacing: 0.3px;
-}
-
-.tab-content ul, .tab-content ol {
-    padding-left: 20px;
-    margin-bottom: 15px;
-}
-
-.tab-content li {
-    margin-bottom: 8px;
-    color: #555;
-}
-
-.tab-content img {
-    max-width: 100%;
-    height: auto;
-    margin: 0 0;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.tab-content img:hover {
-    transform: scale(1.02);
-}
-
-.tab-content a {
-    color: #3498db;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease, color 0.3s ease;
-}
-
-.tab-content a:hover {
-    color: #2ecc71;
-    border-bottom-color: #2ecc71;
-}
-
-/* 图片展示区域样式 */
-#message {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 0px 0;
-    margin:  0 auto;
-    border-radius: 5px;
-    width:100% ;
-    margin-bottom: 30px;
-    display: none;
-    margin-top: 30px;
-    align-items: center;
-}
-
-#message.active {
-    display: grid;
-}
-
-.image-container {
-    margin: auto;
-    width: 100%;
-    background-color:rgb(49 90 169 / 3%);
-    padding: 0px;
-    border-radius: 0px;
-    box-shadow: 4px 5px 10px rgb(178 195 185 / 70%);
-}
-
-.landscape-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-   
-}
-
-.subtitle {
-    text-align: center;
-    font-size: 1rem;
-    color: #144238;
-    margin: 8px 0px 16px;
-    text-align: center;
-    
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 10px;
-    }
-
-    .tabs {
-        padding: 5px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-
-    .tab-button {
-        padding: 12px 10px;
-        font-size: 0.9rem;
-        margin: 0 3px;
-        flex: 1;
-        min-width: 0;
-    }
-
-    .tab-content {
-        padding: 20px;
-    }
-
-    #message {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .tabs {
-        padding: 4px;
-    }
-    
-    .tab-button {
-        padding: 10px 5px;
-        font-size: 0.9rem;
-        margin: 0 2px;
-    }
-    
-    .tab-content {
-        padding: 15px;
-        border-radius: 8px;
-    }
-    
-    .tab-content h2 {
-        font-size: 1.1rem;
-    }
-}
-
-/* 页面整体美化 */
-.main-content {
-    max-width: 1000px;
-    margin: 70px auto 30px auto; /* 调整上边距适应新导航栏 */
-    padding: 30px 0px;
-  /*  background-color: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);*/
-    border-radius: 15px;
-    
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-}
-
-
-
-/* 美化滚动条 */
-::-webkit-scrollbar {
-    width: 2px;
-}
-
-::-webkit-scrollbar-track {
-    background:#19d367;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    border-radius: 5px;
-    transition: background 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to right, #2980b9, #27ae60);
-}
-
-/* 文本选择样式 */
-::selection {
-    background: rgba(52, 152, 219, 0.2);
-    color: #2c3e50;
-}
-
-/* 页面背景 */
-body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
-    min-height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-/* 添加页面过渡效果 */
-.main-content {
-    animation: pageLoad 0.6s ease-out;
-}
-
-@keyframes pageLoad {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .main-content {
-            margin: 58px auto 15px auto; /* 在小屏幕上保持足够的上边距 */
-            padding: 20px 15px;
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式：初始化盒模型和字体 */
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;}
+        body {
+            background: rgba(255, 255, 255, 0.92);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite; /* 背景渐变动画 */
+            color: #555;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
         }
-    
-    body {
-        padding: 10px;
-    }
-}
-
-/* 音乐播放按钮样式 */
-.music-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 920;
-    transition: all 0.3s ease;
-}
-.music-button:hover {
-    transform: scale(1.1);
-    background: linear-gradient(to right, #2980b9, #27ae60);
-}
-
-.music-button i {
-    font-size: 24px;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-.music-button.playing {
-    animation: pulse 2s infinite;
-    background: linear-gradient(to right, #2ecc71, #3498db);
-    
-}
-
-/* 添加图标字体 */
-.icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* 播放暂停按钮样式 */
-.icon-play {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
-}
-
-.icon-pause {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
-}
-
-
-    
-    .loader-container {
-        position: relative; /* 改为相对定位 */
-        width: 100%; /* 宽度100% */
-        height: 100%; /* 高度100% */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10; 
-        transition: opacity 0.5s ease;
-    }
-    
-
-    
-    /* 现代化加载动画主体 */
-    .modern-loader {
-        position: relative;
-        width: 120px;
-        height: 120px;
-    }
-    
-    /* 中心圆 */
-    .modern-loader::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #6e8efb, #a777e3);
-        border-radius: 50%;
-        animation: pulse 1.5s ease-in-out infinite;
-        box-shadow: 0 0 20px rgba(107, 142, 251, 0.5);
-    }
-    
-    /* 粒子效果 */
-    .particle {
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        background: linear-gradient(135deg, #6e8efb, #a777e3);
-        border-radius: 50%;
-        animation: particle-animation 2s ease-in-out infinite;
-    }
-    
-    /* 8个粒子位置 */
-    .particle:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
-    .particle:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.2s; }
-    .particle:nth-child(3) { top: 60%; left: 90%; animation-delay: 0.4s; }
-    .particle:nth-child(4) { top: 85%; left: 50%; animation-delay: 0.6s; }
-    .particle:nth-child(5) { top: 60%; left: 10%; animation-delay: 0.8s; }
-    .particle:nth-child(6) { top: 25%; left: 15%; animation-delay: 1s; }
-    .particle:nth-child(7) { top: 10%; left: 50%; animation-delay: 1.2s; }
-    .particle:nth-child(8) { top: 40%; left: 85%; animation-delay: 1.4s; }
-    
-    /* 加载文字 */
-    .loader-text {
-        position: absolute;
-        margin-top: 140px;
-        color: #555;
-        font-size: 16px;
-        letter-spacing: 2px;
-        font-weight: 500;
-    }
-    
-    /* 脉冲动画 */
-    @keyframes pulse {
-        0% { transform: translate(-50%, -50%) scale(1); }
-        50% { transform: translate(-50%, -50%) scale(1.1); }
-        100% { transform: translate(-50%, -50%) scale(1); }
-    }
-    
-    /* 粒子动画 */
-    @keyframes particle-animation {
-        0% { 
-            transform: scale(0.8) translate(0, 0); 
-            opacity: 0.5;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        50% { 
-            transform: scale(1.2) translate(20px, -20px); 
-            opacity: 1;
+        .container {
+            max-width: 1200px;
+            width: 92%;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        100% { 
-            transform: scale(0.8) translate(0, 0); 
-            opacity: 0.5;
+        /* 装饰元素：背景动态圆形 */
+        .decor {position: absolute;z-index: 0;}
+        .decor-1 {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255,182,193,0.15), rgba(221,160,221,0.1));
+            top: -70px;
+            left: -70px;
         }
-    }
-    
-
-
-</style>
- <!-- https://fonts.zeoseven.com/ -->
+        .decor-2 {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(152,251,152,0.1), rgba(135,206,250,0.15));
+            bottom: -50px;
+            right: -50px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(to right, rgba(255, 240, 245, 0.6), rgba(240, 248, 255, 0.6));
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        h1 {
+            font-size: 3rem;
+            color: #b76e79;
+            margin-bottom: 15px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+            display: inline-block;
+        }
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #e8b4b8, transparent);
+            border-radius: 50%;
+        }
+        .subtitle {
+            font-size: 1.4rem;
+            color: #d4a5a5;
+            font-weight: 300;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 500px;
+            position: relative;
+            z-index: 1;
+        }
+        .image-section {
+            flex: 1;
+            min-width: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            position: relative;
+        }
+        .image-frame {
+            position: relative;
+            max-width: 108%;
+            max-height: 500px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(144, 144, 144, 0.15);
+            transition: transform 0.5s ease;
+        }
+        .featured-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+            filter: brightness(1.02) contrast(1.05);
+        }
+        .image-frame:after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, rgba(232, 180, 184, 0.2), rgba(152, 251, 152, 0.15), rgba(221, 160, 221, 0.1));
+            z-index: -1;
+            border-radius: 10px;
+            animation: glow 4s infinite alternate; /* 图片边框发光动画 */
+        }
+        @keyframes glow {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
+        .image-frame:hover {transform: translateY(-10px);}
+        .image-frame:hover .featured-image {transform: scale(1.03);}
+        
+        /* 文本区域样式优化 */
+        .text-section {
+            flex: 1;
+            min-width: 350px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(255, 250, 250, 0.6);
+        }
+        .message-container {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 40px 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        .message {
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.15rem;
+            color: #666;
+            line-height: 1.8;
+        }
+        .message:before {
+            content: "♥";
+            position: absolute;
+            left: 0;
+            top: -3px;
+            color: #e8b4b8;
+            font-size: 1.2rem;
+        }
+        
+        /* 音乐播放器样式 */
+        .music-player {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            position: relative;
+            z-index: 1;
+        }
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8b4b8, #d4a5a5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(232, 180, 184, 0.35);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid white;
+        }
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(232, 180, 184, 0.5);
+        }
+        .play-btn i {
+            color: white;
+            font-size: 32px;
+            margin-left: 5px;
+        }
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #e8b4b8;
+            animation: pulse 2s infinite; /* 播放按钮脉冲动画 */
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+        .music-text {
+            margin-left: 20px;
+            color: #b76e79;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #b76e79;
+            font-size: 1rem;
+            background: rgba(255, 240, 245, 0.6);
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
+        }
+        
+        /* 响应式布局优化 */
+        @media (max-width: 900px) {
+            .content-wrapper {flex-direction: column;}
+            .image-section, .text-section {min-width: 100%;}
+            .image-section {padding: 30px 20px 10px;}
+            .text-section {padding: 20px;}
+            h1 {font-size: 2.4rem;}
+            .subtitle {font-size: 1.2rem;}
+            .message {font-size: 1.2rem;padding-left: 25px;}
+        }
+        @media (max-width: 480px) {
+            h1 {font-size: 2rem;}
+            .subtitle {font-size: 1.1rem;}
+            .message {font-size: 1rem;padding-left: 22px;}
+            .message-container {padding: 25px 20px;}
+            .play-btn {width: 70px;height: 70px;}
+        }
+    </style>
 </head>
-
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                
-                <span class="nav-title">❄️</span>
-            </div>
-            <button class="hamburger" aria-label="菜单">
-                <span class="hamburger-box">
-                    <span class="hamburger-inner"></span>
-                </span>
-            </button>
-            <div class="nav-menu">
-                <a href="#" class="nav-link active">首页</a>
-                <a href="#" class="nav-link">图库</a>
-                <a href="#" class="nav-link">关于</a>
-                <a href="#" class="nav-link">联系</a>
-            </div>
-        </div>
-    </nav>
-    
-    
-
-    <div class="main-content">
-    
-        <!-- 轮播图 -->
-        <div class="carousel-container">
-        <div class="loader-container" id="loaderContainer">
-    <div class="modern-loader">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    <div class="loader-text">系统加载中...</div>
-</div>
-            <div class="carousel-wrapper">
-                
-                <div class="carousel-slides">
-                
+    <div class="container">
+        <header>
+            <h1>阚双雪</h1>
+            <div class="subtitle">致我永远珍惜的人</div>
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="image-section">
+                <div class="image-frame">
+                    <img src="https://raw.githubusercontent.com/rjdsq/ksx/main/img/yunnan/阚双雪 遵义约拍.jpg" alt="阚双雪 - 时光礼物主角" class="featured-image">
+                    <!-- 优化SEO：alt属性补充主题信息 -->
                 </div>
             </div>
-            <button class="carousel-button prev" aria-label="上一张">&lt;</button>
-            <button class="carousel-button next" aria-label="下一张">&gt;</button>
-            <div class="carousel-dots">
-                
+            
+                    <!-- 优化排版：逻辑更清晰 -->
+        <div class="music-player">
+            <div class="play-btn" id="playButton">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="music-text">让我们赞美愚者</div>
+            <audio id="bgMusic" >
+                <source src="https://rjdsq.github.io/mp3/赞美愚者.mp3" type="audio/mp3">
+            </audio>
+        </div>
+        
+            <div class="text-section">
+                <div class="message-container">
+
+<div class="message">
+我从未跟你抱怨过什么，哪怕有也只是一闪而过，生活的不愉快我从没有让你为我担心，我自己默默承受。
+</div>
+
+<div class="message">
+沟通很重要，但是沟通的前提，是彼此理解，一开始，我也以为我们之间，只要多沟通，就没有问题，但我发现，每一次我跟你，说出我的感受时，你都会认为，我在说你有错，然后你就会觉得，自己不被理解，但我明明在，陈述客观事实和心理感受，你听到的却是我的指责，我在表达感受时侯，你不会和我共情，你只会找到我的破绽，试图反驳我，最后我们的沟通，就会变成辩论，变成争论谁对谁错，没有理解的沟通，最后只会变成争吵。说是解决问题，可笑的是你这个女人总以为自己夹杂在平淡语气下的抱怨，指责，不满等情绪我发觉不了。
+</div>
+
+<div class="message">
+你觉得自己在沟通问题，其实只是发泄情绪，解释却认为在反驳，最后还不是我低头认错么，如果真的在沟通，你应该说我觉得这个事你做的不好，我觉得我们交流一下这个事，而不是一直说 你干嘛…… 你都在…你只会…你还能干嘛…  给我干沉默了又说人家冷暴力   其实因为大部分男生对女朋友没有太多的要求，男生的大部分负面情绪都来自女生，女生好好的比什么都重要，所以你突如其来的情绪让人无法应对，我不知道女生的质问能换来什么。
+</div>
+
+<div class="message">
+原来爱一个人会这样——
+你曾笑我连吃什么都没主见，我总打趣说“去嗦粉”。
+如今才懂，哪是真馋那碗粉？
+不过是想把选择的权利，轻轻放进你掌心。
+那些在菜单前犹豫的时刻，
+我只是想把钱花在你那里，只是觉得——
+你的喜好，比我的胃口更值得被在意。
+你说吃什么，我便答“好”，
+原来偏爱从来不是随口敷衍，
+是把“你喜欢”，当成了我的“我愿意”。
+吃糠咽菜的喜欢，变成了无能的喜欢。
+</div>
+
+<div class="message">
+误打误撞的喜欢却没曾想爱意如此汹涌
+</div>
+               
+<div class="message">
+     属于自己的永远不需要放弃，是该放弃的本就不属于自己，放下控制占有欲珍惜使用选择权，认知资源选择格局比努力能力阅历业力动力压力更重要。
+  </div>
+  
+<div class="message">
+若魂悲,千里思未归,若魂归,墓前心泪悲
+ </div>
+
+<div class="message">
+绝对不能美化爱情，得之坦然，失之淡然。
+</div>
+
+
+<div class="message">
+在所有人声鼎沸的欢喜里 我唯独望向你。
+</div>
+
+<div class="message">
+这个世界没有主角，每个人都只有自己的躯体和灵魂，只不过现在这具躯体太弱了也没有钱。
+</div>
+
+<div class="message">
+生活浮浮沉沉，时好时坏！
+</div>
+
+                </div>
             </div>
         </div>
-
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab('text1')">随笔</button>
-            <button class="tab-button" onclick="showTab('text2')">理解</button>
-            <button class="tab-button" onclick="showTab('text3')">故事</button>
-            <button class="tab-button" onclick="showTab('message')">相册</button>
-        </div>
-
-        <div id="text1" class="tab-content active">
-            <h2>请稍等...</h2>
-            <p>正在加载相关内容...</p>
-        </div>
-
-        <div id="text2" class="tab-content">
-            <h2>请稍等...</h2>
-            <p>正在加载相关内容...</p>
-        </div>
-
-        <div id="text3" class="tab-content">
-            <h2>请稍等...</h2>
-            <p>正在加载相关内容...</p>
-        </div>
-
-        <div id="message" class="tab-content">
-            <h2>请稍等...</h2>
-            <p>正在加载图片内容...</p>
-        </div>
+        
+        <footer>
+            <p>有些相遇是命中注定<br>有些分离是为了更好的重逢</p>
+            <p>愿时光温柔，许我们再次相拥</p>
+            <p>2025.6.8.03-05.30<br>2001.9.5 | @牡丹君</p>
+            <p class="t"></p>
+        </footer>
     </div>
-
-    <!-- 音乐播放器 -->
-    <audio id="music-player" loop>
-        <source src="https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
-        您的浏览器不支持音频元素。
-    </audio>
-    
-    <!-- 音乐播放按钮 -->
-    <button id="music-button" class="music-button" title="播放/暂停音乐">
-        <span class="icon icon-play"></span>
-    </button>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            this.classList.toggle('active');
-        });
+        // 音乐播放控制逻辑
+        const playButton = document.getElementById('playButton');
+        const bgMusic = document.getElementById('bgMusic');
+        const playIcon = playButton.querySelector('i');
+        let isPlaying = false;
         
-        document.addEventListener('click', function(event) {
-            if (!navMenu.contains(event.target) && 
-                !hamburger.contains(event.target) && 
-                navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
+        playButton.addEventListener('click', function() {
+            if (isPlaying) {
+                bgMusic.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+            } else {
+                bgMusic.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
             }
+            isPlaying = !isPlaying;
         });
-    }
-});
-function showTab(tabId) {
-    document.querySelectorAll('.tab-content, #message').forEach(element => {
-        element.classList.remove('active');
-    });
+    </script>
     
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.classList.remove('active');
-    });
+    <script>
+        // 音频循环播放设置
+        const audioElement = document.getElementById('bgMusic');
+        audioElement.loop = true;
+    </script>
+    <script>
+    const s = new Date('2025-05-20 20:00:00'); setInterval(() => { const d = new Date(), diff = d - s, sec = Math.floor(diff / 1000), day = Math.floor(sec / 86400), month = Math.floor(day / 30), year = Math.floor(month / 12), remMonth = month % 12, remDay = day % 30, h = Math.floor((sec % 86400) / 3600), m = Math.floor((sec % 3600) / 60), second = sec % 60; let timeStr = '分手距今：'; if (year > 0) timeStr += `${year}年`; if (remMonth > 0 || year > 0) timeStr += `${remMonth}月`; if (remDay > 0 || remMonth > 0 || year > 0) timeStr += `${remDay}天`; timeStr += `${h}时${m}分${second}秒`; document.querySelector('.t').textContent = timeStr; }, 1000);
+    </script>
     
-    document.getElementById(tabId).classList.add('active');
-    
-    document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
-}
-document.addEventListener('DOMContentLoaded', function() {
-    showTab('text1');
-    const musicPlayer = document.getElementById('music-player');
-    const musicButton = document.getElementById('music-button');
-    const musicIcon = musicButton.querySelector('.icon');
-    
-    musicPlayer.loop = true;
-    
-    musicButton.addEventListener('click', function() {
-        if (musicPlayer.paused) {
-            musicPlayer.play().then(() => {
-                musicIcon.classList.remove('icon-play');
-                musicIcon.classList.add('icon-pause');
-                musicButton.classList.add('playing');
-            }).catch(error => {
-                console.error('播放失败:', error);
-            });
-        } else {
-            musicPlayer.pause();
-            musicIcon.classList.remove('icon-pause');
-            musicIcon.classList.add('icon-play');
-            musicButton.classList.remove('playing');
-        }
-    });
-    musicPlayer.addEventListener('ended', function() {
-        musicIcon.classList.remove('icon-pause');
-        musicIcon.classList.add('icon-play');
-        musicButton.classList.remove('playing');
-    });
-});
-</script>
-    
-<script>
-    // 加载动画
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!window.loaderAnimated) {
-            window.loaderAnimated = true;
-            window.addEventListener('load', function() {
-                clearTimeout(window.loaderTimeout);
-                hideLoader();
-            });
-            window.loaderTimeout = setTimeout(function() {
-                hideLoader();
-            }, 15000); // 最多等待5秒
-        }
-    });
-    
-    // 隐藏加载动画的函数
-    function hideLoader() {
-        var loaderContainer = document.getElementById('loaderContainer');
-        var carouselContainer = document.querySelector('.carousel-container');
-        
-        if (loaderContainer && carouselContainer) {
-            loaderContainer.style.opacity = '0';
-            setTimeout(function() {
-                if (loaderContainer) {
-                    loaderContainer.style.display = 'none';
-                }
-                // 显示轮播图
-                if (carouselContainer) {
-                    carouselContainer.style.opacity = '1';
-                }
-            }, 500);
-        }
-    }
-</script>
-
-
-<script>
-//相册
-
-
-const imageConfig = {
-    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
-    imagePath: 'img/yunnan/',
-    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
-};
-function fetchWithToken(url) {
-    return fetch(url, {
-        headers: {
-            Authorization: `token ${imageConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    });
-}
-function loadImageGallery(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) {
-        console.error('图片容器元素不存在');
-        return;
-    }
-    
-    container.innerHTML = '<p class="loading">正在加载图片...</p>';
-    
-    fetchWithToken(`${imageConfig.baseUrl}${imageConfig.imagePath}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`API请求失败: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            container.innerHTML = '';
-            const imageFiles = data.filter(item => 
-                item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)
-            );
-            
-            if (imageFiles.length === 0) {
-                container.innerHTML = '<p class="empty">没有找到图片</p>';
-                return;
-            }
-            
-            imageFiles.reverse().forEach(item => {
-                const imgContainer = document.createElement('div');
-                imgContainer.className = 'image-container';
-                
-                const img = document.createElement('img');
-                img.src = 'https://goppx.com/' + item.download_url;
-                img.alt = item.name.replace(/\.\w+$/, '');
-                img.loading = 'lazy';
-                img.className = 'landscape-image';
-                
-                const subtitle = document.createElement('div');
-                subtitle.className = 'subtitle';
-                subtitle.textContent = item.name.replace(/\.\w+$/, '');
-                
-                imgContainer.appendChild(img);
-                imgContainer.appendChild(subtitle);
-                container.appendChild(imgContainer);
-            });
-        })
-        .catch(error => {
-            console.error('图片加载错误:', error);
-            container.innerHTML = '<p class="error">无法加载图片，请检查网络连接或令牌有效性</p>';
-        });
-}
-document.addEventListener('DOMContentLoaded', () => {
-    loadImageGallery('message');
-});
-</script>
-<script>
-//轮播
-const carouselConfig = {
-    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
-    carouselPath: 'img/lunbo/',
-    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
-};
-function fetchWithToken(url) {
-    return fetch(url, {
-        headers: {
-            Authorization: `token ${carouselConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    });
-}
-function initCarousel() {
-    const slidesContainer = document.querySelector('.carousel-slides');
-    const dotsContainer = document.querySelector('.carousel-dots');
-    const prevButton = document.querySelector('.carousel-button.prev');
-    const nextButton = document.querySelector('.carousel-button.next');
-    
-    if (!slidesContainer || !dotsContainer) return;
-    
-    
-    
-    fetchWithToken(`${carouselConfig.baseUrl}${carouselConfig.carouselPath}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`轮播图API请求失败: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            slidesContainer.innerHTML = '';
-            dotsContainer.innerHTML = '';
-            
-            const carouselImages = data
-                .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif)$/i.test(item.name))
-                .reverse()
-                .slice(0, 5);
-            
-            if (carouselImages.length === 0) {
-                slidesContainer.innerHTML = '<p class="empty">没有找到轮播图图片</p>';
-                return;
-            }
-            
-            carouselImages.forEach((imgItem, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                
-                const img = document.createElement('img');
-                img.src = 'https://goppx.com/' + imgItem.download_url;
-                img.alt = imgItem.name.replace(/\.\w+$/, '');
-                img.className = 'carousel-slide-img';
-                img.loading = 'lazy';
-                
-                const caption = document.createElement('div');
-                caption.className = 'carousel-caption';
-                caption.textContent = imgItem.name.replace(/\.\w+$/, '');
-                
-                slide.appendChild(img);
-                slide.appendChild(caption);
-                slidesContainer.appendChild(slide);
-                
-                const dot = document.createElement('div');
-                dot.className = `carousel-dot${index === 0 ? ' active' : ''}`;
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-            
-            currentSlide = 0;
-            updateCarousel();
-            startSlideShow();
-            
-            if (prevButton) prevButton.addEventListener('click', prevSlide);
-            if (nextButton) nextButton.addEventListener('click', nextSlide);
-        })
-        .catch(error => {
-            console.error('轮播图加载错误:', error);
-            slidesContainer.innerHTML = '<p class="error">无法加载轮播图，请检查网络连接</p>';
-        });
-}
-let currentSlide = 0;
-let slideInterval;
-const slideDelay = 5000;
-function updateCarousel() {
-    const slides = document.querySelector('.carousel-slides');
-    if (!slides) return;
-    
-    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
-    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-}
-function goToSlide(index) {
-    currentSlide = index;
-    updateCarousel();
-    resetSlideShow();
-}
-function nextSlide() {
-    currentSlide = (currentSlide + 1) % document.querySelectorAll('.carousel-slide').length;
-    updateCarousel();
-    resetSlideShow();
-}
-function prevSlide() {
-    currentSlide = (currentSlide - 1 + document.querySelectorAll('.carousel-slide').length) % document.querySelectorAll('.carousel-slide').length;
-    updateCarousel();
-    resetSlideShow();
-}
-function startSlideShow() {
-    if (slideInterval) clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, slideDelay);
-}
-function stopSlideShow() {
-    if (slideInterval) clearInterval(slideInterval);
-}
-function resetSlideShow() {
-    stopSlideShow();
-    startSlideShow();
-}
-document.addEventListener('DOMContentLoaded', () => {
-    initCarousel();
-    
-    const carouselContainer = document.querySelector('.carousel-container');
-    if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', stopSlideShow);
-        carouselContainer.addEventListener('mouseleave', startSlideShow);
-    }
-});
-</script>
-<script>
-const textFileUrls = {
-    'text1': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
-    'text2': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
-    'text3': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
-};
-
-function loadText(elementId, fileKey) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-
-    element.innerHTML = '<p class="loading">正在加载内容...</p>';
-    const url = textFileUrls[fileKey];
-    if (!url) {
-        element.innerHTML = `<p class="error">文件路径不存在</p>`;
-        return;
-    }
-
-    fetch(url)
-        .then(response => response.ok ? response.text() : Promise.reject(new Error(`请求失败: ${response.status}`)))
-        .then(text => {
-            // 处理换行逻辑：
-            // 1. 先将2次换行(\n\n)转换为段落分隔符</p><p>
-            // 2. 将单次换行(\n)转换为<br>
-            // 3. 超过2次的换行(\n{3,})保持原样
-            // 4. 首尾添加段落标签
-            const htmlContent = text
-                .replace(/\n{3,}/g, '\n\n')  // 超过2次的换行保持为2次
-                .replace(/\n\n/g, '</p><p>')  // 2次换行转段落分隔
-                .replace(/\n/g, '<br>')       // 单次换行转<br>
-                .replace(/(^\s*|<br>\s*)|(\s*$|\s*<br>)/g, '')  // 移除首尾空白和<br>
-                .replace(/^/, '<p>')           // 开头添加<p>
-                .replace(/$/, '</p>');         // 结尾添加</p>
-            
-            element.innerHTML = htmlContent;
-        })
-        .catch(error => {
-            element.innerHTML = `<p class="error">加载失败: ${error.message}</p>`;
-            console.error('文本加载错误:', error);
-        });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadText('text1', 'text1');
-    loadText('text2', 'text2');
-    loadText('text3', 'text3');
-});
-</script>
-
-
 </body>
 </html>
