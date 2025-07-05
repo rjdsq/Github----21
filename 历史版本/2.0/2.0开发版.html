@@ -1,1 +1,1432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+</head>
+    <title>阚双雪 | 时光的礼物 - 致最爱的你</title>
+    <meta name="description" content="写给阚双雪的深情告白，记录我们共同的回忆、成长与情感历程，传递真挚爱意与思念">
+    <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
+    <link rel="preload" as="style" crossorigin
+    href="https://fontsapi.zeoseven.com/488/main/result.css"
+    onload="this.rel='stylesheet'"
+    onerror="this.href='https://fontsapi-storage.zeoseven.com/488/main/result.css'" />
+<noscript>
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/488/main/result.css" />
+</noscript>
+<style>
+    body {
+       
+        font-family: "STDongGuanTi";
+        font-weight: normal;
+    }
+    
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+:root {
+    --primary-blue: #3498db;
+    --primary-green: #2ecc71;
+    --accent-1: #9b59b6;
+    --accent-2: #f1c40f;
+    --accent-3: #e74c3c;
+    --light-gray: #ecf0f1;
+    --dark-gray: #34495e;
+}
+
+body {
+    line-height: 1.6;
+    color: #333;
+    background-color: var(--light-gray);
+}
+
+/* 导航栏样式 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 520;
+    padding: 0.5rem 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1000px;
+    height: 36px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(45, 216, 136, 0.815);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.nav-logo:hover {
+    transform: rotate(15deg) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.nav-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    background: linear-gradient(to right, var(--primary-blue), var(--primary-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: #444; /* 默认状态使用深色 */
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    background: linear-gradient(to right, #2980b9, #27ae60);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:hover::before {
+    width: 60%;
+}
+
+.nav-link.active {
+    background: linear-gradient(to right, #2471a3, #229954);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-link.active::before {
+    width: 60%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+    
+    .nav-menu {
+        gap: 0.8rem;
+    }
+    
+    .nav-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-brand {
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+        min-width: 0;
+        min-height: 36px;
+    }
+    
+    .nav-title {
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 120px;
+        background: linear-gradient(to right, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .nav-logo {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+    }
+    
+    .nav-container {
+        gap: 0.5rem;
+        position: relative;
+       
+    }
+    
+    .hamburger {
+        display: inline-block;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        margin: 0;
+        padding: 10px;
+        z-index: 100;
+    }
+    
+    .hamburger-box {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        position: relative;
+    }
+    
+    .hamburger-inner {
+        display: block;
+        top: 50%;
+        margin-top: -2px;
+    }
+    
+    .hamburger-inner,
+    .hamburger-inner::before,
+    .hamburger-inner::after {
+        width: 24px;
+        height: 1px;
+        background:linear-gradient(to right, #3498db, #2ecc71);
+        border-radius: 3px;
+        position: absolute;
+        transition: transform 0.2s ease;
+    }
+    
+    .hamburger-inner::before,
+    .hamburger-inner::after {
+        content: "";
+        display: block;
+    }
+    
+    .hamburger-inner::before {
+        top: -8px;
+    }
+    
+    .hamburger-inner::after {
+        bottom: -8px;
+    }
+    
+    .nav-menu {
+        position: absolute;
+        top: calc(100% + 5px);
+        right: 10px;
+        width: 140px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        flex-direction: column;
+        padding: 0.3rem 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 6px;
+        display: none;
+        overflow: hidden;
+        transform: translateY(-10px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .nav-menu.active {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+        animation: fadeInUp 0.3s ease forwards;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+        color: #444;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+    
+    .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #3498db;
+        transform: translateX(4px);
+    }
+    
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+    
+    .hamburger.active .hamburger-inner {
+        transform: rotate(45deg);
+    }
+    
+    .hamburger.active .hamburger-inner::before {
+        transform: rotate(-90deg) translate(-8px, 0);
+    }
+    
+    .hamburger.active .hamburger-inner::after {
+        opacity: 0;
+    }
+}
+
+/* 主要内容区域 */
+
+/* 轮播图样式 */
+.carousel-container {
+    position: relative;
+    width: 98%;
+    margin: 0 auto;
+    height: 400px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    border-radius: 8px;
+   box-shadow: 2px 2px 16px rgb(63 85 133 / 53%);
+}
+
+.carousel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 33px;
+    left: 15px;
+    color: white;
+    padding: 5px;
+    text-align: left;
+    font-size: 0.9rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    box-shadow: 4px 1px 20px rgb(222 221 225 / 24%);
+}
+
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.0);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.carousel-container:hover .carousel-button {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.carousel-button.prev {
+    left: 20px;
+}
+
+.carousel-button.next {
+    right: 20px;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.carousel-dot.active {
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .carousel-container {
+        height: 320px;
+    }
+    
+    .carousel-button {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 194px;
+    }
+    
+    .carousel-button {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+}
+
+/* 选项卡样式 */
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    padding: 5px;
+    flex-wrap: nowrap;
+    width: 96%;
+    margin:  auto;
+}
+
+.tab-button {
+    padding: 15px 0;
+    background-color: transparent;
+    color: #555;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+    margin: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tab-button:hover {
+    color: #2ecc71;
+    background-color: rgba(46, 204, 113, 0.05);
+}
+
+.tab-button.active {
+    color: #fff;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    transform: translateY(-2px);
+}
+
+.tab-button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    opacity: 0;
+}
+
+.tab-button:hover::after {
+    width: 70%;
+    opacity: 1;
+}
+
+.tab-button.active::after {
+    opacity: 0;
+}
+
+.tab-content {
+    font-size: 1.1rem;
+    color: #144238;
+   margin-top: 15px;
+    
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.01);
+    
+    display: none;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    /*border: 1px solid rgba(0, 0, 0, 0.05); */
+}
+
+.tab-content.active {
+    display: block;
+    transform: translateY(0);
+    opacity: 1;
+    animation: fadeInUp 0.5s ease forwards;
+    padding: 12px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.tab-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    transition: width 0.3s ease;
+}
+
+.tab-content.active h2::after {
+    width: 100px;
+}
+
+.tab-content p {
+    color:#144238;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    text-align: justify;
+    letter-spacing: 0.3px;
+}
+
+.tab-content ul, .tab-content ol {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.tab-content li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.tab-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.tab-content img:hover {
+    transform: scale(1.02);
+}
+
+.tab-content a {
+    color: #3498db;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-content a:hover {
+    color: #2ecc71;
+    border-bottom-color: #2ecc71;
+}
+
+/* 图片展示区域样式 */
+#message {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 0px 0;
+    margin:  0 auto;
+    border-radius: 5px;
+    width:100% ;
+    margin-bottom: 30px;
+    display: none;
+    margin-top: 30px;
+    align-items: center;
+}
+
+#message.active {
+    display: grid;
+}
+
+.image-container {
+    margin: auto;
+    width: 100%;
+    background-color:rgb(49 90 169 / 3%);
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: 4px 5px 10px rgb(178 195 185 / 70%);
+}
+
+.landscape-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+   
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: #144238;
+    margin: 8px 0px 16px;
+    text-align: center;
+    
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .tabs {
+        padding: 5px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .tab-button {
+        padding: 12px 10px;
+        font-size: 0.9rem;
+        margin: 0 3px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tab-content {
+        padding: 20px;
+    }
+
+    #message {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabs {
+        padding: 4px;
+    }
+    
+    .tab-button {
+        padding: 10px 5px;
+        font-size: 0.9rem;
+        margin: 0 2px;
+    }
+    
+    .tab-content {
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .tab-content h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* 页面整体美化 */
+.main-content {
+    max-width: 1000px;
+    margin: 70px auto 30px auto; /* 调整上边距适应新导航栏 */
+    padding: 30px 0px;
+  /*  background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);*/
+    border-radius: 15px;
+    
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+/* 美化滚动条 */
+::-webkit-scrollbar {
+    width: 2px;
+}
+
+::-webkit-scrollbar-track {
+    background:#19d367;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to right, #2980b9, #27ae60);
+}
+
+/* 文本选择样式 */
+::selection {
+    background: rgba(52, 152, 219, 0.2);
+    color: #2c3e50;
+}
+
+/* 页面背景 */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 添加页面过渡效果 */
+.main-content {
+    animation: pageLoad 0.6s ease-out;
+}
+
+@keyframes pageLoad {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .main-content {
+            margin: 58px auto 15px auto; /* 在小屏幕上保持足够的上边距 */
+            padding: 20px 15px;
+        }
+    
+    body {
+        padding: 10px;
+    }
+}
+
+/* 音乐播放按钮样式 */
+.music-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+.music-button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #2980b9, #27ae60);
+}
+
+.music-button i {
+    font-size: 24px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.music-button.playing {
+    animation: pulse 2s infinite;
+    background: linear-gradient(to right, #2ecc71, #3498db);
+}
+
+/* 添加图标字体 */
+.icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* 播放暂停按钮样式 */
+.icon-play {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+}
+
+.icon-pause {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
+}
+</style>
+ <!-- https://fonts.zeoseven.com/ -->
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                
+                <span class="nav-title">❄️</span>
+            </div>
+            <button class="hamburger" aria-label="菜单">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">首页</a>
+                <a href="#" class="nav-link">图库</a>
+                <a href="#" class="nav-link">关于</a>
+                <a href="#" class="nav-link">联系</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- 轮播图 -->
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-slides">
+
+                </div>
+            </div>
+            <button class="carousel-button prev" aria-label="上一张">&lt;</button>
+            <button class="carousel-button next" aria-label="下一张">&gt;</button>
+            <div class="carousel-dots">
+                
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('text1')">随笔</button>
+            <button class="tab-button" onclick="showTab('text2')">理解</button>
+            <button class="tab-button" onclick="showTab('text3')">故事</button>
+            <button class="tab-button" onclick="showTab('message')">相册</button>
+        </div>
+
+        <div id="text1" class="tab-content active">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="text2" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="text3" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="message" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载图片内容...</p>
+        </div>
+    </div>
+
+    <!-- 音乐播放器 -->
+    <audio id="music-player" loop>
+        <source src="https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 音乐播放按钮 -->
+    <button id="music-button" class="music-button" title="播放/暂停音乐">
+        <span class="icon icon-play"></span>
+    </button>
+  
+
+    
+     <script> 
+ // API地址配置
+const apiConfig = {
+    // 文本文件API地址（豆包改这里）
+    textFiles: {
+        baseUrl: 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/',
+        path: 'text/',
+        files: [
+            { id: 'text1', path: '选项卡1.txt' },
+            { id: 'text2', path: '选项卡2.txt' },
+            { id: 'text3', path: '选项卡3.txt' }
+        ]
+    },
+    // 通用图片API地址（令牌访问）
+    images: {
+        baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',      // 选项卡4 GitHub API路径
+        path: 'img/yunnan/',    // 图片路径      
+        headers: {
+            // GitHub令牌
+            Authorization: 'c2a780a272316010dc3cd2b07acea4b8ae143f7e0ec93443bb626756dc0d6306ba6f2acda75c24ec3ada09ce52d9ae994819a1b61651f5347e1fbe546d6126b9'    // GitHub令牌
+        }
+    },
+    // 轮播图专用图片API地址（令牌访问）
+    carouselImages: {
+        baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',// 轮播图 GitHub API路径
+        path: 'img/lunbo/', // 轮播图专用图片路径
+        headers: {
+            Authorization: 'c2a780a272316010dc3cd2b07acea4b8ae143f7e0ec93443bb626756dc0d6306ba6f2acda75c24ec3ada09ce52d9ae994819a1b61651f5347e1fbe546d6126b9' // GitHub令牌
+        }
+    },
+    // 全局域名替换规则（若API域名被墙时使用，正常情况可忽略）
+    domainReplace: [
+        {
+            from: 'https://raw.githubusercontent.com', // 此处为资源API域名
+            to: 'https://goppx.com/https://raw.github.com'// 替换为可用的资源API域名
+        },
+        {
+            from: '', // 此处为API域名
+            to: ''  // 替换为可用的API域名
+            
+        }
+    ],
+    // 轮播图配置
+    carousel: {
+        slideDelay: 5000, // 轮播切换延迟(毫秒)
+        maxSlides: 3      // 最大显示张数
+    }
+};
+
+// 封装带令牌的API请求函数
+function fetchWithToken(url, headers = {}) {
+    // 合并全局令牌 headers 和自定义 headers
+    const requestHeaders = {
+        ...(apiConfig.images.headers || {}),
+        ...headers,
+        'Accept': 'application/vnd.github.v3+json' // 指定GitHub API版本
+    };
+    
+    return fetch(url, {
+        method: 'GET',
+        headers: requestHeaders
+    });
+}
+
+
+
+
+
+
+
+
+
+        // 移动端菜单交互逻辑
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            // 切换菜单显示状态
+            navMenu.classList.toggle('active');
+            // 切换汉堡菜单动画
+            this.classList.toggle('active');
+        });
+        
+        // 点击菜单外部关闭菜单
+        document.addEventListener('click', function(event) {
+            if (!navMenu.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    }
+});
+
+        // 选项卡切换功能
+        function showTab(tabId) {
+            // 隐藏所有标签内容和图片区域
+            document.querySelectorAll('.tab-content, #message').forEach(element => {
+                element.classList.remove('active');
+            });
+            
+            // 取消所有按钮的活动状态
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // 显示选中的内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 设置对应按钮的活动状态
+            document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认显示第一个选项卡
+            showTab('text1');
+
+            // 音乐播放控制
+            const musicPlayer = document.getElementById('music-player');
+            const musicButton = document.getElementById('music-button');
+            const musicIcon = musicButton.querySelector('.icon');
+            
+            // 设置音乐循环播放
+            musicPlayer.loop = true;
+            
+            musicButton.addEventListener('click', function() {
+                if (musicPlayer.paused) {
+                    // 播放音乐
+                    musicPlayer.play().then(() => {
+                        musicIcon.classList.remove('icon-play');
+                        musicIcon.classList.add('icon-pause');
+                        musicButton.classList.add('playing');
+                    }).catch(error => {
+                        console.error('播放失败:', error);
+                    });
+                } else {
+                    // 暂停音乐
+                    musicPlayer.pause();
+                    musicIcon.classList.remove('icon-pause');
+                    musicIcon.classList.add('icon-play');
+                    musicButton.classList.remove('playing');
+                }
+            });
+
+            // 音乐结束时重置按钮状态
+            musicPlayer.addEventListener('ended', function() {
+                musicIcon.classList.remove('icon-pause');
+                musicIcon.classList.add('icon-play');
+                musicButton.classList.remove('playing');
+            });
+        });
+    
+    
+    
+    
+  // 文本处理函数 - 将换行符转换为<br>
+function processText(text) {
+    return text
+        // 统一所有换行符为\n
+        .replace(/\r\n|\r|\u2028|\u2029/g, '\n')
+        // 将换行符转换为<br>
+        .replace(/\n/g, '<br>');
+}
+
+// 加载文本内容（无需修改，文本文件无需令牌）
+function loadTextContents() {      
+    apiConfig.textFiles.files.forEach(({ id, path }) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+        
+       
+        
+        fetch(`${apiConfig.textFiles.baseUrl}${apiConfig.textFiles.path}${path}`)
+            .then(response => response.ok ? response.text() : Promise.reject('文件获取失败'))
+            .then(text => { element.innerHTML = processText(text); })
+            .catch(error => { element.innerHTML = `网络异常或加载错误.....`; });
+    });
+}
+
+// 加载图片内容
+function loadImageContents() {
+    const message = document.getElementById('message');
+    if (!message) return;
+   
+    
+    // 核心修改：使用封装的fetchWithToken并传递headers
+    fetchWithToken(`${apiConfig.images.baseUrl}${apiConfig.images.path}`, apiConfig.images.headers)
+        .then(response => response.json())
+        .then(data => {
+            message.innerHTML = '';
+            // 核心修改：逆序排列数组（从新到旧）
+            const reversedData = data.reverse();
+            
+            reversedData.forEach(item => {
+                if (item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'image-container';
+                    
+                    const img = document.createElement('img');
+                    const kkgithubUrl = apiConfig.domainReplace.reduce((currentUrl, rule) => {
+                        return currentUrl.replace(rule.from, rule.to);
+                    }, item.download_url);
+                    img.src = kkgithubUrl;
+                    img.alt = item.name.replace(/\.\w+$/, '');
+                    img.loading = 'lazy';
+                    img.className = 'landscape-image';
+                    
+                    const fileName = document.createElement('div');
+                    fileName.className = 'wjm subtitle';
+                    fileName.textContent = item.name.replace(/\.\w+$/, '');
+                    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(fileName);
+                    message.appendChild(imgContainer);
+                }
+            });
+            
+            if (message.children.length === 0) {
+                message.innerHTML = '<p>没有找到图片</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching images:', error);
+            message.innerHTML = '<p>无法加载图片，请稍后再试。</p>';
+        });
+}
+
+// 轮播图控制
+let currentSlide = 0;
+let slideInterval;
+let slideDelay = 5000; // 默认值5秒
+
+// 创建轮播图幻灯片元素
+function createSlideElement(image, index) {
+    const slide = document.createElement('div');
+    slide.className = 'carousel-slide';
+    
+    const img = document.createElement('img');
+    img.alt = image.name.replace(/\.\w+$/, '');
+    
+    // 添加加载错误处理
+    img.onerror = function() {
+        this.classList.add('error');
+        console.error(`图片加载失败: ${image.url}`);
+    };
+    
+    // 添加加载完成处理
+    img.onload = function() {
+        this.classList.remove('error');
+    };
+    
+    // 设置图片源
+    img.src = image.url;
+    
+    // 添加标题
+    if (image.name) {
+        const caption = document.createElement('div');
+        caption.className = 'carousel-caption';
+        caption.textContent = image.name;
+        slide.appendChild(caption);
+    }
+    
+    slide.appendChild(img);
+    return slide;
+}
+
+// 创建轮播图指示点元素
+function createDotElement(index) {
+    const dot = document.createElement('div');
+    dot.className = 'carousel-dot';
+    if (index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(index));
+    return dot;
+}
+
+// 设置轮播图事件监听器
+function setupCarouselEventListeners() {
+    const carouselContainer = document.querySelector('.carousel');
+    
+    // 鼠标悬停控制
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', () => {
+            console.log('鼠标进入，暂停轮播');
+            stopSlideShow();
+        });
+        
+        carouselContainer.addEventListener('mouseleave', () => {
+            console.log('鼠标离开，恢复轮播');
+            startSlideShow();
+        });
+    }
+    
+    // 按钮控制（可选）
+    const prevButton = document.querySelector('.carousel-prev, .carousel-button.prev, .prev-button');
+    const nextButton = document.querySelector('.carousel-next, .carousel-button.next, .next-button');
+    
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            console.log('上一张按钮点击');
+            prevSlide();
+        });
+    } else {
+        console.warn('上一张按钮未找到，自动轮播仍可工作');
+    }
+    
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            console.log('下一张按钮点击');
+            nextSlide();
+        });
+    } else {
+        console.warn('下一张按钮未找到，自动轮播仍可工作');
+    }
+}
+
+// 初始化轮播图
+function initCarousel(images) {
+    console.log('初始化轮播图，图片数量:', images.length);
+    if (!apiConfig.carousel) {
+        console.warn('缺少轮播图配置，使用默认值');
+        apiConfig.carousel = {
+            slideDelay: 5000,
+            maxSlides: 5
+        };
+    }
+    slideDelay = apiConfig.carousel.slideDelay || 5000;
+    
+    const slidesContainer = document.querySelector('.carousel-slides');
+    const dotsContainer = document.querySelector('.carousel-dots');
+    
+    if (!slidesContainer || !dotsContainer) {
+        console.error('轮播图容器元素未找到');
+        return;
+    }
+    
+    // 清空现有内容
+    slidesContainer.innerHTML = '';
+    dotsContainer.innerHTML = '';
+    
+    // 添加图片到轮播图
+    images.forEach((image, index) => {
+        const slide = createSlideElement(image, index);
+        slidesContainer.appendChild(slide);
+        
+        const dot = createDotElement(index);
+        dotsContainer.appendChild(dot);
+    });
+    
+    // 设置初始状态
+    updateCarousel();
+    
+    // 设置事件监听器
+    setupCarouselEventListeners();
+    
+    // 启动自动轮播
+    startSlideShow();
+}
+
+// 更新轮播图显示
+function updateCarousel() {
+    const slides = document.querySelector('.carousel-slides');
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // 更新指示点
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        if (index === currentSlide) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+}
+
+// 统一的幻灯片切换函数
+function changeSlide(newIndex) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    if (slides.length === 0) return;
+    
+    if (typeof newIndex === 'number') {
+        // 直接跳转到指定索引
+        currentSlide = newIndex;
+    } else if (newIndex === 'next') {
+        // 下一张
+        currentSlide = (currentSlide + 1) % slides.length;
+    } else if (newIndex === 'prev') {
+        // 上一张
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    }
+    
+    updateCarousel();
+    resetSlideShow();
+}
+
+// 下一张幻灯片 - 简化为调用统一函数
+function nextSlide() {
+    changeSlide('next');
+}
+
+// 上一张幻灯片 - 简化为调用统一函数
+function prevSlide() {
+    changeSlide('prev');
+}
+
+// 跳转到指定幻灯片 - 简化为调用统一函数
+function goToSlide(index) {
+    changeSlide(index);
+}
+
+// 统一的轮播控制函数
+function controlSlideShow(action) {
+    switch(action) {
+        case 'start':
+            if (!slideInterval) {
+                console.log('启动轮播，间隔:', slideDelay);
+                slideInterval = setInterval(() => {
+                    nextSlide();
+                }, slideDelay);
+            }
+            break;
+            
+        case 'stop':
+            if (slideInterval) {
+                console.log('停止轮播');
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+            break;
+            
+        case 'reset':
+            console.log('重置轮播计时器');
+            controlSlideShow('stop');
+            controlSlideShow('start');
+            break;
+    }
+}
+
+// 开始自动轮播 - 简化为调用统一函数
+function startSlideShow() {
+    controlSlideShow('start');
+}
+
+// 停止自动轮播 - 简化为调用统一函数
+function stopSlideShow() {
+    controlSlideShow('stop');
+}
+
+// 重置自动轮播计时器 - 简化为调用统一函数
+function resetSlideShow() {
+    controlSlideShow('reset');
+}
+
+// 从GitHub获取图片轮播图（修改此处：使用fetchWithToken）
+async function fetchImages() {
+    try {
+        // 核心修改：使用fetchWithToken并传递carouselImages的headers
+        const response = await fetchWithToken(
+            `${apiConfig.carouselImages.baseUrl}${apiConfig.carouselImages.path}`,
+            apiConfig.carouselImages.headers
+        );
+        
+        if (!response.ok) {
+            throw new Error('轮播图图片加载失败');
+        }
+        const data = await response.json();
+        
+        // 将GitHub API返回的数据转换为轮播图需要的格式
+        return data.reverse()
+            .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name))
+            .map(item => ({
+                url: apiConfig.domainReplace.reduce((currentUrl, rule) => {
+                    return currentUrl.replace(rule.from, rule.to);
+                }, item.download_url),
+                name: item.name.replace(/\.\w+$/, '')
+            }))
+            .slice(0, apiConfig.carousel.maxSlides); // 使用配置中的最大显示张数
+    } catch (error) {
+        console.error('获取轮播图图片失败:', error);
+        return [];
+    }
+}
+
+// 页面加载完成后初始化所有功能
+document.addEventListener('DOMContentLoaded', async () => {
+    // 加载文本内容
+    loadTextContents();
+    
+    // 加载图片内容
+    loadImageContents();
+    
+    // 初始化轮播图
+    const images = await fetchImages();
+    if (images.length > 0) {
+        initCarousel(images);
+    }
+});
+  </script>
+ 
+</body>
+</html>
