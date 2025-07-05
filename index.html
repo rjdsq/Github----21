@@ -1342,25 +1342,34 @@ const textFileUrls = {
     'text2': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
     'text3': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
 };
+
 function loadText(elementId, fileKey) {
     const element = document.getElementById(elementId);
     if (!element) return;
-    
+
     element.innerHTML = '<p class="loading">正在加载内容...</p>';
-    
     const url = textFileUrls[fileKey];
     if (!url) {
         element.innerHTML = `<p class="error">文件路径不存在</p>`;
         return;
     }
-    
+
     fetch(url)
-        .then(response => {
-            if (!response.ok) throw new Error(`请求失败: ${response.status}`);
-            return response.text();
-        })
+        .then(response => response.ok ? response.text() : Promise.reject(new Error(`请求失败: ${response.status}`)))
         .then(text => {
-            const htmlContent = text.replace(/\n/g, '<br>');
+            // 处理换行逻辑：
+            // 1. 先将2次换行(\n\n)转换为段落分隔符</p><p>
+            // 2. 将单次换行(\n)转换为<br>
+            // 3. 超过2次的换行(\n{3,})保持原样
+            // 4. 首尾添加段落标签
+            const htmlContent = text
+                .replace(/\n{3,}/g, '\n\n')  // 超过2次的换行保持为2次
+                .replace(/\n\n/g, '</p><p>')  // 2次换行转段落分隔
+                .replace(/\n/g, '<br>')       // 单次换行转<br>
+                .replace(/(^\s*|<br>\s*)|(\s*$|\s*<br>)/g, '')  // 移除首尾空白和<br>
+                .replace(/^/, '<p>')           // 开头添加<p>
+                .replace(/$/, '</p>');         // 结尾添加</p>
+            
             element.innerHTML = htmlContent;
         })
         .catch(error => {
@@ -1368,12 +1377,14 @@ function loadText(elementId, fileKey) {
             console.error('文本加载错误:', error);
         });
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     loadText('text1', 'text1');
     loadText('text2', 'text2');
     loadText('text3', 'text3');
 });
 </script>
+
 
 </body>
 </html>
