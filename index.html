@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
@@ -15,39 +14,39 @@
     <noscript><link rel="stylesheet" href="https://fontsapi.zeoseven.com/488/main/result.css"></noscript>
     <style>
         :root {
-            --primary-pink: #FF69B4;
-            --primary-light-pink: #FFB6C1;
-            --accent-1: #FF1493;
-            --accent-2: #FFC0CB;
-            --accent-3: #FF8C00; /* 可以根据需要调整 */
+            --primary-blue: #3498db;
+            --primary-green: #2ecc71;
+            --accent-1: #9b59b6;
+            --accent-2: #f1c40f;
+            --accent-3: #e74c3c;
             --light-gray: #ecf0f1;
             --dark-gray: #34495e;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: "STDongGuanTi";
             font-weight: normal;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, var(--primary-light-pink) 0%, var(--light-gray) 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
         }
-
+        
         /* 导航栏样式 */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 55;
+            z-index: 520;
             padding: 0.5rem 2rem;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
@@ -55,7 +54,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
-
+        
         .nav-container {
             max-width: 1000px;
             height: 36px;
@@ -64,43 +63,43 @@
             justify-content: space-between;
             align-items: center;
         }
-
+        
         .nav-brand {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-
+        
         .nav-logo {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255, 105, 180, 0.815);
+            border: 2px solid rgba(45, 216, 136, 0.815);
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-
+        
         .nav-logo:hover {
             transform: rotate(15deg) scale(1.1);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
-
+        
         .nav-title {
             font-size: 1.4rem;
             font-weight: 600;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, var(--primary-blue), var(--primary-green));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-
+        
         .nav-menu {
             display: flex;
             gap: 1.5rem;
         }
-
+        
         .nav-link {
             color: #444;
             text-decoration: none;
@@ -110,12 +109,12 @@
             border-radius: 20px;
             transition: all 0.3s ease;
             position: relative;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, #3498db, #2ecc71);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-
+        
         .nav-link::before {
             content: '';
             position: absolute;
@@ -124,50 +123,50 @@
             transform: translateX(-50%);
             width: 0;
             height: 2px;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, #3498db, #2ecc71);
             transition: width 0.3s ease;
         }
-
+        
         .nav-link:hover {
-            background: linear-gradient(to right, var(--accent-1), var(--primary-pink));
+            background: linear-gradient(to right, #2980b9, #27ae60);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             background-color: rgba(255, 255, 255, 0.1);
         }
-
+        
         .nav-link:hover::before {
             width: 60%;
         }
-
+        
         .nav-link.active {
-            background: linear-gradient(to right, var(--accent-1), var(--primary-pink));
+            background: linear-gradient(to right, #2471a3, #229954);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             background-color: rgba(255, 255, 255, 0.2);
         }
-
+        
         .nav-link.active::before {
             width: 60%;
         }
-
+        
         /* 响应式导航 */
         @media (max-width: 768px) {
             .navbar {
                 padding: 0.5rem 1rem;
             }
-
+            
             .nav-menu {
                 gap: 0.8rem;
             }
-
+            
             .nav-link {
                 padding: 0.4rem 0.8rem;
                 font-size: 0.6rem;
             }
         }
-
+        
         @media (max-width: 576px) {
             .nav-brand {
                 gap: 0.5rem;
@@ -175,30 +174,30 @@
                 min-width: 0;
                 min-height: 36px;
             }
-
+            
             .nav-title {
                 font-size: 1.1rem;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 120px;
-                background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+                background: linear-gradient(to right, #3498db, #2ecc71);
                 -webkit-background-clip: text;
                 background-clip: text;
                 color: transparent;
             }
-
+            
             .nav-logo {
                 width: 32px;
                 height: 32px;
                 flex-shrink: 0;
             }
-
+            
             .nav-container {
                 gap: 0.5rem;
                 position: relative;
             }
-
+            
             .hamburger {
                 display: inline-block;
                 cursor: pointer;
@@ -206,47 +205,47 @@
                 border: 0;
                 margin: 0;
                 padding: 10px;
-                z-index: 20;
+                z-index: 100;
             }
-
+            
             .hamburger-box {
                 width: 24px;
                 height: 24px;
                 display: inline-block;
                 position: relative;
             }
-
+            
             .hamburger-inner {
                 display: block;
                 top: 50%;
                 margin-top: -2px;
             }
-
+            
             .hamburger-inner,
             .hamburger-inner::before,
             .hamburger-inner::after {
                 width: 24px;
                 height: 1px;
-                background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+                background:linear-gradient(to right, #3498db, #2ecc71);
                 border-radius: 3px;
                 position: absolute;
                 transition: transform 0.2s ease;
             }
-
+            
             .hamburger-inner::before,
             .hamburger-inner::after {
                 content: "";
                 display: block;
             }
-
+            
             .hamburger-inner::before {
                 top: -8px;
             }
-
+            
             .hamburger-inner::after {
                 bottom: -8px;
             }
-
+            
             .nav-menu {
                 position: absolute;
                 top: calc(100% + 5px);
@@ -256,7 +255,7 @@
                 backdrop-filter: blur(5px);
                 flex-direction: column;
                 padding: 0.3rem 0;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                 border-radius: 6px;
                 display: none;
                 overflow: hidden;
@@ -264,48 +263,48 @@
                 opacity: 0;
                 transition: all 0.3s ease;
                 text-align: center;
-                border: 1px solid rgba(0, 0, 0, 0.05);
+                border: 1px solid rgba(0,0,0,0.05);
             }
-
+            
             .nav-menu.active {
                 display: flex;
                 transform: translateY(0);
                 opacity: 1;
                 animation: fadeInUp 0.3s ease forwards;
             }
-
+            
             .nav-link {
                 display: block;
                 padding: 0.6rem 0.8rem;
                 font-size: 0.9rem;
                 color: #444;
                 transition: all 0.2s ease;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+                border-bottom: 1px solid rgba(0,0,0,0.03);
             }
-
+            
             .nav-link:hover {
                 background-color: #f8f9fa;
-                color: var(--primary-pink);
+                color: #3498db;
                 transform: translateX(4px);
             }
-
+            
             .nav-link:last-child {
                 border-bottom: none;
             }
-
+            
             .hamburger.active .hamburger-inner {
                 transform: rotate(45deg);
             }
-
+            
             .hamburger.active .hamburger-inner::before {
                 transform: rotate(-90deg) translate(-8px, 0);
             }
-
+            
             .hamburger.active .hamburger-inner::after {
                 opacity: 0;
             }
         }
-
+        
         /* 轮播图样式 */
         .carousel-container {
             position: relative;
@@ -315,22 +314,22 @@
             margin-bottom: 30px;
             overflow: hidden;
             border-radius: 8px;
-            box-shadow: 2px 2px 16px rgba(255, 105, 180, 0.53);
+            box-shadow: 2px 2px 16px rgb(63 85 133 / 53%);
         }
-
+        
         .carousel-wrapper {
             width: 100%;
             height: 100%;
             position: relative;
         }
-
+        
         .carousel-slides {
             display: flex;
             width: 100%;
             height: 100%;
             transition: transform 0.5s ease-in-out;
         }
-
+        
         .carousel-slide {
             min-width: 100%;
             height: 100%;
@@ -339,7 +338,7 @@
             align-items: center;
             position: relative;
         }
-
+        
         .carousel-slide img {
             width: 100%;
             height: 100%;
@@ -348,11 +347,11 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
-
+        
         .carousel-slide img.loaded {
             opacity: 1;
         }
-
+        
         .carousel-caption {
             position: absolute;
             bottom: 33px;
@@ -363,9 +362,9 @@
             font-size: 0.9rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             z-index: 2;
-            box-shadow: 4px 1px 20px rgba(255, 192, 203, 0.24);
+            box-shadow: 4px 1px 20px rgb(222 221 225 / 24%);
         }
-
+        
         .carousel-button {
             position: absolute;
             top: 50%;
@@ -385,20 +384,20 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
-
+        
         .carousel-container:hover .carousel-button {
             opacity: 1;
-            background-color: rgba(255, 105, 180, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
         }
-
+        
         .carousel-button.prev {
             left: 20px;
         }
-
+        
         .carousel-button.next {
             right: 20px;
         }
-
+        
         .carousel-dots {
             position: absolute;
             bottom: 20px;
@@ -407,7 +406,7 @@
             display: flex;
             gap: 10px;
         }
-
+        
         .carousel-dot {
             width: 12px;
             height: 12px;
@@ -416,35 +415,35 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
+        
         .carousel-dot.active {
             background-color: white;
         }
-
+        
         @media (max-width: 768px) {
             .carousel-container {
                 height: 320px;
             }
-
+            
             .carousel-button {
                 width: 40px;
                 height: 40px;
                 font-size: 20px;
             }
         }
-
+        
         @media (max-width: 480px) {
             .carousel-container {
                 height: 194px;
             }
-
+            
             .carousel-button {
                 width: 30px;
                 height: 30px;
                 font-size: 16px;
             }
         }
-
+        
         /* 选项卡样式 */
         .tabs {
             display: flex;
@@ -453,14 +452,14 @@
             position: relative;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             background-color: #f8f9fa;
             padding: 5px;
             flex-wrap: nowrap;
             width: 96%;
             margin: 0 auto;
         }
-
+        
         .tab-button {
             padding: 15px 0;
             background-color: transparent;
@@ -480,19 +479,19 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
+        
         .tab-button:hover {
-            color: var(--primary-pink);
-            background-color: rgba(255, 105, 180, 0.05);
+            color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.05);
         }
-
+        
         .tab-button.active {
             color: #fff;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
-            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
             transform: translateY(-2px);
         }
-
+        
         .tab-button::after {
             content: '';
             position: absolute;
@@ -500,33 +499,33 @@
             left: 50%;
             width: 0;
             height: 3px;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, #3498db, #2ecc71);
             transition: all 0.3s ease;
             transform: translateX(-50%);
             opacity: 0;
         }
-
+        
         .tab-button:hover::after {
             width: 70%;
             opacity: 1;
         }
-
+        
         .tab-button.active::after {
             opacity: 0;
         }
-
+        
         .tab-content {
             font-size: 1.1rem;
             color: #144238;
             margin-top: 15px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.01);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.01);
             display: none;
             transform: translateY(10px);
             opacity: 0;
             transition: all 0.3s ease;
         }
-
+        
         .tab-content.active {
             display: block;
             transform: translateY(0);
@@ -534,7 +533,7 @@
             animation: fadeInUp 0.5s ease forwards;
             padding: 12px;
         }
-
+        
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -545,7 +544,7 @@
                 transform: translateY(0);
             }
         }
-
+        
         .tab-content h2 {
             margin-bottom: 20px;
             color: #2c3e50;
@@ -554,7 +553,7 @@
             padding-bottom: 10px;
             position: relative;
         }
-
+        
         .tab-content h2::after {
             content: '';
             position: absolute;
@@ -562,14 +561,14 @@
             left: 0;
             width: 50px;
             height: 2px;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, #3498db, #2ecc71);
             transition: width 0.3s ease;
         }
-
+        
         .tab-content.active h2::after {
             width: 100px;
         }
-
+        
         .tab-content p {
             color: #144238;
             line-height: 1.8;
@@ -578,42 +577,41 @@
             text-align: justify;
             letter-spacing: 0.3px;
         }
-
-        .tab-content ul,
-        .tab-content ol {
+        
+        .tab-content ul, .tab-content ol {
             padding-left: 20px;
             margin-bottom: 15px;
         }
-
+        
         .tab-content li {
             margin-bottom: 8px;
             color: #555;
         }
-
+        
         .tab-content img {
             max-width: 100%;
             height: auto;
             margin: 0 0;
-            box-shadow: 0 3px 10px rgba(255, 105, 180, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
-
+        
         .tab-content img:hover {
             transform: scale(1.02);
         }
-
+        
         .tab-content a {
-            color: var(--primary-pink);
+            color: #3498db;
             text-decoration: none;
             border-bottom: 1px solid transparent;
             transition: border-color 0.3s ease, color 0.3s ease;
         }
-
+        
         .tab-content a:hover {
-            color: var(--accent-1);
-            border-bottom-color: var(--accent-1);
+            color: #2ecc71;
+            border-bottom-color: #2ecc71;
         }
-
+        
         /* 图片展示区域样式 */
         #message {
             display: grid;
@@ -627,20 +625,20 @@
             align-items: center;
             display: none;
         }
-
+        
         #message.active {
             display: grid;
         }
-
+        
         .image-container {
             margin: auto;
             width: 100%;
-            background-color: rgba(255, 105, 180, 0.03);
+            background-color: rgb(49 90 169 / 3%);
             padding: 0;
             border-radius: 0;
-            box-shadow: 4px 5px 10px rgba(255, 192, 203, 0.7);
+            box-shadow: 4px 5px 10px rgb(178 195 185 / 70%);
         }
-
+        
         .landscape-image {
             width: 100%;
             height: auto;
@@ -648,11 +646,11 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
-
+        
         .landscape-image.loaded {
             opacity: 1;
         }
-
+        
         .subtitle {
             text-align: center;
             font-size: 1rem;
@@ -660,19 +658,19 @@
             margin: 8px 0 16px;
             text-align: center;
         }
-
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .main-content {
                 padding: 10px;
             }
-
+        
             .tabs {
                 padding: 5px;
                 flex-wrap: nowrap;
                 overflow-x: auto;
             }
-
+        
             .tab-button {
                 padding: 12px 10px;
                 font-size: 0.9rem;
@@ -680,37 +678,37 @@
                 flex: 1;
                 min-width: 0;
             }
-
+        
             .tab-content {
                 padding: 20px;
             }
-
+        
             #message {
                 grid-template-columns: 1fr;
             }
         }
-
+        
         @media (max-width: 480px) {
             .tabs {
                 padding: 4px;
             }
-
+            
             .tab-button {
                 padding: 10px 5px;
                 font-size: 0.9rem;
                 margin: 0 2px;
             }
-
+            
             .tab-content {
                 padding: 15px;
                 border-radius: 8px;
             }
-
+            
             .tab-content h2 {
                 font-size: 1.1rem;
             }
         }
-
+        
         /* 页面整体美化 */
         .main-content {
             max-width: 1000px;
@@ -721,7 +719,7 @@
             overflow: hidden;
             animation: pageLoad 0.6s ease-out;
         }
-
+        
         @keyframes pageLoad {
             from {
                 opacity: 0;
@@ -732,18 +730,18 @@
                 transform: translateY(0);
             }
         }
-
+        
         @media (max-width: 768px) {
             .main-content {
                 margin: 58px auto 15px;
                 padding: 20px 15px;
             }
-
+        
             body {
                 padding: 10px;
             }
         }
-
+        
         /* 音乐播放按钮样式 - 修复移位问题 */
         .music-button {
             position: fixed;
@@ -752,26 +750,26 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, #3498db, #2ecc71);
             color: white;
             border: none;
-            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 66;
+            z-index: 920;
             transition: all 0.3s ease;
             overflow: hidden;
             /* 确保图标居中 */
             flex-direction: column;
         }
-
+        
         .music-button:hover {
             transform: scale(1.1);
-            background: linear-gradient(to right, var(--accent-1), var(--primary-pink));
+            background: linear-gradient(to right, #2980b9, #27ae60);
         }
-
+        
         /* 图标样式 */
         .icon {
             display: inline-block;
@@ -782,65 +780,56 @@
             height: 24px;
             transition: opacity 0.3s ease;
         }
-
+        
         .icon-play {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
         }
-
+        
         .icon-pause {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
         }
-
+        
         .music-button.playing {
             animation: pulse 2s infinite;
-            background: linear-gradient(to right, var(--primary-light-pink), var(--primary-pink));
+            background: linear-gradient(to right, #2ecc71, #3498db);
         }
-
+        
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.7);
-            }
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(255, 105, 180, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
-            }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
         }
-
+        
         /* 美化滚动条 */
         ::-webkit-scrollbar {
             width: 2px;
         }
-
+        
         ::-webkit-scrollbar-track {
-            background: var(--primary-light-pink);
+            background: #19d367;
             border-radius: 5px;
         }
-
+        
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to right, var(--primary-pink), var(--primary-light-pink));
+            background: linear-gradient(to right, #3498db, #2ecc71);
             border-radius: 5px;
             transition: background 0.3s ease;
         }
-
+        
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to right, var(--accent-1), var(--primary-pink));
+            background: linear-gradient(to right, #2980b9, #27ae60);
         }
-
+        
         /* 文本选择样式 */
         ::selection {
-            background: rgba(255, 105, 180, 0.2);
+            background: rgba(52, 152, 219, 0.2);
             color: #2c3e50;
         }
+
+
     </style>
 </head>
-
 <body>
-
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -858,15 +847,19 @@
                 <a href="https://rjdsq.github.io/历史版本/1.0/1.0发行版.html" class="nav-link">1.0发行版</a>
                 <a href="https://rjdsq.github.io/历史版本/2.0/2.0初始版.html" class="nav-link">2.0初始版</a>
                 <a href="https://rjdsq.github.io/历史版本/2.0/2.0开发版.html" class="nav-link">2.0开发版</a>
+                <a href="https://rjdsq.github.io/历史版本/2.0/2.0发行版2.html" class="nav-link">2.0发行版</a>
+                <a href="https://rjdsq.github.io/历史版本/2.0/粉色回忆录.html" class="nav-link">2.0粉色特别版</a>
+                <a href="https://rjdsq.github.io/历史版本/2.0/拟态回忆录.html" class="nav-link">2.0拟态特别版</a>
+                <a href="https://rjdsq.github.io/html/Github_toke4.html" class="nav-link">后台管理</a>
             </div>
         </div>
     </nav>
-
+    
     <div class="main-content">
         <!-- 轮播图 -->
         <div class="carousel-container">
             <div class="loader-container" id="loaderContainer">
-
+            
             </div>
             <div class="carousel-wrapper">
                 <div class="carousel-slides"></div>
@@ -909,7 +902,7 @@
         <source src="https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
         您的浏览器不支持音频元素。
     </audio>
-
+    
     <!-- 音乐播放按钮 -->
     <button id="music-button" class="music-button" title="播放/暂停音乐">
         <span class="icon icon-play"></span>
@@ -1273,7 +1266,5 @@
             }
         });
     </script>
-    <script src="https://rjdsq.github.io/file/樱花1.js"></script>
 </body>
-
 </html>
