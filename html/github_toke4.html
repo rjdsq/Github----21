@@ -929,7 +929,7 @@ body {
                 copyProxyLinkBtn.addEventListener('click', () => {
                     if (item.type === 'file') {
                         const rawLink = item.download_url;
-                        const proxyLink = `https://goppx.com/${rawLink}`;
+                        const proxyLink = `https://gh-proxy.com/${rawLink}`;
                         navigator.clipboard.writeText(proxyLink).then(() => {
                             showToast('代理链接已复制');
                         }).catch((error) => {
