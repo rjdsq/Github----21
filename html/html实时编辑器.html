@@ -1,7 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="refresh" content="0;url=https://www.baidu.com">
-    
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  .play-btn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 16px 32px;
+    font-size: 40px;
+    font-weight: bold;
+    color: black;
+    border: none;
+    width:100%;
+    height:100%;
+    border-radius: 8px;
+    touch-action: manipulation;
+  }
+</style>
 </head>
+<body>
+<audio id="music" autoplay loop>
+  <source src="https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/mp3/赞美愚者.mp3" type="audio/mpeg">
+  
+</audio>
+<button class="play-btn" onclick="document.getElementById('music').play()">音乐播放中</button>
+
+<script>
+  // 更兼容的自动播放处理
+  window.onload = function() {
+    var audio = document.getElementById('music');
+    audio.play().catch(function(error) {
+      // 如果自动播放被阻止，显示点击播放提示
+      document.querySelector('.play-btn').textContent = '点击播放音乐';
+    });
+    
+    // 确保循环播放
+    audio.loop = true;
+    
+    // 旧版浏览器回退方案
+    audio.addEventListener('ended', function() {
+      this.currentTime = 0;
+      this.play();
+    }, false);
+  };
+</script>
+</body>
 </html>
