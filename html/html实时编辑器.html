@@ -9,7 +9,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 16px 32px;
-    font-size: 40px;
+    font-size: 120px;
     font-weight: bold;
     color: black;
     border: none;
@@ -17,34 +17,79 @@
     height:100%;
     border-radius: 8px;
     touch-action: manipulation;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  .control-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    z-index: 100;
   }
 </style>
 </head>
 <body>
 <audio id="music" autoplay loop>
   <source src="https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/mp3/赞美愚者.mp3" type="audio/mpeg">
-  
+  您的浏览器不支持音频元素。
 </audio>
-<button class="play-btn" onclick="document.getElementById('music').play()">音乐播放中</button>
+
+<button class="play-btn" onclick="togglePlay()"></button>
+<button class="control-btn" onclick="togglePlay()">暂停</button>
 
 <script>
-  // 更兼容的自动播放处理
+  var audio = document.getElementById('music');
+  var isPlaying = false;
+  
+  // 初始化
   window.onload = function() {
-    var audio = document.getElementById('music');
-    audio.play().catch(function(error) {
-      // 如果自动播放被阻止，显示点击播放提示
-      document.querySelector('.play-btn').textContent = '点击播放音乐';
-    });
+    // 尝试自动播放
+    var playPromise = audio.play();
     
-    // 确保循环播放
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        isPlaying = true;
+        updateButton();
+      })
+      .catch(error => {
+        isPlaying = false;
+        updateButton();
+      });
+    }
+    
+    // 确保循环
     audio.loop = true;
     
-    // 旧版浏览器回退方案
+    // 旧浏览器兼容
     audio.addEventListener('ended', function() {
       this.currentTime = 0;
-      this.play();
-    }, false);
+      if(isPlaying) this.play();
+    });
   };
+  
+  // 播放/暂停切换
+  function togglePlay() {
+    if(isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    isPlaying = !isPlaying;
+    updateButton();
+  }
+  
+  // 更新按钮状态
+  function updateButton() {
+    document.querySelector('.control-btn').textContent = isPlaying ? '暂停' : '播放';
+    document.querySelector('.play-btn').textContent = isPlaying ? '音乐播放中' : '点击播放音乐';
+  }
 </script>
 </body>
 </html>
