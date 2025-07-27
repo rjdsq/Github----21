@@ -900,7 +900,7 @@
 
     <!-- 音乐播放器 -->
     <audio id="music-player" loop>
-        <source src="https://gh-proxy.com//https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
+        <source src="https://gh-proxy.com/raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
         您的浏览器不支持音频元素。
     </audio>
     
@@ -1064,11 +1064,12 @@
                         const imgContainer = document.createElement('div');
                         imgContainer.className = 'image-container';
                         
-                        const img = document.createElement('img');
-                        img.src = 'https://gh-proxy.com//' + item.download_url;
-                        img.alt = item.name.replace(/\.\w+$/, '');
-                        img.loading = 'lazy';
-                        img.className = 'landscape-image image-loading';
+                       const img = document.createElement('img');
+img.src = 'https://gh-proxy.com/' + item.download_url.replace(/^https?:\/\//, '');
+img.alt = item.name.replace(/^https?:\/\//, '');
+img.loading = 'lazy';
+img.className = 'landscape-image image-loading';
+
                         
                         // 图片加载完成后移除加载动画
                         img.onload = function() {
@@ -1130,8 +1131,9 @@
                         slide.className = 'carousel-slide';
                         
                         const img = document.createElement('img');
-                        img.src = 'https://gh-proxy.com//' + imgItem.download_url;
-                        img.alt = imgItem.name.replace(/\.\w+$/, '');
+                        
+img.src = 'https://gh-proxy.com/' + imgItem.download_url.replace(/^https?:\/\//, '');
+
                         img.className = 'carousel-slide-img image-loading';
                         img.loading = 'lazy';
                         
@@ -1217,9 +1219,9 @@
         
         // 文本加载逻辑
         const textFileUrls = {
-            'text1': 'https://gh-proxy.com//https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
-            'text2': 'https://gh-proxy.com//https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
-            'text3': 'https://gh-proxy.com//https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
+            'text1': 'https://gh-proxy.com/raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
+            'text2': 'https://gh-proxy.com/raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
+            'text3': 'https://gh-proxy.com/raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
         };
         
         function loadText(elementId, fileKey) {
