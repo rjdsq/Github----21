@@ -6,68 +6,125 @@
 <title>关于她 · 图集</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#111;color:#fff}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#111;color:#fff;padding-bottom:60px;/* 为底部导航栏预留空间 */}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));/* 默认双列 */gap:8px;padding:8px}
+/* 单列布局 */
+.gallery.single-column{grid-template-columns:1fr;}
+.gallery.single-column .thumb{aspect-ratio:16/9;/* 单列时使用宽屏比例 */}
 .thumb{position:relative;border-radius:4px;overflow:hidden;background:#222;aspect-ratio:1/1;cursor:pointer}
 .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .2s}
 .thumb:hover img{transform:scale(1.05)}
 .thumb .title{position:absolute;left:0;right:0;bottom:0;padding:20px 6px 6px;font-size:12px;
               background:linear-gradient(to top,rgba(0,0,0,.7),transparent);pointer-events:none}
-
 /* 全屏查看层 */
 .viewer{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:999}
 .viewer img{max-width:95%;max-height:95%;border-radius:4px;transition:transform .3s ease}
 .viewer .info{position:absolute;left:0;right:0;bottom:20px;text-align:center;font-size:16px;color:#fff;text-shadow:0 0 5px #000}
 .viewer .close{position:absolute;top:20px;right:20px;font-size:30px;color:#fff;cursor:pointer}
+/* 底部导航栏 */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#222;display:flex;z-index:998;padding:8px;}
+.nav-btn{flex:1;padding:10px 0;margin:0 4px;border-radius:4px;background:#333;border:none;color:#fff;font-size:14px;cursor:pointer;transition:background .2s}
+.nav-btn.active{background:#007bff;}
+/* 布局切换按钮 */
+.layout-controls{position:fixed;bottom:60px;right:10px;display:flex;gap:8px;z-index:997}
+.layout-btn{width:40px;height:40px;border-radius:50%;background:#333;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
-
 <!-- 缩略图网格 -->
 <div id="gallery" class="gallery">
   <div class="loading">加载中…</div>
 </div>
-
 <!-- 全屏查看器 -->
 <div id="viewer" class="viewer">
   <span class="close" onclick="closeViewer()">&times;</span>
   <img id="viewerImg" />
   <div id="viewerInfo" class="info"></div>
 </div>
+<!-- 布局切换按钮 -->
+<div class="layout-controls">
+  <button class="layout-btn" onclick="setLayout('double')" title="双列显示">2</button>
+  <button class="layout-btn" onclick="setLayout('single')" title="单列显示">1</button>
+</div>
+<!-- 底部导航栏 -->
+<div class="nav-bar">
+  <button class="nav-btn active" onclick="loadImages('all')">全部图片</button>
+  <button class="nav-btn" onclick="loadImages('douyin')">最新图片</button>
+  <button class="nav-btn" onclick="loadImages('yunnan')">云南图片</button>
+</div>
 
 <script>
-const API  = 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan';
+const API_URLS = {
+  douyin: 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/douyin',
+  yunnan: 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan',
+  all: ['https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/douyin', 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/yunnan']
+};
 const PROXY= 'https://gh-proxy.com/';
-
 let imgs=[];           // 图片数组
 let idx =0;            // 当前索引
+let currentSource = 'all'; // 当前数据源
 
+// 初始加载全部图片
+loadImages('all');
 
-fetch(API)
-  .then(r=>r.json())
-  .then(list=>{
-    imgs=list.filter(f=>/\.(jpe?g|png|gif|webp)$/i.test(f.name));
-    renderThumbs();
-  })
-  .catch(()=>gallery.innerHTML='<div style="text-align:center;padding:40px;color:#666">加载失败，请稍后重试</div>');
-
+function loadImages(source) {
+  // 更新导航按钮状态
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`.nav-btn[onclick="loadImages('${source}')"]`).classList.add('active');
+  
+  currentSource = source;
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '<div style="text-align:center;padding:40px;">加载中…</div>';
+  
+  // 根据来源加载不同API
+  if (source === 'all') {
+    // 加载全部图片（合并两个API）
+    Promise.all(API_URLS.all.map(url => fetch(url).then(r => r.json())))
+      .then(results => {
+        // 合并结果并过滤图片
+        let allImages = [];
+        results.forEach(list => {
+          allImages.push(...list.filter(f => /\.(jpe?g|png|gif|webp)$/i.test(f.name)));
+        });
+        imgs = allImages.reverse(); // 反向排序
+        renderThumbs();
+      })
+      .catch(() => gallery.innerHTML='<div style="text-align:center;padding:40px;color:#666">加载失败，请稍后重试</div>');
+  } else {
+    // 加载单个来源
+    fetch(API_URLS[source])
+      .then(r => r.json())
+      .then(list => {
+        imgs = list.filter(f => /\.(jpe?g|png|gif|webp)$/i.test(f.name)).reverse(); // 反向排序
+        renderThumbs();
+      })
+      .catch(() => gallery.innerHTML='<div style="text-align:center;padding:40px;color:#666">加载失败，请稍后重试</div>');
+  }
+}
 
 function renderThumbs(){
+  const gallery = document.getElementById('gallery');
   gallery.innerHTML='';
-  imgs.forEach((f,i)=>{
+  
+  if (imgs.length === 0) {
+    gallery.innerHTML = '<div style="text-align:center;padding:40px;color:#666">没有找到图片</div>';
+    return;
+  }
+  
+  imgs.forEach((f,i) => {
     const box=document.createElement('div');
     box.className='thumb';
     box.innerHTML=`
-      <img src="${PROXY+f.download_url}" alt="">
+      <img src="${PROXY+f.download_url}" alt="${f.name}">
       <div class="title">${f.name.replace(/\.[^/.]+$/,'')}</div>`;
-    box.onclick=()=>openViewer(i);
+    box.onclick=() => openViewer(i);
     gallery.appendChild(box);
   });
 }
 
-
 function openViewer(i){
-  idx=i;
+  idx = i;
+  const viewer = document.getElementById('viewer');
   viewer.style.display='flex';
   updateSrc();
   document.addEventListener('keydown',onKey);
@@ -75,54 +132,77 @@ function openViewer(i){
   viewer.addEventListener('touchstart',onTouch);
 }
 
-
 function closeViewer(){
+  const viewer = document.getElementById('viewer');
   viewer.style.display='none';
   document.removeEventListener('keydown',onKey);
   viewer.removeEventListener('click',onClick);
   viewer.removeEventListener('touchstart',onTouch);
 }
 
-
 function updateSrc(){
-  viewerImg.src=PROXY+imgs[idx].download_url;
-  viewerInfo.textContent=`${idx+1} / ${imgs.length}  ${imgs[idx].name.replace(/\.[^/.]+$/,'')}`;
+  const viewerImg = document.getElementById('viewerImg');
+  const viewerInfo = document.getElementById('viewerInfo');
+  viewerImg.src = PROXY + imgs[idx].download_url;
+  viewerInfo.textContent = `${idx+1} / ${imgs.length}  ${imgs[idx].name.replace(/\.[^/.]+$/,'')}`;
 }
-
 
 function onKey(e){
-  if(e.key==='ArrowLeft') prev();
-  if(e.key==='ArrowRight') next();
-  if(e.key==='Escape') closeViewer();
+  if(e.key === 'ArrowLeft') prev();
+  if(e.key === 'ArrowRight') next();
+  if(e.key === 'Escape') closeViewer();
 }
+
 function onClick(e){
-  if(e.target===viewer || e.target.classList.contains('close')) closeViewer();
-  else{
-    const vw=window.innerWidth;
-    e.clientX<vw/3?prev():e.clientX>vw*2/3?next():0;
+  if(e.target === document.getElementById('viewer') || e.target.classList.contains('close')) {
+    closeViewer();
+  } else {
+    const vw = window.innerWidth;
+    e.clientX < vw/3 ? prev() : e.clientX > vw*2/3 ? next() : 0;
   }
 }
 
-
 let sx=0;
 function onTouch(e){
-  sx=e.touches[0].clientX;
-  viewer.addEventListener('touchmove',onMove,{passive:true});
-  viewer.addEventListener('touchend',onEnd,{once:true});
+  sx = e.touches[0].clientX;
+  document.getElementById('viewer').addEventListener('touchmove',onMove,{passive:true});
+  document.getElementById('viewer').addEventListener('touchend',onEnd,{once:true});
 }
+
 function onMove(e){
-  if(Math.abs(e.touches[0].clientX-sx)>50) viewerImg.style.transform=`translateX(${e.touches[0].clientX-sx}px)`;
+  if(Math.abs(e.touches[0].clientX - sx) > 50) {
+    document.getElementById('viewerImg').style.transform = `translateX(${e.touches[0].clientX - sx}px)`;
+  }
 }
+
 function onEnd(e){
-  const dx=e.changedTouches[0].clientX-sx;
-  viewerImg.style.transform='';
-  viewer.removeEventListener('touchmove',onMove);
-  if(Math.abs(dx)>50) dx<0?next():prev();
+  const dx = e.changedTouches[0].clientX - sx;
+  document.getElementById('viewerImg').style.transform = '';
+  document.getElementById('viewer').removeEventListener('touchmove',onMove);
+  if(Math.abs(dx) > 50) {
+    dx < 0 ? next() : prev();
+  }
+}
+
+function prev(){
+  idx = (idx - 1 + imgs.length) % imgs.length;
+  updateSrc();
+}
+
+function next(){
+  idx = (idx + 1) % imgs.length;
+  updateSrc();
 }
 
 
-function prev(){idx=(idx-1+imgs.length)%imgs.length;updateSrc();}
-function next(){idx=(idx+1)%imgs.length;updateSrc();}
+function setLayout(type) {
+  const gallery = document.getElementById('gallery');
+  if (type === 'single') {
+    gallery.classList.add('single-column');
+  } else {
+    gallery.classList.remove('single-column');
+  }
+}
 </script>
 </body>
 </html>
