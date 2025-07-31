@@ -21,35 +21,19 @@ fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u005
 d.reverse().forEach(f=>{
 if(f.name.endsWith('.webp')){
 const img=document.createElement('img');
-img.dataset.src='https://gh-proxy.com/'+f.download_url;
-img.loading='lazy';
+img.src='https://gh-proxy.com/'+f.download_url;
 img.addEventListener('click',e=>{
 e.preventDefault();
 v.style.display='flex';
-v.querySelector('img').src=img.dataset.src;
+v.querySelector('img').src=img.src;
 });
 c.appendChild(img);
 }
 });
-
-const lazyLoad = target => {
-const io = new IntersectionObserver((entries, observer) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) {
-const img = entry.target;
-img.src = img.dataset.src;
-observer.disconnect();
-}
-});
-});
-io.observe(target);
-};
-
-document.querySelectorAll('img[data-src]').forEach(lazyLoad);
 });
 v.addEventListener('click',()=>v.style.display='none');
 
-const a=new Audio("https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/music/kiss.mp3");document.addEventListener("touchstart",()=>a.play(),{once:!0}),document.addEventListener("click",()=>a.play(),{once:!0});
+(function(d){let t=[],c=0,p=!1,played=!1;if(d.getElementById('m-p'))return;let a=d.createElement('div');a.id='m-p';a.style.cssText='position:fixed;bottom:10%;right:20px;display:flex;gap:15px;z-index:9999';a.innerHTML='<button id="b" style="font:32px sans-serif;background:0;border:0;color:#fff;cursor:pointer">⏮</button><button id="p" style="font:32px sans-serif;background:0;border:0;color:#fff;cursor:pointer">▶</button><button id="n" style="font:32px sans-serif;background:0;border:0;color:#fff;cursor:pointer">⏭</button><audio id="a" hidden>';d.body.appendChild(a);let b=d.getElementById('b'),pbtn=d.getElementById('p'),n=d.getElementById('n'),aud=d.getElementById('a');fetch('https://gh-proxy.com/https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music').then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>({u:'https://gh-proxy.com/'+f.download_url}));t.length&&(aud.src=t[0].u)});pbtn.onclick=toggle;b.onclick=()=>{c=(c-1+t.length)%t.length;aud.src=t[c].u;p&&aud.play()};n.onclick=()=>{c=(c+1)%t.length;aud.src=t[c].u;p&&aud.play()};aud.onended=()=>n.onclick();d.addEventListener('click',()=>{if(!played&&t.length){aud.play();p=played=!0;pbtn.textContent='❚❚'}});function toggle(){p?aud.pause():aud.play();p=!p;pbtn.textContent=p?'❚❚':'▶';played=!0}})(document);
 </script>
 </body>
 </html>
