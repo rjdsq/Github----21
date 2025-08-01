@@ -15,6 +15,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 <div id="c"></div>
 <div id="v"><img></div>
 <script>
+//图片核心组件
 const u='https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/douyin';
 fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'}})
 .then(r=>r.json()).then(d=>{
@@ -33,7 +34,68 @@ c.appendChild(img);
 });
 v.addEventListener('click',()=>v.style.display='none');
 
-(function(d){let t=[],c=0,p=!1,played=!1;if(d.getElementById('m-p'))return;let a=d.createElement('div');a.id='m-p';a.style.cssText='position:fixed;bottom:10%;right:20px;display:flex;gap:15px;z-index:9999';a.innerHTML='<button id="b" style="font:32px sans-serif;background:0;border:0;color:#fff;cursor:pointer">⏮</button><button id="p" style="font:32px sans-serif;background:0;border:0;color:#fff;cursor:pointer">▶</button><button id="n" style="font:32px sans-serif;background:0;border:0;color:#fff;cursor:pointer">⏭</button><audio id="a" hidden>';d.body.appendChild(a);let b=d.getElementById('b'),pbtn=d.getElementById('p'),n=d.getElementById('n'),aud=d.getElementById('a');fetch('https://gh-proxy.com/https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music').then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>({u:'https://gh-proxy.com/'+f.download_url}));t.length&&(aud.src=t[0].u)});pbtn.onclick=toggle;b.onclick=()=>{c=(c-1+t.length)%t.length;aud.src=t[c].u;p&&aud.play()};n.onclick=()=>{c=(c+1)%t.length;aud.src=t[c].u;p&&aud.play()};aud.onended=()=>n.onclick();d.addEventListener('click',()=>{if(!played&&t.length){aud.play();p=played=!0;pbtn.textContent='❚❚'}});function toggle(){p?aud.pause():aud.play();p=!p;pbtn.textContent=p?'❚❚':'▶';played=!0}})(document);
+//音乐
+(function(d) {
+    let t = [], c = 0, p = !1, played = !1;
+    if (d.getElementById('m-p')) return;
+    let a = d.createElement('div');
+    a.id = 'm-p';
+    a.style.cssText = 'position:fixed;bottom:10%;left:50%;transform:translateX(-50%);display:flex;gap:25px;z-index:9999';
+    a.innerHTML = '<button id="b" style="font:55px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">⏮</button><button id="p" style="font:46px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">▶</button><button id="n" style="font:55px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">⏭</button><audio id="a" hidden>';
+    d.body.appendChild(a);
+    let b = d.getElementById('b'), 
+        pbtn = d.getElementById('p'), 
+        n = d.getElementById('n'), 
+        aud = d.getElementById('a');
+    
+    fetch('https://gh-proxy.com/https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music')
+        .then(r => r.json())
+        .then(e => {
+            t = e.filter(f => f.name.endsWith('.mp3')).map(f => ({
+                u: 'https://gh-proxy.com/' + f.download_url
+            }));
+            t.length && (aud.src = t[0].u);
+        });
+    
+    pbtn.onclick = toggle;
+    
+    b.onclick = () => {
+        c = (c - 1 + t.length) % t.length;
+        aud.src = t[c].u;
+        aud.play();
+        p = true;
+        pbtn.textContent = '❚❚';
+        played = true;
+    };
+    
+    n.onclick = () => {
+        c = (c + 1) % t.length;
+        aud.src = t[c].u;
+        aud.play();
+        p = true;
+        pbtn.textContent = '❚❚';
+        played = true;
+    };
+    
+    aud.onended = () => n.onclick();
+    
+    d.addEventListener('click', () => {
+        if (!played && t.length) {
+            aud.play();
+            p = played = !0;
+            pbtn.textContent = '❚❚';
+        }
+    });
+    
+    function toggle() {
+        p ? aud.pause() : aud.play();
+        p = !p;
+        pbtn.textContent = p ? '❚❚' : '▶';
+        played = !0;
+    }
+})(document);
+
+
 </script>
 </body>
 </html>
