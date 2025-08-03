@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub文件管理器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="bg-[#030712] text-[#f3f4f6] min-h-screen overflow-x-hidden">
+    <!-- 页面结构保持不变 -->
+    <div id="authScreen" class="h-screen flex flex-col p-6 justify-center gap-6">
+        <div class="text-center mb-10">
+            <i class="fa fa-github text-6xl text-gray-400 mb-4"></i>
+            <h1 class="text-3xl font-bold">GitHub文件管理器</h1>
+        </div>
+        <div class="shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] rounded-xl p-6 flex flex-col gap-4">
+            <input type="text" id="tokenInput" placeholder="输入GitHub访问令牌" 
+                class="box-shadow-[inset_3px_3px_6px_rgba(0,0,0,0.3),inset_-3px_-3px_6px_rgba(75,85,99,0.1)] bg-[#030712] rounded-lg p-3 outline-none text-[#f3f4f6]">
+            <button id="authBtn" class="box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#6b7280] hover:bg-[#4b5563] transition-colors rounded-lg p-3 font-medium">
+                登录
+            </button>
+        </div>
+    </div>
+
+    <div id="app" class="hidden flex flex-col h-screen">
+        <header class="bg-[rgba(17,24,39,0.8)] backdrop-blur-[10px] -webkit-backdrop-blur-[10px] box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] py-3 px-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa fa-github text-gray-400"></i>
+                <h1 class="font-bold text-lg truncate" id="currentRepo">选择仓库</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="logoutBtn" class="p-2 rounded-full hover:bg-[#6b7280]/20 transition-colors" title="退出登录">
+                    <i class="fa fa-sign-out"></i>
+                </button>
+                <button id="repoBtn" class="p-2 rounded-full hover:bg-[#6b7280]/20 transition-colors" title="仓库列表">
+                    <i class="fa fa-github text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="bg-[rgba(17,24,39,0.8)] backdrop-blur-[10px] -webkit-backdrop-blur-[10px] py-2 px-4 overflow-x-auto whitespace-nowrap hidden" id="pathNavContainer">
+            <div id="pathNav" class="flex gap-1 text-sm"></div>
+        </div>
+
+        <main class="flex-1 overflow-y-auto">
+            <div id="repoList" class="p-3 space-y-2">
+                <div class="flex justify-center items-center h-full py-10">
+                    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div>
+                </div>
+            </div>
+            <div id="fileList" class="p-3 space-y-2 hidden">
+                <div class="flex justify-center items-center h-full py-10">
+                    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-[rgba(17,24,39,0.8)] backdrop-blur-[10px] -webkit-backdrop-blur-[10px] box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] py-3 px-4 flex justify-around">
+            <button id="backBtn" class="flex flex-col items-center justify-center p-2 w-1/4" title="返回上级">
+                <i class="fa fa-arrow-up text-xl"></i>
+            </button>
+            <button id="newFolderBtn" class="flex flex-col items-center justify-center p-2 w-1/4" title="新建文件夹">
+                <i class="fa fa-folder text-xl"></i>
+            </button>
+            <button id="uploadBtn" class="flex flex-col items-center justify-center p-2 w-1/4" title="上传文件">
+                <i class="fa fa-upload text-xl"></i>
+            </button>
+            <button id="refreshBtn" class="flex flex-col items-center justify-center p-2 w-1/4" title="刷新">
+                <i class="fa fa-refresh text-xl"></i>
+            </button>
+        </footer>
+    </div>
+
+    <!-- 编辑模态框 -->
+    <div id="editModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] rounded-xl flex flex-col w-full max-w-5xl min-h-[60vh]">
+            <div class="flex justify-between items-center p-3 border-b border-gray-700">
+                <h3 class="text-lg font-bold" id="editFileName">编辑文件</h3>
+                <button id="closeEditModal" class="p-2 hover:bg-[#6b7280]/20 rounded-full">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-3 m-[0.1rem_0] rounded-[0.375rem]" id="editStatus"></div>
+            <div class="flex-1 overflow-hidden relative">
+                <div id="editorOverlay" class="absolute inset-0 flex items-center justify-center bg-[rgba(17,24,39,0.7)] z-10 rounded-[0.375rem] opacity-0 pointer-events-none transition-opacity-[0.3s_ease]">
+                    <div class="text-center"><i class="fa fa-spinner fa-spin text-2xl"></i></div>
+                </div>
+                <div class="save-notification absolute top-10 right-10 bg-[rgba(15,81,50,0.9)] text-white p-[5px_10px] rounded-4px text-14px z-5 opacity-0 transform -translate-y-20 transition-[opacity_0.3s_ease,transform_0.3s_ease]" id="saveNotification">
+                    <i class="fa fa-check mr-1"></i> 保存成功
+                </div>
+                <textarea id="fileContent" class="box-shadow-[inset_3px_3px_6px_rgba(0,0,0,0.3),inset_-3px_-3px_6px_rgba(75,85,99,0.1)] bg-[#030712] w-full h-full resize-none p-3 outline-none"></textarea>
+            </div>
+            <div class="flex gap-3 p-3 border-t border-gray-700">
+                <button id="cancelEdit" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] hover:bg-[#111827]/70 transition-colors rounded-lg p-3">取消</button>
+
+                <button id="saveEdit" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#6b7280] hover:bg-[#4b5563] transition-colors rounded-lg p-3">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他模态框和组件保持不变 -->
+    <div id="uploadPanel" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-[rgba(17,24,39,0.8)] backdrop-blur-[10px] -webkit-backdrop-blur-[10px] box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] rounded-lg p-4 w-[91.666667%] max-w-md hidden z-40">
+        <h3 class="font-medium mb-3">文件上传中</h3>
+        <div id="uploadItems" class="space-y-3 max-h-40 overflow-y-auto"></div>
+    </div>
+
+    <div id="modalOverlay" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+        <div class="box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] rounded-xl p-5 w-[91.666667%] max-w-md">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <div id="contextMenu" class="fixed bg-[rgba(17,24,39,0.8)] backdrop-blur-[10px] -webkit-backdrop-blur-[10px] box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] rounded-lg shadow-lg z-50 hidden w-48">
+        <div class="py-1" id="contextMenuItems"></div>
+    </div>
+
+    <div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-[rgba(17,24,39,0.8)] backdrop-blur-[10px] -webkit-backdrop-blur-[10px] box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] px-4 py-2 rounded-full hidden z-30">
+        <span id="toastMessage"></span>
+    </div>
+
+    <input type="file" id="fileUploadInput" multiple class="hidden">
+
+    <script>
+        const state = {
+            token: localStorage.getItem('gh_token') || null,
+            currentRepo: null,
+            currentPath: '',
+            files: [],
+            repos: [],
+            selectedFile: null,
+            uploadQueue: [],
+            editingFile: null,
+            fileSha: '',
+            originalContent: '',
+            lastRequestTime: 0,
+            MIN_INTERVAL: 1000,
+            proxyUrl: 'https://gh-proxy.com/'
+        };
+
+        const el = Object.fromEntries(
+            ['authScreen', 'app', 'tokenInput', 'authBtn', 'fileList', 'repoList', 
+             'pathNav', 'pathNavContainer', 'currentRepo', 'logoutBtn', 'newFolderBtn', 
+             'uploadBtn', 'refreshBtn', 'repoBtn', 'backBtn', 'modalOverlay', 'modalContent', 
+             'contextMenu', 'contextMenuItems', 'toast', 'toastMessage', 'uploadPanel', 
+             'uploadItems', 'editModal', 'editFileName', 'fileContent', 'closeEditModal', 
+             'cancelEdit', 'saveEdit', 'editStatus', 'editorOverlay', 'saveNotification',
+             'fileUploadInput']
+            .map(id => [id, document.getElementById(id)])
+        );
+
+        // 视图切换函数
+        function showRepoListView() {
+            el.repoList.classList.remove('hidden');
+            el.fileList.classList.add('hidden');
+            el.pathNavContainer.classList.add('hidden');
+            el.currentRepo.textContent = '选择仓库';
+        }
+
+        function showFileListView() {
+            el.repoList.classList.add('hidden');
+            el.fileList.classList.remove('hidden');
+            el.pathNavContainer.classList.remove('hidden');
+        }
+
+        // 调整编辑器尺寸
+        function adjustEditorDimensions() {
+            const viewportHeight = window.innerHeight;
+            const targetEditorHeight = viewportHeight * 0.6;
+            const modal = el.editModal.querySelector('.min-h-\\[60vh\\]');
+            const otherElementsHeight = 
+                modal.querySelector('div.flex.justify-between').offsetHeight + 
+                el.editStatus.offsetHeight + 
+                modal.querySelector('div.flex.gap-3').offsetHeight + 30;
+            modal.style.height = `${targetEditorHeight + otherElementsHeight}px`;
+            el.fileContent.style.height = `${targetEditorHeight}px`;
+            el.fileContent.focus();
+        }
+
+        window.addEventListener('resize', () => !el.editModal.classList.contains('hidden') && adjustEditorDimensions());
+
+        // 编辑器覆盖层控制
+        const showEditorOverlay = () => el.editorOverlay.classList.add('opacity-100', 'pointer-events-auto');
+        const hideEditorOverlay = () => el.editorOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+        
+        // 保存通知
+        function showSaveNotification() {
+            el.saveNotification.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => el.saveNotification.classList.remove('opacity-100', 'translate-y-0'), 3000);
+        }
+
+        // 初始化
+        function init() {
+            state.token ? (showApp(), fetchRepos()) : showAuth();
+            setupEventListeners();
+        }
+
+        const showAuth = () => (el.authScreen.classList.remove('hidden'), el.app.classList.add('hidden'));
+        const showApp = () => (el.authScreen.classList.add('hidden'), el.app.classList.remove('hidden'));
+
+        // 获取仓库列表
+        async function fetchRepos() {
+            try {
+                el.repoList.innerHTML = '<div class="flex justify-center items-center h-full py-10"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div></div>';
+                const res = await fetch('https://api.github.com/user/repos', {
+                    headers: { Authorization: `token ${state.token}`, 'User-Agent': 'Mozilla/5.0' }
+                });
+                if (!res.ok) throw new Error('获取仓库失败');
+                state.repos = await res.json();
+                renderRepoList();
+                showRepoListView();
+            } catch (err) {
+                showToast('加载仓库失败');
+                console.error(err);
+            }
+        }
+
+        // 渲染仓库列表
+        function renderRepoList() {
+            el.repoList.innerHTML = state.repos.length === 0 
+                ? '<div class="text-center py-10 text-gray-400"><i class="fa fa-github text-4xl mb-2"></i><p>没有找到仓库</p></div>'
+                : '';
+
+            state.repos.forEach(repo => {
+                const item = document.createElement('div');
+                item.className = `box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] rounded-lg p-3 flex items-center gap-3 hover:bg-[#6b7280]/10 transition-colors cursor-pointer ${state.currentRepo === repo.full_name ? 'ring-2 ring-blue-500' : ''}`;
+                item.innerHTML = `
+                    <div class="w-10 h-10 flex items-center justify-center rounded-8px bg-[#111827]/50"><i class="fa fa-github text-gray-400"></i></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium truncate">${repo.name}</p>
+                        <p class="text-xs text-gray-400">${repo.full_name}</p>
+                        <p class="text-xs text-gray-500 mt-1">更新于 ${formatRelativeTime(new Date(repo.updated_at))}</p>
+                    </div>
+                `;
+                item.addEventListener('click', () => {
+                    state.currentRepo = repo.full_name;
+                    state.currentPath = '';
+                    el.currentRepo.textContent = repo.name;
+                    renderPathNav();
+                    fetchFiles();
+                    showFileListView();
+                });
+                el.repoList.appendChild(item);
+            });
+        }
+
+        // 获取文件列表
+        async function fetchFiles() {
+            if (!state.currentRepo) return;
+            try {
+                el.fileList.innerHTML = '<div class="flex justify-center items-center h-full py-10"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div></div>';
+                const res = await fetch(`https://api.github.com/repos/${state.currentRepo}/contents/${state.currentPath}`, {
+                    headers: { Authorization: `token ${state.token}`, 'User-Agent': 'Mozilla/5.0' }
+                });
+                if (!res.ok) { showToast('加载文件失败'); return; }
+                state.files = await res.json();
+                state.files.sort((a, b) => a.type === 'dir' && b.type !== 'dir' ? -1 : a.type !== 'dir' && b.type === 'dir' ? 1 : a.name.localeCompare(b.name));
+                renderFileList();
+            } catch (err) {
+                showToast('加载文件失败');
+                console.error(err);
+            }
+        }
+
+        // 渲染文件列表
+        function renderFileList() {
+            el.fileList.innerHTML = state.files.length === 0
+                ? '<div class="text-center py-10 text-gray-400"><i class="fa fa-folder-open-o text-4xl mb-2"></i><p>文件夹为空</p></div>'
+                : '';
+
+            state.files.forEach(file => {
+                const isDir = file.type === 'dir';
+                const icon = isDir ? 'fa-folder text-yellow-500' : getFileIcon(file.name);
+                const item = document.createElement('div');
+                item.className = 'box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] rounded-lg p-3 flex items-center gap-3 hover:bg-[#6b7280]/10 transition-colors cursor-pointer';
+                item.innerHTML = `
+                    <div class="w-10 h-10 flex items-center justify-center rounded-8px bg-[#111827]/50"><i class="fa ${icon}"></i></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium truncate">${file.name}</p>
+                        <p class="text-xs text-gray-400">
+                            ${isDir ? '文件夹' : formatSize(file.size)} · ${formatRelativeTime(new Date(file.updated_at))}
+                        </p>
+                    </div>
+                `;
+                item.addEventListener('click', () => isDir ? navigateToDir(file.name) : editFile(file));
+                
+                let pressTimer;
+                ['touchstart', 'mousedown'].forEach(event => {
+                    item.addEventListener(event, (e) => {
+                        pressTimer = setTimeout(() => { e.preventDefault(); showContextMenu(e, file); }, 500);
+                    });
+                });
+                ['touchend', 'touchcancel', 'mouseup', 'mouseleave'].forEach(event => {
+                    item.addEventListener(event, () => clearTimeout(pressTimer));
+                });
+                
+                el.fileList.appendChild(item);
+            });
+        }
+
+        // 渲染路径导航
+        function renderPathNav() {
+            el.pathNav.innerHTML = '';
+            const parts = state.currentPath.split('/').filter(p => p);
+            let currentPath = '';
+            addPathItem('/', '');
+            parts.forEach((part, i) => {
+                currentPath += part + '/';
+                addPathItem(part, currentPath);
+            });
+        }
+
+        function addPathItem(name, path) {
+            const item = document.createElement('span');
+            item.className = 'cursor-pointer hover:text-gray-300';
+            item.textContent = name;
+            item.dataset.path = path;
+            item.addEventListener('click', () => {
+                el.fileList.innerHTML = '<div class="flex justify-center items-center h-full py-10"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div></div>';
+                navigateToPath(path);
+            });
+            el.pathNav.appendChild(item);
+            if (name !== '/') el.pathNav.appendChild(document.createTextNode(' / '));
+        }
+
+        // 导航函数
+        const navigateToDir = dirName => {
+            state.currentPath = state.currentPath ? `${state.currentPath}${dirName}/` : `${dirName}/`;
+            renderPathNav();
+            fetchFiles();
+        };
+
+        const navigateToPath = path => {
+            state.currentPath = path;
+            renderPathNav();
+            fetchFiles();
+        };
+
+        function goUp() {
+            if (!state.currentRepo) return;
+            if (!state.currentPath) {
+                showRepoListView();
+                return;
+            }
+            const parts = state.currentPath.split('/').filter(p => p);
+            parts.pop();
+            state.currentPath = parts.length ? parts.join('/') + '/' : '';
+            renderPathNav();
+            el.fileList.innerHTML = '<div class="flex justify-center items-center h-full py-10"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div></div>';
+            fetchFiles();
+            showToast('已返回上一级');
+        }
+
+        // 文件图标获取
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                js: 'fa-code text-yellow-500',
+                html: 'fa-html5 text-orange-500',
+                css: 'fa-css3 text-blue-500',
+                json: 'fa-file-code-o text-gray-400',
+                md: 'fa-file-text-o text-blue-400',
+                png: 'fa-file-image-o text-green-400',
+                jpg: 'fa-file-image-o text-green-400',
+                jpeg: 'fa-file-image-o text-green-400',
+                gif: 'fa-file-image-o text-green-400',
+                pdf: 'fa-file-pdf-o text-red-500',
+                zip: 'fa-file-zip-o text-yellow-600',
+                git: 'fa-git text-red-600'
+            };
+            return icons[ext] || 'fa-file-o text-gray-400';
+        }
+
+        // 格式化工具函数
+        function formatSize(bytes) {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function formatRelativeTime(date) {
+            const diffMs = new Date() - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            if (diffMins < 1) return '刚刚';
+            if (diffMins < 60) return `${diffMins}分钟前`;
+            if (diffHours < 24) return `${diffHours}小时前`;
+            if (diffDays < 30) return `${diffDays}天前`;
+            return date.toLocaleDateString();
+        }
+
+        // 上下文菜单
+        function showContextMenu(e, file) {
+            state.selectedFile = file;
+            const rect = e.target.closest('div[class*="box-shadow"]').getBoundingClientRect();
+            el.contextMenu.style.top = `${rect.top}px`;
+            el.contextMenu.style.left = `${Math.max(10, rect.right - 192 - 10)}px`;
+            el.contextMenu.classList.remove('hidden');
+            renderContextMenuItems(file);
+        }
+
+        function renderContextMenuItems(file) {
+            el.contextMenuItems.innerHTML = '';
+            const isDir = file.type === 'dir';
+            const items = isDir 
+                ? [['download', 'fa-download', '下载 (ZIP)'], 
+                   ['rename', 'fa-pencil', '重命名'], 
+                   ['delete', 'fa-trash', '删除', 'text-red-400']]
+                : [['download', 'fa-download', '下载'], 
+                   ['copyLink', 'fa-link', '复制链接'], 
+                   ['copyProxy', 'fa-share', '代理链接'], 
+                   ['edit', 'fa-edit', '编辑'], 
+                   ['rename', 'fa-pencil', '重命名'], 
+                   ['delete', 'fa-trash', '删除', 'text-red-400']];
+            
+            items.forEach(([action, icon, text, className = '']) => {
+                const item = document.createElement('a');
+                item.className = `block px-4 py-2 text-sm hover:bg-[#6b7280]/20 ${className}`;
+                item.dataset.action = action;
+                item.innerHTML = `<i class="fa ${icon} mr-2"></i>${text}`;
+                item.addEventListener('click', () => {
+                    handleContextMenuAction(action, state.selectedFile);
+                    hideContextMenu();
+                });
+                el.contextMenuItems.appendChild(item);
+            });
+        }
+
+        const hideContextMenu = () => (el.contextMenu.classList.add('hidden'), state.selectedFile = null);
+        const showModal = content => (el.modalContent.innerHTML = content, el.modalOverlay.classList.remove('hidden'), el.modalOverlay.classList.add('flex'));
+        const hideModal = () => (el.modalOverlay.classList.add('hidden'), el.modalOverlay.classList.remove('flex'));
+        const showToast = message => (el.toastMessage.textContent = message, el.toast.classList.remove('hidden'), setTimeout(() => el.toast.classList.add('hidden'), 3000));
+
+        // 编辑模态框控制
+        function showEditModal() {
+            el.editModal.classList.remove('hidden');
+            el.editModal.classList.add('flex');
+            showEditorOverlay();
+            setTimeout(adjustEditorDimensions, 10);
+        }
+
+        const hideEditModal = () => {
+            el.editModal.classList.add('hidden');
+            el.editModal.classList.remove('flex');
+            state.editingFile = state.fileSha = state.originalContent = '';
+            el.saveEdit.className = 'flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#6b7280] hover:bg-[#4b5563] transition-colors rounded-lg p-3';
+        };
+
+        function showEditStatus(text, type) {
+            el.editStatus.textContent = text;
+            el.editStatus.className = `p-3 m-[0.1rem_0] rounded-[0.375rem] ${type}`;
+        }
+
+        // 速率限制检查
+        function checkRateLimit() {
+            const now = Date.now();
+            if (now - state.lastRequestTime < state.MIN_INTERVAL) {
+                showEditStatus(`请稍等 ${Math.ceil((state.MIN_INTERVAL - (now - state.lastRequestTime))/1000)} 秒再操作`, 'bg-[#f8d7da] text-[#842029]');
+                return false;
+            }
+            state.lastRequestTime = now;
+            return true;
+        }
+
+        // 文件编辑功能
+        async function editFile(file) {
+            state.editingFile = file;
+            el.editFileName.textContent = `编辑 ${file.name}`;
+            el.fileContent.value = '';
+            showEditStatus('', '');
+            showEditModal();
+            if (!checkRateLimit()) return;
+            
+            try {
+                const [owner, repo] = state.currentRepo.split('/');
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}`, { 
+                    headers: { 'Authorization': `token ${state.token}`, 'User-Agent': 'Mozilla/5.0' } 
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    hideEditorOverlay();
+                    showEditStatus(`加载失败：${err.message}`, 'bg-[#f8d7da] text-[#842029]');
+                    return;
+                }
+                const data = await res.json();
+                const content = decodeURIComponent(escape(atob(data.content)));
+                el.fileContent.value = content;
+                state.originalContent = content;
+                state.fileSha = data.sha;
+                hideEditorOverlay();
+                el.fileContent.addEventListener('input', checkContentChanges);
+            } catch (e) {
+                hideEditorOverlay();
+                showEditStatus(`错误：${e.message}`, 'bg-[#f8d7da] text-[#842029]');
+                console.error(e);
+            }
+        }
+
+        function checkContentChanges() {
+            const isModified = el.fileContent.value !== state.originalContent;
+            el.saveEdit.className = `flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] ${isModified ? 'bg-[#3b82f6] hover:bg-blue-600' : 'bg-[#6b7280] hover:bg-[#4b5563]'} transition-colors rounded-lg p-3`;
+        }
+
+        async function saveEditedFile() {
+            if (!state.editingFile || !state.fileSha || !checkRateLimit()) return;
+            
+            const currentContent = el.fileContent.value;
+            if (currentContent === state.originalContent) {
+                showToast('未检测到修改');
+                return;
+            }
+            
+            showEditorOverlay();
+            try {
+                const [owner, repo] = state.currentRepo.split('/');
+                const encodedContent = btoa(unescape(encodeURIComponent(currentContent)));
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${state.editingFile.path}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `token ${state.token}`, 
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    },
+                    body: JSON.stringify({ 
+                        message: `Update ${state.editingFile.name} via web editor`, 
+                        content: encodedContent, 
+                        sha: state.fileSha 
+                    })
+                });
+                
+                if (!res.ok) {
+                    const err = await res.json();
+                    hideEditorOverlay();
+                    showEditStatus(`保存失败：${err.message}`, 'bg-[#f8d7da] text-[#842029]');
+                    return;
+                }
+                
+                const result = await res.json();
+                state.fileSha = result.content.sha;
+                state.originalContent = currentContent;
+                hideEditorOverlay();
+                showToast('文件已保存');
+                showSaveNotification();
+                fetchFiles();
+                el.saveEdit.className = 'flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#6b7280] hover:bg-[#4b5563] transition-colors rounded-lg p-3';
+            } catch (e) {
+                hideEditorOverlay();
+                showEditStatus(`错误：${e.message}`, 'bg-[#f8d7da] text-[#842029]');
+                console.error(e);
+            }
+        }
+
+        // 下载文件
+        async function downloadFile(file) {
+            if (!checkRateLimit()) return;
+            try {
+                showToast(`正在下载 ${file.name}`);
+                const url = file.download_url || `${state.proxyUrl}https://github.com/${state.currentRepo}/archive/refs/heads/main.zip`;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast(`已开始下载 ${file.name}`);
+            } catch (e) {
+                showToast(`下载失败: ${e.message}`);
+                console.error(e);
+            }
+        }
+
+        // 复制链接功能
+        function copyLink(file) {
+            navigator.clipboard.writeText(file.html_url).then(() => {
+                showToast('链接已复制');
+            }).catch(e => {
+                showToast('复制失败');
+                console.error(e);
+            });
+        }
+
+        // 复制代理链接功能
+        function copyProxyLink(file) {
+            if (!file.download_url) return showToast('无代理链接可用');
+            const proxyUrl = `${state.proxyUrl}${file.download_url}`;
+            navigator.clipboard.writeText(proxyUrl).then(() => {
+                showToast('代理链接已复制');
+            }).catch(e => {
+                showToast('复制失败');
+                console.error(e);
+            });
+        }
+
+        // 重命名功能
+        function renameItem(file) {
+            showModal(`<h3 class="font-bold mb-4">重命名 ${file.name}</h3>
+                <input type="text" id="newName" value="${file.name}" class="w-full box-shadow-[inset_3px_3px_6px_rgba(0,0,0,0.3),inset_-3px_-3px_6px_rgba(75,85,99,0.1)] bg-[#030712] rounded-lg p-3 outline-none text-[#f3f4f6] mb-4">
+                <div class="flex gap-3">
+                    <button id="cancelRename" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] hover:bg-[#111827]/70 transition-colors rounded-lg p-3">取消</button>
+                    <button id="confirmRename" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#6b7280] hover:bg-[#4b5563] transition-colors rounded-lg p-3">确认</button>
+                </div>`);
+            
+            document.getElementById('cancelRename').addEventListener('click', hideModal);
+            document.getElementById('confirmRename').addEventListener('click', async () => {
+                const newName = document.getElementById('newName').value.trim();
+                if (!newName || newName === file.name) {
+                    hideModal();
+                    return;
+                }
+                if (!checkRateLimit()) return;
+                
+                try {
+                    const [owner, repo] = state.currentRepo.split('/');
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}`, {
+                        method: 'PUT',
+                        headers: { 
+                            'Authorization': `token ${state.token}`, 
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'Mozilla/5.0'
+                        },
+                        body: JSON.stringify({
+                            message: `Rename ${file.name} to ${newName}`,
+                            sha: file.sha,
+                            path: file.path.replace(file.name, newName)
+                        })
+                    });
+                    
+                    if (!res.ok) {
+                        const err = await res.json();
+                        showToast(`重命名失败: ${err.message}`);
+                        return;
+                    }
+                    
+                    hideModal();
+                    showToast(`已重命名为 ${newName}`);
+                    fetchFiles();
+                } catch (e) {
+                    showToast(`重命名失败: ${e.message}`);
+                    console.error(e);
+                }
+            });
+        }
+
+        // 删除功能
+        async function deleteItem(item) {
+            if (!confirm(`确定要删除 ${item.name} 吗？`) || !checkRateLimit()) return;
+            try {
+                const [owner, repo] = state.currentRepo.split('/');
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${item.path}`, {
+                    method: 'DELETE',
+                    headers: { 
+                        'Authorization': `token ${state.token}`, 
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    },
+                    body: JSON.stringify({ message: `Delete ${item.name}`, sha: item.sha })
+                });
+                
+                if (!res.ok) {
+                    const err = await res.json();
+                    showToast(`删除失败: ${err.message}`);
+                    return;
+                }
+                
+                showToast(`${item.name} 已删除`);
+                fetchFiles();
+            } catch (e) {
+                showToast(`删除失败: ${e.message}`);
+                console.error(e);
+            }
+        }
+
+        // 修复的新建文件夹功能
+        function createNewFolder() {
+            if (!state.currentRepo) {
+                showToast('请先选择仓库');
+                return;
+            }
+            
+            showModal(`<h3 class="font-bold mb-4">新建文件夹</h3>
+                <input type="text" id="folderName" placeholder="文件夹名称" class="w-full box-shadow-[inset_3px_3px_6px_rgba(0,0,0,0.3),inset_-3px_-3px_6px_rgba(75,85,99,0.1)] bg-[#030712] rounded-lg p-3 outline-none text-[#f3f4f6] mb-4">
+                <div class="flex gap-3">
+                    <button id="cancelCreateFolder" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] hover:bg-[#111827]/70 transition-colors rounded-lg p-3">取消</button>
+                    <button id="confirmCreateFolder" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#6b7280] hover:bg-[#4b5563] transition-colors rounded-lg p-3">创建</button>
+                </div>`);
+            
+            document.getElementById('cancelCreateFolder').addEventListener('click', hideModal);
+            document.getElementById('confirmCreateFolder').addEventListener('click', async () => {
+                const folderName = document.getElementById('folderName').value.trim();
+                if (!folderName) {
+                    showToast('请输入文件夹名称');
+                    return;
+                }
+                if (!checkRateLimit()) return;
+                
+                try {
+                    const [owner, repo] = state.currentRepo.split('/');
+                    // 确保文件夹路径以斜杠结尾，明确告诉GitHub这是一个文件夹
+                    const folderPath = state.currentPath 
+                        ? `${state.currentPath}${folderName}/` 
+                        : `${folderName}/`;
+                    
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${folderPath}`, {
+                        method: 'PUT',
+                        headers: { 
+                            'Authorization': `token ${state.token}`, 
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'Mozilla/5.0'
+                        },
+                        body: JSON.stringify({
+                            message: `Create new folder: ${folderName}`,
+                            content: '', // 文件夹内容为空
+                            path: folderPath
+                        })
+                    });
+                    
+                    if (!res.ok) {
+                        const err = await res.json();
+                        showToast(`创建失败: ${err.message}`);
+                        return;
+                    }
+                    
+                    hideModal();
+                    showToast(`文件夹 "${folderName}" 已创建`);
+                    fetchFiles();
+                } catch (e) {
+                    showToast(`创建失败: ${e.message}`);
+                    console.error(e);
+                }
+            });
+        }
+
+        // 多文件上传功能
+        function handleFileUpload() {
+            if (!state.currentRepo) {
+                showToast('请先选择仓库');
+                return;
+            }
+            el.fileUploadInput.click();
+        }
+
+        // 处理选中的上传文件
+        function processUploadFiles(files) {
+            if (files.length === 0) return;
+            
+            // 显示上传面板
+            el.uploadPanel.classList.remove('hidden');
+            el.uploadItems.innerHTML = '';
+            
+            // 为每个文件创建上传项
+            Array.from(files).forEach(file => {
+                const uploadItem = document.createElement('div');
+                uploadItem.className = 'flex flex-col gap-1';
+                uploadItem.innerHTML = `
+                    <div class="flex justify-between text-sm">
+                        <span class="truncate max-w-[70%]">${file.name}</span>
+                        <span class="upload-percentage">0%</span>
+                    </div>
+                    <div class="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                        <div class="upload-progress h-full bg-blue-500 w-0 transition-all"></div>
+                    </div>
+                `;
+                uploadItem.dataset.filename = file.name;
+                el.uploadItems.appendChild(uploadItem);
+            });
+            
+            // 逐个上传文件
+            (async () => {
+                for (const file of files) {
+                    await uploadSingleFile(file);
+                }
+                
+                // 所有文件上传完成后隐藏面板并刷新
+                setTimeout(() => {
+                    el.uploadPanel.classList.add('hidden');
+                    fetchFiles();
+                }, 1000);
+            })();
+        }
+
+        // 上传单个文件
+        function uploadSingleFile(file) {
+            return new Promise(async (resolve) => {
+                if (!checkRateLimit()) {
+                    resolve();
+                    return;
+                }
+                
+                try {
+                    const [owner, repo] = state.currentRepo.split('/');
+                    const filePath = state.currentPath ? `${state.currentPath}${file.name}` : file.name;
+                    
+                    // 读取文件内容并编码
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            // 转换为base64
+                            const base64Content = e.target.result.split(',')[1];
+                            
+                            // 更新进度为30%
+                            updateUploadProgress(file.name, 30);
+                            
+                            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+                                method: 'PUT',
+                                headers: { 
+                                    'Authorization': `token ${state.token}`, 
+                                    'Content-Type': 'application/json',
+                                    'User-Agent': 'Mozilla/5.0'
+                                },
+                                body: JSON.stringify({
+                                    message: `Upload file: ${file.name}`,
+                                    content: base64Content
+                                })
+                            });
+                            
+                            // 更新进度为100%
+                            updateUploadProgress(file.name, 100);
+                            
+                            if (!res.ok) {
+                                const err = await res.json();
+                                showToast(`上传失败: ${file.name} - ${err.message}`);
+                                resolve();
+                                return;
+                            }
+                            
+                            showToast(`已上传: ${file.name}`);
+                            resolve();
+                        } catch (e) {
+                            showToast(`上传错误: ${file.name} - ${e.message}`);
+                            resolve();
+                        }
+                    };
+                    
+                    // 读取文件为DataURL (base64)
+                    reader.readAsDataURL(file);
+                } catch (e) {
+                    showToast(`上传失败: ${file.name} - ${e.message}`);
+                    resolve();
+                }
+            });
+        }
+
+        // 更新上传进度
+        function updateUploadProgress(filename, percentage) {
+            const item = el.uploadItems.querySelector(`[data-filename="${filename}"]`);
+            if (item) {
+                item.querySelector('.upload-percentage').textContent = `${percentage}%`;
+                item.querySelector('.upload-progress').style.width = `${percentage}%`;
+            }
+        }
+
+        // 上下文菜单动作处理
+        function handleContextMenuAction(action, item) {
+            switch (action) {
+                case 'download': downloadFile(item); break;
+                case 'edit': editFile(item); break;
+                case 'delete': deleteItem(item); break;
+                case 'copyLink': copyLink(item); break;
+                case 'copyProxy': copyProxyLink(item); break;
+                case 'rename': renameItem(item); break;
+            }
+        }
+
+        // 事件监听设置
+        function setupEventListeners() {
+            // 认证相关
+            el.authBtn.addEventListener('click', () => {
+                const token = el.tokenInput.value.trim();
+                if (token) {
+                    localStorage.setItem('gh_token', token);
+                    state.token = token;
+                    showApp();
+                    fetchRepos();
+                } else showToast('请输入访问令牌');
+            });
+
+            el.logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('gh_token');
+                state.token = null;
+                showAuth();
+            });
+
+            // 导航相关
+            el.backBtn.addEventListener('click', goUp);
+            el.refreshBtn.addEventListener('click', fetchFiles);
+            el.repoBtn.addEventListener('click', showRepoListView);
+
+            // 编辑模态框相关
+            el.closeEditModal.addEventListener('click', hideEditModal);
+            el.cancelEdit.addEventListener('click', hideEditModal);
+            el.saveEdit.addEventListener('click', saveEditedFile);
+
+            // 新建文件夹和上传文件
+            el.newFolderBtn.addEventListener('click', createNewFolder);
+            el.uploadBtn.addEventListener('click', handleFileUpload);
+            el.fileUploadInput.addEventListener('change', (e) => processUploadFiles(e.target.files));
+
+            // 点击空白处关闭上下文菜单
+            document.addEventListener('click', e => !el.contextMenu.contains(e.target) && hideContextMenu());
+            
+            // 点击模态框背景关闭模态框
+            el.modalOverlay.addEventListener('click', e => e.target === el.modalOverlay && hideModal());
+        }
+
+        // 初始化应用
+        init();
+    </script>
+</body>
+</html>
