@@ -91,7 +91,7 @@
                 <div class="save-notification absolute top-10 right-10 bg-[rgba(15,81,50,0.9)] text-white p-[5px_10px] rounded-4px text-14px z-5 opacity-0 transform -translate-y-20 transition-[opacity_0.3s_ease,transform_0.3s_ease]" id="saveNotification">
                     <i class="fa fa-check mr-1"></i> 保存成功
                 </div>
-                <textarea id="fileContent" class="box-shadow-[inset_3px_3px_6px_rgba(0,0,0,0.3),inset_-3px_-3px_6px_rgba(75,85,99,0.1)] bg-[#030712] w-full h-full resize-none p-3 outline-none"></textarea>
+                <textarea id="fileContent" class="box-shadow-[inset_3px_3px_6px_rgba(0,0,0,0.3),inset_-3px_-3px_6px_rgba(75,85,99,0.1)] bg-[#030712] w-full h-full resize-none p-3 outline-none min-h-[60vh]"></textarea>
             </div>
             <div class="flex gap-3 p-3 border-t border-gray-700">
                 <button id="cancelEdit" class="flex-1 box-shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(75,85,99,0.1)] bg-[#111827] hover:bg-[#111827]/70 transition-colors rounded-lg p-3">取消</button>
@@ -684,36 +684,136 @@ function initEditorFeatures() {
 initEditorFeatures();
     </script>
 
-    <!-- 文件操作模块 -->
+    <!-- 文件下载模块 -->
     <script>
-        // 下载文件
-        async function downloadFile(file) {
-            if (!checkRateLimit()) return;
-            try {
-                showToast(`正在下载 ${file.name}`);
-                const url = file.download_url || `${state.proxyUrl}https://github.com/${state.currentRepo}/archive/refs/heads/main.zip`;
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = file.name;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                showToast(`已开始下载 ${file.name}`);
-            } catch (e) {
-                showToast(`下载失败: ${e.message}`);
-                console.error(e);
-            }
+// 统一处理文件和文件夹下载（保留原文件名和后缀）
+async function downloadFile(item) {
+    if (!checkRateLimit()) return;
+    try {
+        showToast(`正在准备 ${item.name} 的下载`);
+        let url, downloadName;
+
+        // 提取原始文件名（含后缀）
+        downloadName = item.name; // 直接使用item.name确保文件名和后缀完整
+
+        if (item.type === 'dir') {
+            // 文件夹下载：通过代理获取ZIP包，保留文件夹名+zip后缀
+            const [owner, repo] = state.currentRepo.split('/');
+            const encodedPath = encodeURIComponent(item.path);
+            url = `${state.proxyUrl}https://github.com/${owner}/${repo}/archive/refs/heads/main.zip?path=${encodedPath}`;
+        } else {
+            // 文件下载：使用GitHub Raw链接（带代理）
+            const rawUrl = item.html_url
+                .replace('github.com', 'raw.githubusercontent.com')
+                .replace('/blob/', '/');
+            url = `${state.proxyUrl}${rawUrl}`;
         }
 
-        // 复制链接功能
-        function copyLink(file) {
-            navigator.clipboard.writeText(file.html_url).then(() => {
-                showToast('链接已复制');
-            }).catch(e => {
-                showToast('复制失败');
-                console.error(e);
-            });
+        // 验证链接有效性
+        if (!url || !url.startsWith('http')) {
+            throw new Error('下载链接无效');
         }
+
+        // 需特殊处理的文本文件类型（强制下载而非预览）
+        const textFileExtensions = ['html', 'htm', 'txt', 'css', 'js', 'json', 'md', 'xml', 'csv'];
+        const fileExt = downloadName.split('.').pop()?.toLowerCase();
+        const isTextFile = textFileExtensions.includes(fileExt) && item.type !== 'dir';
+
+        if (isTextFile) {
+            // 文本文件：通过Fetch获取内容后创建Blob，强制下载（保留原文件名）
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`无法获取文件内容 (${response.status})`);
+            }
+            
+            // 根据文件类型设置正确的MIME类型（不影响文件名）
+            const mimeType = getMimeType(fileExt);
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = objectUrl;
+            a.download = downloadName; // 关键：强制使用原始文件名（含后缀）
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+
+            // 清理资源
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(objectUrl);
+            }, 500);
+        } else {
+            // 非文本文件/文件夹：直接使用原链接下载（保留原文件名）
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = downloadName; // 直接使用原始文件名
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                document.body.removeChild(a);
+            }, 500);
+        }
+
+        showToast(`已开始下载 ${downloadName}`);
+    } catch (e) {
+        showToast(`下载失败: ${e.message || '请检查网络或代理设置'}`);
+        console.error('下载错误:', e);
+    }
+}
+
+// 辅助函数：获取文件MIME类型（不影响文件名，仅用于正确解析文件内容）
+function getMimeType(ext) {
+    const mimeMap = {
+        html: 'text/html',
+        htm: 'text/html',
+        txt: 'text/plain',
+        css: 'text/css',
+        js: 'application/javascript',
+        json: 'application/json',
+        md: 'text/markdown',
+        xml: 'application/xml',
+        csv: 'text/csv'
+    };
+    return mimeMap[ext] || 'application/octet-stream';
+}
+
+// 速率限制检查函数
+function checkRateLimit() {
+    const now = Date.now();
+    if (now - state.lastRequestTime < state.MIN_INTERVAL) {
+        const waitTime = Math.ceil((state.MIN_INTERVAL - (now - state.lastRequestTime)) / 1000);
+        showToast(`请稍等 ${waitTime} 秒再操作`);
+        return false;
+    }
+    state.lastRequestTime = now;
+    return true;
+}
+
+</script >
+
+
+
+<script >
+
+        
+// 复制 GitHub raw 链接功能
+function copyLink(file) {
+    // 构造 raw 链接
+    const rawUrl = file.download_url || file.html_url
+        .replace('github.com', 'raw.githubusercontent.com')
+        .replace('/blob/', '/');
+
+    navigator.clipboard.writeText(rawUrl).then(() => {
+        showToast('Raw 链接已复制');
+    }).catch(e => {
+        showToast('复制失败');
+        console.error(e);
+    });
+}
+
 
         // 复制代理链接功能
         function copyProxyLink(file) {
@@ -732,8 +832,8 @@ initEditorFeatures();
 
 
 <script>
+//重命名模块
 async function renameItem(item) {
-    // 0. 类型检测（文件/文件夹）
     const isDir = item.type === 'dir';
     
     showModal(`
@@ -753,7 +853,6 @@ async function renameItem(item) {
     const input = document.getElementById('newName');
     const confirmBtn = document.getElementById('confirmRename');
 
-    // 1. 输入验证
     input.addEventListener('input', () => {
         const isValid = input.value.trim() && input.value.trim() !== item.name;
         confirmBtn.disabled = !isValid;
@@ -762,75 +861,108 @@ async function renameItem(item) {
             : 'flex-1 p-3 bg-gray-600 text-gray-400 rounded cursor-not-allowed';
     });
 
-    // 2. 确认操作
     confirmBtn.onclick = async () => {
         const newName = input.value.trim();
         if (!newName || newName === item.name) return;
 
         confirmBtn.disabled = true;
-        confirmBtn.innerHTML = ` ${isDir ? '保存中' : '保存中'}<i class="fa fa-spinner fa-spin mr-2"></i>`;
+        confirmBtn.innerHTML = `保存中<i class="fa fa-spinner fa-spin ml-2"></</i>`;
 
         try {
             const [owner, repo] = state.currentRepo.split('/');
             const oldPath = item.path;
+            const oldPathWithSlash = oldPath.endsWith('/') ? oldPath : `${oldPath}/`;
             const newPath = oldPath.replace(item.name, newName);
+            const newPathWithSlash = newPath.endsWith('/') ? newPath : `${newPath}/`;
 
-            // 3. 文件夹特殊处理
             if (isDir) {
-                // 3.1 获取文件夹内所有文件
-                const dirRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${oldPath}`, {
-                    headers: { Authorization: `token ${state.token}` }
-                });
-                if (!dirRes.ok) throw new Error('获取文件夹内容失败');
-                
-                const dirFiles = await dirRes.json();
-                if (!Array.isArray(dirFiles)) throw new Error('文件夹内容解析失败');
-
-                // 3.2 逐个移动文件
-                for (const file of dirFiles) {
-                    const fileOldPath = file.path;
-                    const fileNewPath = file.path.replace(oldPath, newPath);
-
-                    // 读取原文件内容
-                    const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileOldPath}`, {
+                const getAllFiles = async (path) => {
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
                         headers: { Authorization: `token ${state.token}` }
                     });
-                    if (!getRes.ok) throw new Error(`获取文件 ${file.name} 失败`);
+                    if (!res.ok) throw new Error(`获取 ${path} 内容失败`);
+                    
+                    const items = await res.json();
+                    if (!Array.isArray(items)) return [];
 
-                    const fileData = await getRes.json();
+                    let files = [];
+                    for (const item of items) {
+                        if (item.type === 'dir') {
+                            const subFiles = await getAllFiles(item.path);
+                            files = [...files, ...subFiles];
+                        } else {
+                            files.push(item);
+                        }
+                    }
+                    return files;
+                };
 
-                    // 创建新位置文件
-                    const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileNewPath}`, {
+                const allFiles = await getAllFiles(oldPath);
+                if (allFiles.length === 0) {
+                    await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${newPath}`, {
                         method: 'PUT',
                         headers: { 
                             'Authorization': `token ${state.token}`,
                             'Content-Type': 'application/json' 
                         },
                         body: JSON.stringify({
-                            message: `Move ${file.name} for folder rename`,
-                            content: fileData.content,
-                            sha: fileData.sha
+                            message: `Create empty folder ${newName}`,
+                            content: ''
                         })
                     });
-                    if (!putRes.ok) throw new Error(`移动文件 ${file.name} 失败`);
+                } else {
+                    for (const file of allFiles) {
+                        const fileNewPath = file.path.startsWith(oldPathWithSlash)
+                            ? file.path.replace(oldPathWithSlash, newPathWithSlash)
+                            : file.path.replace(oldPath, newPath);
 
-                    // 删除原文件
-                    const delRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileOldPath}`, {
-                        method: 'DELETE',
-                        headers: { 
-                            'Authorization': `token ${state.token}`,
-                            'Content-Type': 'application/json' 
-                        },
-                        body: JSON.stringify({
-                            message: `Delete ${file.name} after move`,
-                            sha: fileData.sha
-                        })
-                    });
-                    if (!delRes.ok) console.warn(`警告：删除原文件 ${file.name} 失败（可忽略）`);
+                        const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}`, {
+                            headers: { Authorization: `token ${state.token}` }
+                        });
+                        if (!getRes.ok) throw new Error(`获取文件 ${file.name} 失败`);
+
+                        const fileData = await getRes.json();
+
+                        const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileNewPath}`, {
+                            method: 'PUT',
+                            headers: { 
+                                'Authorization': `token ${state.token}`,
+                                'Content-Type': 'application/json' 
+                            },
+                            body: JSON.stringify({
+                                message: `Move ${file.name} for folder rename`,
+                                content: fileData.content,
+                                sha: fileData.sha
+                            })
+                        });
+                        if (!putRes.ok) throw new Error(`移动文件 ${file.name} 失败`);
+
+                        await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}`, {
+                            method: 'DELETE',
+                            headers: { 
+                                'Authorization': `token ${state.token}`,
+                                'Content-Type': 'application/json' 
+                            },
+                            body: JSON.stringify({
+                                message: `Delete ${file.name} after move`,
+                                sha: fileData.sha
+                            })
+                        });
+                    }
                 }
-            } 
-            // 4. 文件处理（原逻辑）
-            else {
+
+                await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${oldPath}`, {
+                    method: 'DELETE',
+                    headers: { 
+                        'Authorization': `token ${state.token}`,
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({
+                        message: `Delete old folder ${item.name}`,
+                        sha: item.sha
+                    })
+                });
+            } else {
                 const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${oldPath}`, {
                     headers: { Authorization: `token ${state.token}` }
                 });
@@ -867,7 +999,7 @@ async function renameItem(item) {
 
             showToast(`重命名成功: ${newName}`);
             hideModal();
-            fetchFiles(); // 强制刷新
+            fetchFiles();
         } catch (error) {
             console.error('重命名错误:', error);
             showToast(`失败: ${error.message}`);
@@ -876,10 +1008,462 @@ async function renameItem(item) {
         }
     };
 
-    // 取消按钮
     document.getElementById('cancelRename').onclick = hideModal;
 }
 </script>
+
+
+<script >
+// 删除项目（文件/文件夹）
+async function deleteItem(item) {
+    const isDir = item.type === 'dir';
+    const confirmMessage = isDir
+      ? `确定要删除文件夹"${item.name}"吗？这将删除该文件夹及其所有内容。`
+       : `确定要删除文件"${item.name}"吗？此操作不可撤销。`;
+
+    showModal(`
+        <h3 class="font-bold mb-4">确认删除</h3>
+        <p class="mb-4 text-gray-300">${confirmMessage}</p>
+        <div class="flex gap-3">
+            <button id="cancelDelete" class="flex-1 p-3 bg-gray-700 rounded hover:bg-gray-600 transition-colors">取消</button>
+            <button id="confirmDelete" class="flex-1 p-3 bg-red-600 hover:bg-red-500 text-white rounded">
+                确认删除
+            </button>
+        </div>
+    `);
+
+    const confirmBtn = document.getElementById('confirmDelete');
+    const cancelBtn = document.getElementById('cancelDelete');
+
+    confirmBtn.onclick = async () => {
+        confirmBtn.disabled = true;
+        // 显示处理中和旋转动画
+        confirmBtn.innerHTML = `处理中 <i class="fa fa-spinner fa-spin ml-2"></i>`;
+
+        try {
+            const [owner, repo] = state.currentRepo.split('/');
+            const targetPath = item.path;
+
+            if (isDir) {
+                // 获取文件夹内所有文件（包括子文件夹）
+                const getAllFiles = async (path) => {
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+                        headers: { Authorization: `token ${state.token}` }
+                    });
+                    if (!res.ok) throw new Error(`获取 ${path} 内容失败`);
+
+                    const items = await res.json();
+                    if (!Array.isArray(items)) return [];
+
+                    let files = [];
+                    for (const item of items) {
+                        if (item.type === 'dir') {
+                            const subFiles = await getAllFiles(item.path);
+                            files = [...files, ...subFiles];
+                        } else {
+                            files.push(item);
+                        }
+                    }
+                    return files;
+                };
+
+                const allFiles = await getAllFiles(targetPath);
+                // 先删除所有子文件
+                for (const file of allFiles) {
+                    const delRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file.path}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `token ${state.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Delete ${file.name} (from folder deletion)`,
+                            sha: file.sha
+                        })
+                    });
+                    if (!delRes.ok) throw new Error(`删除文件 ${file.name} 失败`);
+                }
+            }
+
+            // 删除目标（文件或空文件夹）
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${targetPath}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `token ${state.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `Delete ${item.name}`,
+                    sha: item.sha
+                })
+            });
+
+            if (!res.ok) throw new Error('删除失败');
+
+            showToast(`${isDir ? '文件夹' : '文件'} "${item.name}" 已删除`);
+            hideModal();
+            fetchFiles();// 刷新文件列表
+        } catch (error) {
+            console.error('删除错误:', error);
+            showToast(`删除失败: ${error.message}`);
+            confirmBtn.disabled = false;
+            // 移除旋转动画，恢复按钮文本
+            confirmBtn.innerHTML = '确认删除';
+        }
+    };
+
+    cancelBtn.onclick = hideModal;
+}
+
+
+</script >
+
+
+
+
+
+<script>
+// 确保在DOM元素加载完成后初始化
+if (window.el) {
+    initUploadFeatures();
+} else {
+    // 监听DOM加载完成事件
+    document.addEventListener('DOMContentLoaded', initUploadFeatures);
+}
+
+function initUploadFeatures() {
+    // 避免重复绑定事件
+    if (window.uploadFeaturesInitialized) return;
+    window.uploadFeaturesInitialized = true;
+
+    // 绑定上传按钮点击事件
+    if (el.uploadBtn) {
+        el.uploadBtn.addEventListener('click', handleUploadClick);
+    }
+
+    // 监听文件选择事件
+    if (el.fileUploadInput) {
+        el.fileUploadInput.addEventListener('change', handleFilesSelected);
+    }
+}
+
+function handleUploadClick() {
+    if (!state || !state.currentRepo) {
+        showToast('请先选择仓库');
+        return;
+    }
+    // 重置输入以允许重复选择同一文件
+    if (el.fileUploadInput) {
+        el.fileUploadInput.value = '';
+        el.fileUploadInput.click();
+    }
+}
+
+function handleFilesSelected(e) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // 显示上传面板
+    if (el.uploadPanel) {
+        el.uploadPanel.classList.remove('hidden');
+    }
+    if (el.uploadItems) {
+        el.uploadItems.innerHTML = '';
+    }
+
+    // 为每个文件创建上传项
+    files.forEach((file, index) => {
+        const uploadItem = document.createElement('div');
+        uploadItem.className = 'flex flex-col gap-1';
+        uploadItem.innerHTML = `
+            <div class="flex justify-between items-center text-sm">
+                <span class="truncate max-w-[70%]">${file.name}</span>
+                <span class="text-gray-400">${formatSize ? formatSize(file.size) : formatFileSize(file.size)}</span>
+            </div>
+            <div class="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                <div class="upload-progress h-full bg-blue-500 w-0 transition-all duration-300" data-index="${index}"></div>
+            </div>
+            <div class="text-xs text-gray-400 upload-status" data-index="${index}">等待上传...</div>
+        `;
+        if (el.uploadItems) {
+            el.uploadItems.appendChild(uploadItem);
+        }
+    });
+
+    // 开始上传文件
+    uploadFilesInSequence(files, 0);
+    
+    // 清空输入
+    e.target.value = '';
+}
+
+// 兼容处理：如果原代码没有formatSize函数则添加
+function formatFileSize(bytes) {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// 速率限制检查（使用全局函数避免冲突）
+function checkUploadRateLimit() {
+    if (!state) return true;
+    const now = Date.now();
+    if (now - (state.lastRequestTime || 0) < (state.MIN_INTERVAL || 1000)) {
+        return false;
+    }
+    state.lastRequestTime = now;
+    return true;
+}
+
+function uploadFilesInSequence(files, index) {
+    if (index >= files.length) {
+        // 所有文件上传完成
+        setTimeout(() => {
+            if (el.uploadPanel) {
+                el.uploadPanel.classList.add('hidden');
+            }
+            // 调用原代码的刷新函数
+            if (typeof fetchFiles === 'function') {
+                fetchFiles();
+            }
+        }, 2000);
+        return;
+    }
+
+    const file = files[index];
+    const statusElement = document.querySelector(`.upload-status[data-index="${index}"]`);
+    
+    if (statusElement) {
+        statusElement.textContent = '准备上传...';
+    }
+
+    // 检查速率限制
+    const now = Date.now();
+    const timeSinceLast = now - (state.lastRequestTime || 0);
+    const minInterval = state ? state.MIN_INTERVAL : 1000;
+    
+    if (timeSinceLast < minInterval) {
+        const waitTime = minInterval - timeSinceLast;
+        const waitSeconds = Math.ceil(waitTime / 1000);
+        
+        if (statusElement) {
+            statusElement.textContent = `等待中... ${waitSeconds}s`;
+        }
+        
+        setTimeout(() => {
+            uploadSingleFile(file, index)
+                .then(() => uploadFilesInSequence(files, index + 1))
+                .catch(() => uploadFilesInSequence(files, index + 1));
+        }, waitTime);
+    } else {
+        uploadSingleFile(file, index)
+            .then(() => uploadFilesInSequence(files, index + 1))
+            .catch(() => uploadFilesInSequence(files, index + 1));
+    }
+}
+
+async function uploadSingleFile(file, index) {
+    return new Promise((resolve, reject) => {
+        const progressBar = document.querySelector(`.upload-progress[data-index="${index}"]`);
+        const statusElement = document.querySelector(`.upload-status[data-index="${index}"]`);
+
+        // 更新进度和状态
+        if (progressBar) progressBar.style.width = '5%';
+        if (statusElement) statusElement.textContent = '正在处理文件...';
+
+        // 读取文件内容
+        const reader = new FileReader();
+        
+        // 根据文件类型选择读取方式
+        if (file.type.includes('text') || file.size < 1024 * 1024) {
+            reader.readAsText(file);
+        } else {
+            reader.readAsDataURL(file);
+        }
+
+        reader.onload = async (e) => {
+            try {
+                if (statusElement) statusElement.textContent = '正在编码内容...';
+                
+                // 处理文件内容
+                let content;
+                if (e.target.result.startsWith('data:')) {
+                    content = e.target.result.split(',')[1];
+                } else {
+                    content = btoa(unescape(encodeURIComponent(e.target.result)));
+                }
+
+                if (progressBar) progressBar.style.width = '30%';
+
+                // 准备上传参数
+                if (!state || !state.currentRepo) {
+                    throw new Error('未选择仓库');
+                }
+                const fileName = file.name;
+                const filePath = state.currentPath ? `${state.currentPath}${fileName}` : fileName;
+                const [owner, repo] = state.currentRepo.split('/');
+
+                if (statusElement) statusElement.textContent = '正在上传...';
+                
+                // 执行上传请求
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${state.token}`,
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    },
+                    body: JSON.stringify({
+                        message: `Upload ${fileName}`,
+                        content: content
+                    }),
+                    signal: AbortSignal.timeout(60000)
+                });
+
+                if (progressBar) progressBar.style.width = '100%';
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `上传失败: HTTP ${response.status}`);
+                }
+
+                // 上传成功
+                if (statusElement) {
+                    statusElement.textContent = '上传成功';
+                    statusElement.className = 'text-xs text-green-400 upload-status';
+                }
+                if (typeof showToast === 'function') {
+                    showToast(`文件 "${fileName}" 上传成功`);
+                }
+                if (state) {
+                    state.lastRequestTime = Date.now();
+                }
+                resolve();
+            } catch (error) {
+                if (statusElement) {
+                    statusElement.textContent = `失败: ${error.message.substring(0, 20)}...`;
+                    statusElement.className = 'text-xs text-red-400 upload-status';
+                }
+                if (typeof showToast === 'function') {
+                    showToast(`文件 "${file.name}" 上传失败`);
+                }
+                reject(error);
+            }
+        };
+
+        // 处理文件读取错误
+        reader.onerror = () => {
+            if (statusElement) {
+                statusElement.textContent = '文件读取失败';
+                statusElement.className = 'text-xs text-red-400 upload-status';
+            }
+            if (typeof showToast === 'function') {
+                showToast(`无法读取文件: ${file.name}`);
+            }
+            reject(new Error('文件读取失败'));
+        };
+    });
+}
+</script>
+
+
+
+
+
+
+    <script >
+    // 初始化手机返回键支持
+function initBackButtonSupport() {
+    // 页面加载时添加初始历史记录，确保首次返回键可被捕获
+    if (window.history.state === null) {
+        history.pushState({ page: 'initial' }, '', window.location.href);
+    }
+
+    // 监听手机返回键事件
+    window.addEventListener('popstate', handleBackButton);
+
+    // 记录导航历史（用于多级返回）
+    state.navHistory = [state.currentPath || 'root'];
+}
+
+// 处理手机返回键逻辑
+function handleBackButton(event) {
+    // 判断是否有可返回的历史记录
+    if (state.navHistory.length > 1) {
+        // 移除当前路径
+        state.navHistory.pop();
+        // 获取上一级路径
+        const prevPath = state.navHistory[state.navHistory.length - 1];
+        
+        // 执行页内返回操作
+        if (prevPath === 'root') {
+            // 返回仓库列表
+            showRepoListView();
+        } else {
+            // 返回上一级文件夹
+            navigateToPath(prevPath);
+        }
+        
+        // 重新添加历史记录，保持监听有效
+        history.pushState({ page: 'nav' }, '', window.location.href);
+    } else {
+        // 没有更多历史记录时，提示是否退出
+        if (confirm('确定要退出应用吗？')) {
+            // 允许浏览器默认返回行为
+            history.back();
+        } else {
+            // 取消退出，重新添加历史记录
+            history.pushState({ page: 'stay' }, '', window.location.href);
+        }
+    }
+}
+
+// 扩展导航函数，记录历史
+function navigateToDir(dirName) {
+    const newPath = state.currentPath ? `${state.currentPath}${dirName}/` : `${dirName}/`;
+    state.navHistory.push(newPath); // 记录新路径到历史
+    state.currentPath = newPath;
+    renderPathNav();
+    fetchFiles();
+}
+
+function navigateToPath(path) {
+    state.navHistory.push(path); // 记录新路径到历史
+    state.currentPath = path;
+    renderPathNav();
+    fetchFiles();
+}
+
+function goUp() {
+    if (!state.currentRepo) return;
+    if (!state.currentPath) {
+        showRepoListView();
+        return;
+    }
+    const parts = state.currentPath.split('/').filter(p => p);
+    parts.pop();
+    const newPath = parts.length ? parts.join('/') + '/' : '';
+    state.navHistory.push(newPath); // 记录新路径到历史
+    state.currentPath = newPath;
+    renderPathNav();
+    el.fileList.innerHTML = '<div class="flex justify-center items-center h-full py-10"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-400"></div></div>';
+    fetchFiles();
+    showToast('已返回上一级');
+}
+
+// 在初始化时调用
+document.addEventListener('DOMContentLoaded', () => {
+    init();
+    initBackButtonSupport(); // 添加手机返回键支持
+});
+
+    </script >
+
+
+
+
 
 
     <!-- 事件监听模块 -->
@@ -934,5 +1518,8 @@ async function renameItem(item) {
             });
         }
     </script>
+    
+    
+
 </body>
 </html>
