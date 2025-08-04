@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式多媒体网页</title>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --accent-color: #ff8e53;
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            z-index: 10;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .theme-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .gallery-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            aspect-ratio: 4/3;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .gallery-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .info-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 50px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .music-control i {
+            font-size: 1.5rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .theme-selector {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- 粒子效果容器 -->
+    <div id="particles-js"></div>
+    
+    <div class="container">
+    <!--
+        <header>
+            <h1>隆重展示</h1>
+           <p class="subtitle">优雅的设计 · 完美的体验 · 永恒的记忆</p>
+        </header>
+        -->
+        <div class="theme-selector">
+            <button class="theme-btn" data-theme="purple">蓝紫主题</button>
+            <button class="theme-btn" data-theme="green">森林主题</button>
+            
+<!--<button class="theme-btn" data-theme="sunset">日落主题</button>-->
+
+            <button class="theme-btn" data-theme="blue">紫红主题</button>
+        </div>
+        
+        <div class="gallery">
+            <div class="gallery-item fade-in">
+                <img src="https://pic.netbian.com/uploads/allimg/250430/124206-1745988126cf2e.jpg" alt="自然景观" class="gallery-img">
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">自然之美</h3>
+                    <p class="gallery-desc">壮丽的自然景观，令人心旷神怡</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item fade-in">
+                <img src="https://pic.netbian.com/uploads/allimg/171219/221048-1513692648a88d.jpg" alt="自然风光" class="gallery-img">
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">自然韵律</h3>
+                    <p class="gallery-desc">神游其境的繁华与活力</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item fade-in">
+                <img src="https://pic.netbian.com/uploads/allimg/171219/221048-1513692648a88d.jpg" alt="绿植" class="gallery-img">
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">狗尾巴草</h3>
+                    <p class="gallery-desc">大自然的鬼斧神工</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item fade-in">
+                <img src="https://pic.netbian.com/uploads/allimg/171219/221048-1513692648a88d.jpg" alt="湖泊" class="gallery-img">
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">宁静湖泊</h3>
+                    <p class="gallery-desc">平静如镜的湖面，倒映天空</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section fade-in">
+            <h2>关于此设计</h2>
+            <div class="info-content">
+                <p>这个响应式网页设计融合了现代网页技术的精华：</p>
+                <ul style="padding: 20px;">
+                    <li>使用particles.js创建的3D粒子背景，柔顺流畅</li>
+                    <li>四种精心设计的渐变主题可供选择</li>
+                    <li>隐藏式背景音乐自动播放</li>
+                    <li>响应式图片画廊，适配各种设备</li>
+                    <li>优雅的悬停效果和平滑的动画</li>
+                </ul>
+                <p>无论您是在桌面设备还是移动设备上浏览，都能获得一致而隆重的体验。</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 隆重展示 | @牡丹君</p>
+        </footer>
+    </div>
+    
+    <!-- 音乐控制按钮 -->
+    <div class="music-control" id="musicControl">
+        <i>♪</i>
+    </div>
+    
+    <!-- 隐藏的音频元素 -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://rjdsq.github.io/music/第57次取消发送铃声.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // 初始化粒子效果
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 1 } },
+                        push: { particles_nb: 4 }
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // 尝试自动播放背景音乐
+            const audio = document.getElementById('backgroundMusic');
+            const musicControl = document.getElementById('musicControl');
+            let audioPlaying = false;
+            
+            // 自动播放音乐（可能会被浏览器阻止）
+            const playAudio = () => {
+                audio.play()
+                    .then(() => {
+                        audioPlaying = true;
+                        musicControl.innerHTML = '<i>♪</i>';
+                    })
+                    .catch(error => {
+                        console.log('自动播放被阻止，需要用户交互:', error);
+                    });
+            };
+            
+            // 页面加载后尝试播放
+            setTimeout(playAudio, 1000);
+            
+            // 音乐控制按钮
+            musicControl.addEventListener('click', () => {
+                if (audioPlaying) {
+                    audio.pause();
+                    musicControl.innerHTML = '<i>🔇</i>';
+                } else {
+                    audio.play();
+                    musicControl.innerHTML = '<i>♪</i>';
+                }
+                audioPlaying = !audioPlaying;
+            });
+            
+            // 主题切换功能
+            const themeButtons = document.querySelectorAll('.theme-btn');
+            themeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const theme = button.getAttribute('data-theme');
+                    applyTheme(theme);
+                });
+            });
+            
+            // 应用主题
+            function applyTheme(themeName) {
+                let primary, secondary;
+                
+                switch(themeName) {
+                        case 'green':
+                        primary = '#134E5E';
+                        secondary = '#71B280';
+                        break;
+                    case 'blue':
+                        primary = '#1a2a6c';
+                        secondary = '#b21f1f';
+                        break;
+
+                    case 'sunset':
+                        primary = '#FF512F';
+                        secondary = '#F09819';
+                        break;
+                    case 'purple':
+                        primary = '#4776E6';
+                        secondary = '#8E54E9';
+                        break;
+                    default:
+                        primary = '#6a11cb';
+                        secondary = '#2575fc';
+                }
+                
+                document.documentElement.style.setProperty('--primary-color', primary);
+                document.documentElement.style.setProperty('--secondary-color', secondary);
+            }
+            
+            // 滚动动画
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.gallery-item, .info-section').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
