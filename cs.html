@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>返回键永远不退出</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      history.pushState(null, '', location.href);
+    });
+
+    window.addEventListener('popstate', function() {
+      // 这里可以做你想做的事，比如弹窗、内容刷新等
+      alert('你按了返回键，但网页不会退出！');
+      // 关键：每次都 pushState 回去，锁死页面
+      history.pushState(null, '', location.href);
+    });
+  </script>
+</head>
+<body>
+  <h2>无论怎么点返回键，网页都不会退出</h2>
+</body>
+</html>
