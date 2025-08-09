@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>炫彩 GitHub 文件管理器</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+:root{
+  --bg:#070b19;
+  --panel:#0b1226;
+  --panel-2:#0f172a;
+  --glass:rgba(11,18,38,.7);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --border:#1f2a44;
+  --primary:#22d3ee;
+  --primary-2:#38bdf8;
+  --accent:#a21caf;
+  --accent-2:#f472b6;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --err:#ef4444;
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow-lg:0 12px 40px rgba(0,0,0,.35), 0 2px 12px rgba(0,0,0,.25);
+  --shadow-md:0 10px 26px rgba(0,0,0,.3), 0 2px 10px rgba(0,0,0,.2);
+  --shadow-sm:0 6px 16px rgba(0,0,0,.25), 0 1px 6px rgba(0,0,0,.18);
+  --blur:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Arial;
+  background: radial-gradient(1200px 800px at 20% -10%, #101631 0%, #070b19 50%) fixed;
+  color:var(--text);
+  overflow-x:hidden;
+}
+.rainbow{
+  background:linear-gradient(90deg, #0ea5e9, #22d3ee, #a78bfa, #f472b6, #f59e0b, #0ea5e9);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:rainbow 6s linear infinite;
+}
+@keyframes rainbow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+.fade-in{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm)}
+.glass{background:var(--glass); backdrop-filter:blur(var(--blur))}
+.btn{
+  border:none; outline:none; color:#fff; cursor:pointer; border-radius:10px; padding:.6rem .8rem; 
+  background:linear-gradient(135deg,#0ea5e9,#6366f1); transition:.2s; box-shadow:var(--shadow-sm);
+}
+.btn:hover{transform:translateY(-1px); box-shadow:var(--shadow-md)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent; border:1px solid var(--border)}
+.btn.icon{padding:.5rem; border-radius:10px; background:transparent; border:1px solid transparent}
+.btn.icon:hover{background:rgba(255,255,255,.04); border-color:var(--border)}
+.btn.primary{background:linear-gradient(135deg,#22d3ee,#6366f1)}
+.btn.danger{background:linear-gradient(135deg,#ef4444,#f97316)}
+.btn.ok{background:linear-gradient(135deg,#10b981,#22d3ee)}
+.btn:disabled{opacity:.6; cursor:not-allowed; filter:grayscale(.2)}
+input,textarea,select{
+  background:#070b19; border:1px solid var(--border); color:var(--text); border-radius:10px;
+  padding:.75rem .9rem; outline:none; transition:.2s;
+}
+input:focus,textarea:focus,select:focus{border-color:#475569; box-shadow:0 0 0 4px rgba(100,116,139,.2)}
+.badge{font-size:.72rem; color:#cbd5e1; padding:.2rem .5rem; border-radius:999px; background:#0b1226; border:1px solid var(--border)}
+.chips{display:flex; flex-wrap:wrap; gap:.5rem}
+.chip{
+  padding:.35rem .6rem; background:#0b1226; border:1px solid var(--border); border-radius:999px; color:#cbd5e1;
+  display:inline-flex; align-items:center; gap:.4rem; cursor:pointer; transition:.18s;
+}
+.chip:hover{background:#0e1733}
+.toolbar{display:flex; gap:.5rem; align-items:center}
+.toolbar .sp{flex:1}
+.hint{font-size:.85rem; color:var(--muted)}
+.header{
+  position:sticky; top:0; z-index:30;
+  display:flex; align-items:center; gap:.6rem; padding:.65rem .6rem; 
+  background:linear-gradient(180deg, rgba(7,11,25,.92), rgba(7,11,25,.7));
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+}
+.brand{display:flex; align-items:center; gap:.6rem; font-weight:700}
+.brand .logo{
+  width:36px;height:36px;display:grid;place-items:center;border-radius:12px;
+  background:linear-gradient(135deg, rgba(56,189,248,.15), rgba(99,102,241,.18));
+  border:1px solid var(--border)
+}
+.brand .logo i{font-size:18px}
+.brand .name{font-size:1.05rem}
+.header .search{flex:1; display:flex; align-items:center; gap:.5rem; background:#0b1226; border:1px solid var(--border); border-radius:12px; padding:.45rem .6rem; min-width:160px}
+.header .search i{color:#80caff}
+.header .search input{flex:1; background:transparent; border:none; padding:.3rem .4rem}
+.wrapper{display:grid; grid-template-rows:auto auto 1fr; height:100vh;}
+.breadcrumb{display:flex; align-items:center; gap:.5rem; padding:.5rem .6rem; border-bottom:1px dashed var(--border)}
+.breadcrumb .crumb{cursor:pointer; color:#cbd5e1}
+.breadcrumb .crumb:hover{color:#fff; text-decoration:underline}
+.main{overflow:auto; padding:1rem;}
+#auth{
+  min-height:100vh; display:grid; place-items:center; padding:1rem;
+}
+.auth-box{
+  width:100%; max-width:460px; padding:1.2rem 1.2rem 1.1rem;
+  border-radius:16px; box-shadow:var(--shadow-lg); border:1px solid var(--border);
+  background: radial-gradient(900px 600px at 100% -40%, rgba(36,99,235,.08), transparent 50%) , var(--panel);
+}
+.auth-head{display:flex; flex-direction:column; align-items:center; gap:.5rem; text-align:center; margin-bottom:.6rem}
+.auth-head i{font-size:42px}
+.auth-head .t1{font-size:1.2rem; font-weight:800}
+.auth-form{display:flex; flex-direction:column; gap:.8rem}
+.auth-actions{display:flex; gap:.6rem; align-items:center}
+.auth-actions .sp{flex:1}
+.grid-repo{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:1rem}
+@media (max-width:1200px){.grid-repo{grid-template-columns:repeat(3, minmax(0,1fr))}}
+@media (max-width:900px){.grid-repo{grid-template-columns:repeat(2, minmax(0,1fr))}}
+@media (max-width:560px){.grid-repo{grid-template-columns:repeat(1, minmax(0,1fr))}}
+.repo-card{display:flex; gap:.8rem; padding:.9rem; transition:.2s; cursor:pointer}
+.repo-card:hover{transform:translateY(-2px); box-shadow:var(--shadow-md); background:linear-gradient(180deg,rgba(56,189,248,.05),rgba(0,0,0,0))}
+.repo-card .icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(30,41,59,.8); border:1px solid var(--border)}
+.repo-card .icon i{font-size:20px}
+.repo-title{font-weight:700}
+.repo-meta{color:var(--muted); font-size:.9rem}
+.repo-desc{color:#a7b0c3; font-size:.9rem; margin-top:.25rem}
+.list-files{display:flex; flex-direction:column; gap:.6rem; max-width:1100px; margin:0 auto}
+.file-row{
+  display:grid; grid-template-columns:auto 1fr auto; gap:.7rem; align-items:center; padding:.6rem .7rem;
+  border:1px solid var(--border); border-radius:12px; background:linear-gradient(180deg,rgba(14,23,52,.6),rgba(14,23,52,.4));
+  transition:.2s; cursor:pointer;
+}
+.file-row:hover{transform:translateY(-1px); box-shadow:var(--shadow-sm)}
+.file-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:#0b1226;border:1px solid var(--border)}
+.fn{font-weight:600}
+.fm{font-size:.85rem;color:var(--muted)}
+.row-actions{display:flex;align-items:center;gap:.3rem}
+.row-actions .act{border:none;background:transparent;color:#cbd5e1;cursor:pointer;border-radius:8px;padding:.4rem}
+.row-actions .act:hover{background:rgba(255,255,255,.06)}
+.checkbox{display:inline-flex; align-items:center; gap:.4rem}
+.checkbox input{width:16px; height:16px}
+.footer-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:20;
+  display:flex; justify-content:space-around; padding:.55rem .6rem;
+  background:linear-gradient(180deg, rgba(11,18,38,.25), rgba(11,18,38,.5)); backdrop-filter:blur(12px);
+  border-top:1px solid var(--border)
+}
+.footer-bar .fbtn{display:flex;flex-direction:column;align-items:center;gap:.2rem;color:#cbd5e1}
+.footer-bar .fbtn i{font-size:18px}
+@media (min-width:900px){.footer-bar{display:none}}
+.ctx{position:fixed; z-index:60; width:220px; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-lg); display:none}
+.ctx .ctx-body{background:var(--panel-2)}
+.ctx a{display:flex; gap:.6rem; align-items:center; color:#dbe3f1; text-decoration:none; padding:.6rem .8rem; border-bottom:1px solid rgba(255,255,255,.04); transition:.15s}
+.ctx a:last-child{border-bottom:none}
+.ctx a:hover{background:rgba(255,255,255,.05)}
+.ctx i{width:18px}
+.ctx .danger{color:#fda4af}
+.modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:70; background:rgba(0,0,0,.55); backdrop-filter:blur(3px)}
+.modal.show{display:flex}
+.paper{width:92vw; max-width:540px; padding:1rem; border-radius:16px; border:1px solid var(--border); background:var(--panel); box-shadow:var(--shadow-lg)}
+.paper h3{margin:.2rem 0 .8rem; font-size:1.1rem}
+.paper .row{display:flex; gap:.6rem; align-items:center; margin:.6rem 0}
+.paper .cols{display:grid; gap:.6rem}
+.paper .actions{display:flex; gap:.6rem; justify-content:flex-end; margin-top:.8rem}
+.text-danger{color:#fda4af}
+#editorModal .paper{width:94vw; max-width:1200px; padding:.7rem}
+.editor-head{display:flex; align-items:center; justify-content:space-between; gap:.7rem; padding:.3rem .2rem .5rem}
+.editor-name{font-weight:800}
+.editor-controls{display:flex; align-items:center; gap:.4rem}
+.editor-status{font-size:.85rem; color:#93c5fd}
+.editor-wrap{position:relative; border:1px solid var(--border); border-radius:12px; background:#070b19; overflow:hidden}
+#editorArea{
+  width:100%; min-height:60vh; resize:none; border:none; outline:none; 
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+  font-size:13px; line-height:1.6; padding:12px 14px; color:#a1abc8; background:transparent;
+}
+.editor-overlay{position:absolute; inset:0; display:grid; place-items:center; background:rgba(2,6,23,.6); opacity:0; pointer-events:none; transition:.2s}
+.editor-overlay.show{opacity:1; pointer-events:auto}
+.editor-toast{position:absolute; top:14px; right:14px; background:rgba(16,185,129,.9); color:#fff; padding:.35rem .5rem; border-radius:8px; opacity:0; transform:translateY(-8px); transition:.2s}
+.editor-toast.show{opacity:1; transform:translateY(0)}
+.editor-foot{display:flex; gap:.6rem; justify-content:flex-end; padding:.5rem 0 .2rem}
+.upload-panel{
+  position:fixed; left:50%; transform:translateX(-50%); bottom:70px; z-index:40;
+  width:92vw; max-width:560px; background:var(--glass); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow-lg); padding:.7rem .8rem; display:none;
+}
+.up-item{margin:.5rem 0}
+.up-meta{display:flex; justify-content:space-between; color:#cbd5e1; font-size:.92rem}
+.up-bar{height:6px; background:#1f2a44; border-radius:999px; overflow:hidden; position:relative; margin-top:.35rem}
+.up-bar .bar{height:100%; width:0; background:linear-gradient(90deg,#22c55e,#0ea5e9,#6366f1,#f472b6,#f59e0b,#22c55e); background-size:200% 100%; animation:rb 1.8s linear infinite; transition:.2s}
+@keyframes rb{from{background-position:0% 50%}to{background-position:100% 50%}}
+.up-status{font-size:.85rem; color:#9ca3af; margin-top:.2rem}
+.up-status.ok{color:#22c55e}
+.up-status.err{color:#f87171}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:72px; z-index:45; background:var(--glass); border:1px solid var(--border); border-radius:999px; padding:.45rem .7rem; display:none}
+.toast.show{display:block}
+.proxy-list{display:flex; flex-direction:column; gap:.45rem; margin:.4rem 0}
+.proxy-row{display:grid; grid-template-columns:1fr auto auto; gap:.4rem; align-items:center}
+.proxy-row .badge{justify-self:start}
+i.fa-github{background:linear-gradient(270deg,#0f172a,#06b6d4,#a21caf,#0f172a); background-size:400% 400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:github-rainbow 4.5s linear infinite}
+@keyframes github-rainbow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+i.fa-folder{background:linear-gradient(90deg,#f97316,#facc15,#4ade80,#f97316); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:folder-rainbow 2.2s ease-in-out infinite alternate}
+@keyframes folder-rainbow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+i.fa-code,i.fa-html5,i.fa-css3,i.fa-file-code-o{
+  background:linear-gradient(90deg,#2563eb,#06b6d4,#22c55e,#2563eb); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:code-rainbow 1.8s linear infinite
+}
+@keyframes code-rainbow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+i.fa-file-text-o,i.fa-file-o{
+  background:linear-gradient(90deg,#22d3ee,#a5b4fc,#fff,#22d3ee); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:text-rainbow 3s linear infinite
+}
+i.fa-file-image-o{
+  background:linear-gradient(90deg,#f472b6,#fb7185,#fde68a,#f472b6); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:image-rainbow 2.6s ease-in-out infinite alternate
+}
+i.fa-file-pdf-o{
+  background:linear-gradient(90deg,#be123c,#f59e42,#fff,#be123c); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:pdf-rainbow 2.4s linear infinite
+}
+i.fa-file-zip-o{
+  background:linear-gradient(90deg,#a78bfa,#38bdf8,#22d3ee,#a78bfa); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:zip-rainbow 2.1s ease-in-out infinite alternate
+}
+#mediaPreview{position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.88); padding:20px}
+#mediaPreview.show{display:flex}
+#mediaPreview img, #mediaPreview video{max-width:92%; max-height:92vh; object-fit:contain}
+.center{display:grid; place-items:center; padding:2rem 0}
+.spinner{width:28px;height:28px;border:3px solid #8492a6;border-top-color:#22d3ee; border-radius:999px; animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none !important}
+.mobile-only{display:none}
+@media (max-width:900px){
+  #repoTitle,.header .search{display:none}
+  .mobile-only{display:inline-flex}
+  .header{gap:.4rem}
+}
+</style>
+</head>
+<body>
+<section id="auth">
+  <div class="auth-box fade-in">
+    <div class="auth-head">
+      <div class="logo"><i class="fa fa-github"></i></div>
+      <div class="t1">炫彩 GitHub 文件管理器</div>
+      <div class="hint">使用 GitHub Personal Access Token 登录以管理仓库与文件</div>
+    </div>
+    <div class="auth-form">
+      <input id="tokenInput" placeholder="输入 GitHub 访问令牌 (建议 fine-grained 或 classic: repo 权限)" autocomplete="off">
+      <div class="toolbar">
+        <div class="chips">
+          <span class="chip" id="howToken"><i class="fa fa-info-circle"></i>如何获取令牌</span>
+          <span class="chip" id="setDemoProxy"><i class="fa fa-share-alt"></i>设置默认代理</span>
+        </div>
+        <span class="sp"></span>
+        <button id="loginBtn" class="btn primary"><i class="fa fa-sign-in"></i> 登录</button>
+      </div>
+      <div class="hint">令牌仅保存在本地浏览器 localStorage，随时可登出清除</div>
+    </div>
+  </div>
+</section>
+<section id="app" class="wrapper hidden">
+  <header class="header">
+    <div class="brand">
+      <div class="logo"><i class="fa fa-github"></i></div>
+      <div class="name"><span class="rainbow">GitHub</span> 管理器</div>
+    </div>
+    <button class="btn icon mobile-only" id="repoBtn" title="仓库"><i class="fa fa-list"></i></button>
+    <button class="btn icon mobile-only" id="mSearchBtn" title="搜索"><i class="fa fa-search"></i></button>
+    <div class="hint" id="repoTitle" style="min-width:120px;max-width:28vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">选择仓库</div>
+    <div class="search">
+      <i class="fa fa-search"></i>
+      <input id="searchInput" placeholder="搜索 仓库/文件...">
+    </div>
+    <div class="toolbar">
+      <button class="btn icon" id="toggleViewBtn" title="切换仓库视图"><i class="fa fa-th-large"></i></button>
+      <button class="btn icon" id="sortBtn" title="排序"><i class="fa fa-sort"></i></button>
+      <button class="btn icon" id="refreshBtn" title="刷新"><i class="fa fa-refresh"></i></button>
+      <button class="btn icon" id="uploadBtn" title="上传文件"><i class="fa fa-upload"></i></button>
+      <button class="btn icon" id="newBtn" title="新建"><i class="fa fa-plus"></i></button>
+      <button class="btn icon" id="settingsBtn" title="设置 (代理)"><i class="fa fa-cog"></i></button>
+      <button class="btn icon" id="menuBtn" title="菜单"><i class="fa fa-ellipsis-h"></i></button>
+    </div>
+  </header>
+  <nav class="breadcrumb" id="crumbs"></nav>
+  <main class="main">
+    <div id="reposView">
+      <div class="toolbar" style="margin-bottom:.6rem">
+        <span class="badge" id="repoCount">仓库 0</span>
+        <span class="sp"></span>
+        <div class="chips">
+          <span class="chip" id="createRepoChip"><i class="fa fa-plus"></i>新建仓库</span>
+          <span class="chip" id="backToReposChip" title="回到仓库列表"><i class="fa fa-list"></i>列表</span>
+        </div>
+      </div>
+      <div id="repoGrid" class="grid-repo"></div>
+      <div id="repoEmpty" class="center hidden">
+        <div class="hint"><i class="fa fa-github"></i> 尚无仓库</div>
+      </div>
+      <div id="repoLoading" class="center"><div class="spinner"></div></div>
+    </div>
+    <div id="filesView" class="hidden">
+      <div class="toolbar" style="margin-bottom:.6rem">
+        <div class="chips">
+          <span class="chip" id="newFolderChip"><i class="fa fa-folder"></i>新建文件夹</span>
+          <span class="chip" id="newFileChip"><i class="fa fa-file-o"></i>新建文件</span>
+          <span class="chip" id="goUpChip"><i class="fa fa-arrow-up"></i>上级</span>
+        </div>
+        <span class="sp"></span>
+        <span class="badge" id="fileCount">文件 0</span>
+      </div>
+      <div id="fileList" class="list-files"></div>
+      <div id="fileEmpty" class="center hidden">
+        <div class="hint"><i class="fa fa-folder-open"></i> 文件夹为空</div>
+      </div>
+      <div id="fileLoading" class="center"><div class="spinner"></div></div>
+    </div>
+  </main>
+  <div class="footer-bar">
+    <div class="fbtn" id="mBack"><i class="fa fa-arrow-left"></i><span>返回</span></div>
+    <div class="fbtn" id="mRefresh"><i class="fa fa-refresh"></i><span>刷新</span></div>
+    <div class="fbtn" id="mNew"><i class="fa fa-plus"></i><span>新建</span></div>
+    <div class="fbtn" id="mSettings"><i class="fa fa-cog"></i><span>设置</span></div>
+  </div>
+</section>
+<input id="filePicker" class="hidden" type="file" multiple />
+<div id="contextMenu" class="ctx">
+  <div class="ctx-body" id="ctxItems"></div>
+</div>
+<div id="toast" class="toast"><span id="toastText"></span></div>
+<div id="uploadPanel" class="upload-panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem">
+    <div class="hint"><i class="fa fa-upload"></i> 上传任务</div>
+    <button class="btn icon" id="closeUpload"><i class="fa fa-times"></i></button>
+  </div>
+  <div id="uploadItems"></div>
+</div>
+<div id="mediaPreview">
+  <img id="pvImg" alt="预览" class="hidden" />
+  <video id="pvVideo" class="hidden" controls></video>
+</div>
+<div id="editorModal" class="modal">
+  <div class="paper fade-in">
+    <div class="editor-head">
+      <div>
+        <div class="editor-name" id="editorName">编辑文件</div>
+        <div class="editor-status" id="editorStatus"></div>
+      </div>
+      <div class="editor-controls">
+        <button class="btn icon" id="toggleMaxEditor" title="最大化/恢复"><i class="fa fa-expand"></i></button>
+        <button class="btn icon" id="closeEditor"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-overlay" id="editorOverlay"><i class="fa fa-spinner fa-spin"></i></div>
+      <div class="editor-toast" id="editorSaved"><i class="fa fa-check"></i> 已保存</div>
+      <textarea id="editorArea" spellcheck="false"></textarea>
+    </div>
+    <div class="editor-foot">
+      <button class="btn ghost" id="cancelEditBtn">取消</button>
+      <button class="btn ok" id="saveEditBtn"><i class="fa fa-floppy-o"></i> 保存</button>
+    </div>
+  </div>
+</div>
+<div id="modal" class="modal">
+  <div class="paper fade-in" id="modalPaper"></div>
+</div>
+<script>
+const app = {
+  s: {
+    token: localStorage.getItem('gh_token') || '',
+    proxy: localStorage.getItem('gh_proxy') || 'https://gh-proxy.com/',
+    proxyList: JSON.parse(localStorage.getItem('gh_proxy_list') || '[]'),
+    currentRepo: null,
+    currentRepoName: '',
+    currentPath: '',
+    repos: [],
+    files: [],
+    cacheFiles: new Map(),
+    fileSha: '',
+    editingFile: null,
+    originalContent: '',
+    isGrid: true,
+    sortMode: 'updated',
+  },
+  el: {},
+  init(){
+    this.el.auth = document.getElementById('auth');
+    this.el.app = document.getElementById('app');
+    this.el.tokenInput = document.getElementById('tokenInput');
+    this.el.loginBtn = document.getElementById('loginBtn');
+    this.el.howToken = document.getElementById('howToken');
+    this.el.setDemoProxy = document.getElementById('setDemoProxy');
+    this.el.repoTitle = document.getElementById('repoTitle');
+    this.el.searchInput = document.getElementById('searchInput');
+    this.el.repoBtn = document.getElementById('repoBtn');
+    this.el.mSearchBtn = document.getElementById('mSearchBtn');
+    this.el.toggleViewBtn = document.getElementById('toggleViewBtn');
+    this.el.sortBtn = document.getElementById('sortBtn');
+    this.el.refreshBtn = document.getElementById('refreshBtn');
+    this.el.uploadBtn = document.getElementById('uploadBtn');
+    this.el.newBtn = document.getElementById('newBtn');
+    this.el.settingsBtn = document.getElementById('settingsBtn');
+    this.el.menuBtn = document.getElementById('menuBtn');
+    this.el.reposView = document.getElementById('reposView');
+    this.el.repoGrid = document.getElementById('repoGrid');
+    this.el.repoEmpty = document.getElementById('repoEmpty');
+    this.el.repoLoading = document.getElementById('repoLoading');
+    this.el.repoCount = document.getElementById('repoCount');
+    this.el.filesView = document.getElementById('filesView');
+    this.el.fileList = document.getElementById('fileList');
+    this.el.fileEmpty = document.getElementById('fileEmpty');
+    this.el.fileLoading = document.getElementById('fileLoading');
+    this.el.fileCount = document.getElementById('fileCount');
+    this.el.crumbs = document.getElementById('crumbs');
+    this.el.footerBack = document.getElementById('mBack');
+    this.el.footerRefresh = document.getElementById('mRefresh');
+    this.el.footerNew = document.getElementById('mNew');
+    this.el.footerSettings = document.getElementById('mSettings');
+    this.el.filePicker = document.getElementById('filePicker');
+    this.el.contextMenu = document.getElementById('contextMenu');
+    this.el.ctxItems = document.getElementById('ctxItems');
+    this.el.toast = document.getElementById('toast');
+    this.el.toastText = document.getElementById('toastText');
+    this.el.uploadPanel = document.getElementById('uploadPanel');
+    this.el.uploadItems = document.getElementById('uploadItems');
+    this.el.closeUpload = document.getElementById('closeUpload');
+    this.el.mediaPreview = document.getElementById('mediaPreview');
+    this.el.pvImg = document.getElementById('pvImg');
+    this.el.pvVideo = document.getElementById('pvVideo');
+    this.el.editorModal = document.getElementById('editorModal');
+    this.el.editorName = document.getElementById('editorName');
+    this.el.editorStatus = document.getElementById('editorStatus');
+    this.el.editorArea = document.getElementById('editorArea');
+    this.el.editorOverlay = document.getElementById('editorOverlay');
+    this.el.editorSaved = document.getElementById('editorSaved');
+    this.el.toggleMaxEditor = document.getElementById('toggleMaxEditor');
+    this.el.closeEditor = document.getElementById('closeEditor');
+    this.el.cancelEditBtn = document.getElementById('cancelEditBtn');
+    this.el.saveEditBtn = document.getElementById('saveEditBtn');
+    this.el.modal = document.getElementById('modal');
+    this.el.modalPaper = document.getElementById('modalPaper');
+    this.el.createRepoChip = document.getElementById('createRepoChip');
+    this.el.backToReposChip = document.getElementById('backToReposChip');
+    this.el.newFolderChip = document.getElementById('newFolderChip');
+    this.el.newFileChip = document.getElementById('newFileChip');
+    this.el.goUpChip = document.getElementById('goUpChip');
+    this.bindGlobal();
+    this.bindHeader();
+    this.bindEditor();
+    this.bindDndUpload();
+    this.initMediaPreview();
+    if (this.s.token){
+      this.showApp();
+      this.fetchRepos();
+    }else{
+      this.showAuth();
+    }
+  },
+  showAuth(){
+    this.el.auth.classList.remove('hidden');
+    this.el.app.classList.add('hidden');
+  },
+  showApp(){
+    this.el.auth.classList.add('hidden');
+    this.el.app.classList.remove('hidden');
+  },
+  bindGlobal(){
+    this.el.loginBtn.addEventListener('click', ()=>{
+      const t = (this.el.tokenInput.value||'').trim();
+      if(!t) return this.toast('请输入令牌');
+      this.s.token = t;
+      localStorage.setItem('gh_token', t);
+      this.showApp();
+      this.fetchRepos();
+    });
+    this.el.howToken.addEventListener('click',()=>{ window.open('https://github.com/settings/tokens', '_blank') });
+    this.el.setDemoProxy.addEventListener('click',()=>{
+      if(!this.s.proxyList.length){
+        this.s.proxyList = ['https://gh-proxy.com/','https://gh.api.99988866.xyz/','https://mirror.ghproxy.com/'];
+        localStorage.setItem('gh_proxy_list', JSON.stringify(this.s.proxyList));
+      }
+      this.s.proxy = this.s.proxyList[0];
+      localStorage.setItem('gh_proxy', this.s.proxy);
+      this.toast('已设置默认代理: ' + this.s.proxy);
+    });
+    this.el.searchInput.addEventListener('input', ()=>{
+      const kw = this.el.searchInput.value.toLowerCase();
+      if(!this.s.currentRepo) this.renderRepoGrid(kw);
+      else this.renderFileList(kw);
+    });
+    document.addEventListener('click', (e)=>{ if(!this.el.contextMenu.contains(e.target)) this.hideContextMenu() });
+    document.addEventListener('contextmenu', (e)=>{ if(e.target.closest('.file-row,.repo-card')) e.preventDefault() });
+    this.el.footerBack.addEventListener('click', ()=>this.goUp());
+    this.el.footerRefresh.addEventListener('click', ()=>{ this.s.currentRepo? this.fetchFiles(true):this.fetchRepos(true) });
+    this.el.footerNew.addEventListener('click', ()=>this.openCreateMenu());
+    this.el.footerSettings.addEventListener('click', ()=>this.openSettings());
+    this.el.closeUpload.addEventListener('click', ()=>this.el.uploadPanel.style.display='none');
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        this.hideContextMenu();
+        this.hideModal();
+        this.closePreview();
+        if(this.el.editorModal.classList.contains('show')) this.hideEditor();
+      }
+    });
+    const longPress = (el, handler, ms=600)=>{
+      let timer=null;
+      ['touchstart','mousedown'].forEach(ev=>{
+        el.addEventListener(ev, (e)=>{ timer=setTimeout(()=>handler(e), ms) });
+      });
+      ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev=>{
+        el.addEventListener(ev, ()=>{ if(timer) clearTimeout(timer) });
+      });
+    };
+    this.el.repoGrid.addEventListener('mousedown', ()=>{});
+    this.el.repoGrid.addEventListener('contextmenu', (e)=>{
+      const card = e.target.closest('.repo-card');
+      if(!card) return;
+      const repo = this.s.repos.find(r=> r.full_name===card.dataset.full);
+      this.showRepoMenu(e, repo);
+    });
+    longPress(this.el.repoGrid, (e)=>{
+      const card = e.target.closest('.repo-card');
+      if(!card) return;
+      const repo = this.s.repos.find(r=> r.full_name===card.dataset.full);
+      this.showRepoMenu(e, repo);
+    });
+    this.el.fileList.addEventListener('contextmenu', (e)=>{
+      const row = e.target.closest('.file-row');
+      if(!row) return;
+      const idx = +row.dataset.idx;
+      const file = this.s.files[idx];
+      this.showFileMenu(e, file);
+    });
+    longPress(this.el.fileList, (e)=>{
+      const row = e.target.closest('.file-row');
+      if(!row) return;
+      const idx = +row.dataset.idx;
+      const file = this.s.files[idx];
+      this.showFileMenu(e, file);
+    });
+    this.el.createRepoChip.addEventListener('click', ()=>this.openCreateRepo());
+    this.el.backToReposChip.addEventListener('click', ()=>this.showReposView());
+    this.el.newFolderChip.addEventListener('click', ()=>this.newFolder());
+    this.el.newFileChip.addEventListener('click', ()=>this.newFile());
+    this.el.goUpChip.addEventListener('click', ()=>this.goUp());
+  },
+  bindHeader(){
+    this.el.repoBtn.addEventListener('click', ()=>this.showReposView());
+    this.el.mSearchBtn.addEventListener('click', ()=>this.openSearchPanel());
+    this.el.toggleViewBtn.addEventListener('click', ()=>{
+      this.s.isGrid = !this.s.isGrid;
+      this.el.toggleViewBtn.innerHTML = this.s.isGrid ? '<i class="fa fa-th-large"></i>' : '<i class="fa fa-list"></i>';
+      if(!this.s.currentRepo) this.renderRepoGrid(this.el.searchInput.value.toLowerCase());
+    });
+    this.el.sortBtn.addEventListener('click', ()=>this.openSortMenu());
+    this.el.refreshBtn.addEventListener('click', ()=>{ this.s.currentRepo? this.fetchFiles(true):this.fetchRepos(true) });
+    this.el.uploadBtn.addEventListener('click', ()=>this.pickFiles());
+    this.el.newBtn.addEventListener('click', ()=>this.openCreateMenu());
+    this.el.settingsBtn.addEventListener('click', ()=>this.openSettings());
+    this.el.menuBtn.addEventListener('click', ()=>this.openMainMenu());
+  },
+  bindEditor(){
+    this.el.saveEditBtn.addEventListener('click', ()=>this.saveEdit());
+    this.el.cancelEditBtn.addEventListener('click', ()=>this.hideEditor());
+    this.el.closeEditor.addEventListener('click', ()=>this.hideEditor());
+    document.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){
+        if(this.el.editorModal.classList.contains('show')){ e.preventDefault(); this.saveEdit() }
+      }
+    });
+    this.el.toggleMaxEditor.addEventListener('click', ()=>{
+      const paper = this.el.editorModal.querySelector('.paper');
+      paper.classList.toggle('max');
+      const icon = this.el.toggleMaxEditor.querySelector('i');
+      if(paper.classList.contains('max')){
+        paper.style.width='98vw'; paper.style.maxWidth='98vw';
+        icon.classList.remove('fa-expand'); icon.classList.add('fa-compress');
+      }else{
+        paper.style.width=''; paper.style.maxWidth='';
+        icon.classList.add('fa-expand'); icon.classList.remove('fa-compress');
+      }
+    });
+    const cfg = {min: 10, max: 40, key:'editor-font-size', def: 13};
+    const ta = this.el.editorArea;
+    const saved = +(localStorage.getItem(cfg.key)||cfg.def);
+    ta.style.fontSize = saved+'px';
+    ta.style.lineHeight = '1.6';
+    let pinch=false, startDist=0, startSize=saved;
+    const dist=(t)=>Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+    ta.addEventListener('touchstart',(e)=>{
+      if(e.touches.length===2){ pinch=true; startDist=dist(e.touches); startSize=parseInt(window.getComputedStyle(ta).fontSize) }
+    }, {passive:false});
+    ta.addEventListener('touchmove',(e)=>{
+      if(pinch && e.touches.length===2){
+        e.preventDefault();
+        const scale = dist(e.touches)/startDist;
+        let size = Math.max(cfg.min, Math.min(cfg.max, Math.round(startSize*scale)));
+        ta.style.fontSize=size+'px';
+        localStorage.setItem(cfg.key, size);
+      }
+    },{passive:false});
+    ta.addEventListener('touchend',()=>pinch=false);
+    ta.addEventListener('wheel',(e)=>{
+      if(e.ctrlKey){ e.preventDefault();
+        let size=parseInt(window.getComputedStyle(ta).fontSize);
+        size += (e.deltaY>0?-1:1);
+        size=Math.max(cfg.min,Math.min(cfg.max,size));
+        ta.style.fontSize=size+'px';
+        localStorage.setItem(cfg.key,size);
+      }
+    },{passive:false});
+  },
+  bindDndUpload(){
+    const dropArea = this.el.filesView;
+    const on = (el,ev,fn)=>el.addEventListener(ev, fn, false);
+    ['dragenter','dragover'].forEach(ev=>on(dropArea, ev, (e)=>{e.preventDefault(); e.dataTransfer.dropEffect='copy'; dropArea.style.outline='2px dashed #22d3ee'}));
+    ['dragleave','drop'].forEach(ev=>on(dropArea, ev, (e)=>{e.preventDefault(); dropArea.style.outline='none'}));
+    on(dropArea,'drop',(e)=>{
+      const files = Array.from(e.dataTransfer.files||[]);
+      if(!files.length){this.toast('没有可上传的文件');return;}
+      this.startUpload(files);
+    });
+  },
+  initMediaPreview(){
+    this.el.pvVideo.addEventListener('click',(e)=>e.stopPropagation());
+  },
+  ghHeaders(extra={}){ return { Authorization:`token ${this.s.token}`, Accept:'application/vnd.github+json', ...extra } },
+  async fetchRepos(force=false){
+    this.el.reposView.classList.remove('hidden');
+    this.el.filesView.classList.add('hidden');
+    this.el.repoLoading.classList.remove('hidden');
+    this.el.repoEmpty.classList.add('hidden');
+    try{
+      const url = `https://api.github.com/user/repos?per_page=100&sort=updated&ts=${Date.now()}`;
+      const res = await fetch(url, {headers:this.ghHeaders(), cache: force?'no-store':'default'});
+      if(!res.ok) throw new Error('获取仓库失败');
+      const data = await res.json();
+      this.s.repos = data || [];
+      this.el.repoCount.textContent = `仓库 ${this.s.repos.length}`;
+      this.renderRepoGrid(this.el.searchInput.value.toLowerCase());
+    }catch(e){
+      this.toast('加载仓库失败：' + e.message);
+    }finally{
+      this.el.repoLoading.classList.add('hidden');
+    }
+  },
+  renderRepoGrid(keyword=''){
+    const list = (this.s.repos||[]).filter(r=>{
+      return !keyword || r.name.toLowerCase().includes(keyword) || (r.description||'').toLowerCase().includes(keyword);
+    });
+    this.el.repoGrid.innerHTML='';
+    if(!list.length){ this.el.repoEmpty.classList.remove('hidden') } else { this.el.repoEmpty.classList.add('hidden') }
+    if(this.s.isGrid){ this.el.repoGrid.classList.add('grid-repo') } else { this.el.repoGrid.classList.remove('grid-repo') }
+    list.forEach(repo=>{
+      const card = document.createElement('div');
+      card.className='repo-card card';
+      card.dataset.full = repo.full_name;
+      card.innerHTML = `
+        <div class="icon"><i class="fa fa-github"></i></div>
+        <div style="min-width:0">
+          <div class="repo-title">${repo.name} ${repo.private?'<span class="badge">私有</span>':''}</div>
+          <div class="repo-meta">${(repo.size? this.formatSize(repo.size*1024)+' · ' : '')}${this.timeAgo(repo.updated_at)}</div>
+          ${repo.description ? `<div class="repo-desc">${this.escape(repo.description)}</div>`:''}
+        </div>
+      `;
+      card.addEventListener('click', ()=>{
+        this.s.currentRepo = repo.full_name;
+        this.s.currentRepoName = repo.name;
+        this.s.currentPath = '';
+        this.el.repoTitle.textContent = repo.name;
+        this.renderCrumbs();
+        this.showFilesView();
+        this.fetchFiles();
+      });
+      this.el.repoGrid.appendChild(card);
+    });
+  },
+  showReposView(){
+    this.s.currentRepo = null;
+    this.s.currentRepoName = '';
+    this.s.currentPath = '';
+    this.el.repoTitle.textContent = '选择仓库';
+    this.el.reposView.classList.remove('hidden');
+    this.el.filesView.classList.add('hidden');
+    this.renderCrumbs();
+  },
+  showFilesView(){
+    this.el.reposView.classList.add('hidden');
+    this.el.filesView.classList.remove('hidden');
+  },
+  async fetchFiles(force=false){
+    if(!this.s.currentRepo) return;
+    const key = `${this.s.currentRepo}:${this.s.currentPath}`;
+    this.el.fileLoading.classList.remove('hidden');
+    this.el.fileEmpty.classList.add('hidden');
+    this.el.fileList.innerHTML='';
+    if(!force && this.s.cacheFiles.has(key)){
+      this.s.files = this.s.cacheFiles.get(key);
+      this.renderFileList(this.el.searchInput.value.toLowerCase());
+      this.el.fileLoading.classList.add('hidden');
+      this.fetchFiles(true);
+      return;
+    }
+    try{
+      const url = `https://api.github.com/repos/${this.s.currentRepo}/contents/${this.s.currentPath}?ts=${Date.now()}`;
+      const res = await fetch(url, {headers:this.ghHeaders(), cache:'no-store'});
+      if(!res.ok){
+        if(res.status===404){ this.s.files=[]; this.renderFileList(); return; }
+        throw new Error('加载文件失败');
+      }
+      const arr = await res.json();
+      const files = Array.isArray(arr)? arr : [];
+      files.sort((a,b)=>{
+        if(a.type!==b.type) return a.type==='dir' ? -1 : 1;
+        if(this.s.sortMode==='name') return a.name.localeCompare(b.name);
+        if(this.s.sortMode==='size') return (a.size||0)-(b.size||0);
+        return 0;
+      });
+      this.s.files = files;
+      this.s.cacheFiles.set(key, [...files]);
+      this.renderFileList(this.el.searchInput.value.toLowerCase());
+      this.enrichLastModified(files).catch(()=>{});
+    }catch(e){
+      this.toast('加载文件失败：' + e.message);
+    }finally{
+      this.el.fileLoading.classList.add('hidden');
+    }
+  },
+  async enrichLastModified(files){
+    const [owner, repo] = this.s.currentRepo.split('/');
+    const tasks = files.map(async f=>{
+      try{
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(f.path)}&per_page=1`, {headers:this.ghHeaders()});
+        if(!res.ok) return;
+        const commits = await res.json();
+        if(Array.isArray(commits) && commits[0]) f.last_modified = commits[0].commit.committer.date;
+      }catch{}
+    });
+    await Promise.allSettled(tasks);
+    if(this.s.sortMode==='updated'){
+      this.s.files.sort((a,b)=>{
+        const t1= a.last_modified? new Date(a.last_modified).getTime():0;
+        const t2= b.last_modified? new Date(b.last_modified).getTime():0;
+        if(a.type!==b.type) return a.type==='dir' ? -1 : 1;
+        return t2-t1;
+      });
+      this.renderFileList(this.el.searchInput.value.toLowerCase());
+    }else{
+      this.renderFileList(this.el.searchInput.value.toLowerCase(), true);
+    }
+  },
+  renderFileList(keyword='', keepScroll=false){
+    const container = this.el.fileList;
+    const prevScroll = container.scrollTop;
+    container.innerHTML='';
+    const list = (this.s.files||[]).filter(f=>!keyword || f.name.toLowerCase().includes(keyword));
+    this.el.fileCount.textContent = `文件 ${list.length}`;
+    if(!list.length){ this.el.fileEmpty.classList.remove('hidden') } else { this.el.fileEmpty.classList.add('hidden') }
+    list.forEach((f)=>{
+      const isDir = f.type==='dir';
+      const icon = isDir ? 'fa-folder' : this.getIcon(f.name);
+      const row = document.createElement('div');
+      row.className='file-row card';
+      row.dataset.idx = String(this.s.files.indexOf(f));
+      row.innerHTML = `
+        <div class="file-icon"><i class="fa ${icon}"></i></div>
+        <div style="min-width:0">
+          <div class="fn" title="${f.name}">${f.name}</div>
+          <div class="fm">${isDir?'文件夹':this.formatSize(f.size)} · ${f.last_modified? this.timeAgo(f.last_modified) : '...'} </div>
+        </div>
+        <div class="row-actions">
+          <button class="act" title="${isDir?'打开':'预览/编辑'}"><i class="fa ${isDir?'fa-sign-in':'fa-eye'}"></i></button>
+          <button class="act more"><i class="fa fa-ellipsis-h"></i></button>
+        </div>
+      `;
+      row.addEventListener('click', (e)=>{
+        if(e.target.closest('.more')){ this.showFileMenu(e, f); return; }
+        if(isDir) this.enterDir(f.name);
+        else this.openFile(f);
+      });
+      container.appendChild(row);
+    });
+    if(keepScroll) container.scrollTop = prevScroll;
+  },
+  renderCrumbs(){
+    const nav = this.el.crumbs;
+    nav.innerHTML='';
+    const parts = this.s.currentPath.split('/').filter(Boolean);
+    const add = (label, path)=>{
+      const span = document.createElement('span');
+      span.className='crumb';
+      span.textContent = label;
+      span.addEventListener('click', ()=>{
+        this.s.currentPath = path;
+        this.renderCrumbs();
+        this.fetchFiles();
+      });
+      nav.appendChild(span);
+      const arrow = document.createElement('span'); arrow.textContent=' / '; arrow.className='hint';
+      if(label!=='/') nav.appendChild(arrow);
+    };
+    if(!this.s.currentRepo){
+      nav.innerHTML='<span class="hint">仓库列表</span>';
+      return;
+    }
+    add('/', '');
+    let p='';
+    parts.forEach((seg)=>{
+      p += seg + '/';
+      add(seg, p);
+    });
+  },
+  enterDir(dir){
+    this.s.currentPath = (this.s.currentPath? this.s.currentPath + dir + '/' : dir + '/');
+    this.renderCrumbs();
+    this.fetchFiles();
+  },
+  goUp(){
+    if(!this.s.currentRepo){ this.showReposView(); return; }
+    const parts = this.s.currentPath.split('/').filter(Boolean);
+    if(parts.length===0){ this.showReposView(); return; }
+    parts.pop();
+    this.s.currentPath = parts.length? parts.join('/') + '/' : '';
+    this.renderCrumbs();
+    this.fetchFiles();
+  },
+  openMainMenu(){
+    const content = `
+      <h3>主菜单</h3>
+      <div class="cols">
+        <button class="btn ghost" id="menuRepos"><i class="fa fa-list"></i> 仓库列表</button>
+        <button class="btn ghost" id="menuRefresh"><i class="fa fa-refresh"></i> 刷新</button>
+        <button class="btn ghost" id="menuNewRepo"><i class="fa fa-plus"></i> 新建仓库</button>
+        <button class="btn ghost" id="menuSettings"><i class="fa fa-cog"></i> 设置</button>
+        <button class="btn danger" id="menuLogout"><i class="fa fa-sign-out"></i> 退出登录</button>
+      </div>`;
+    this.showModal(content, (box)=>{
+      box.querySelector('#menuRepos').addEventListener('click', ()=>{ this.hideModal(); this.showReposView(); });
+      box.querySelector('#menuRefresh').addEventListener('click', ()=>{ this.hideModal(); this.s.currentRepo? this.fetchFiles(true):this.fetchRepos(true)});
+      box.querySelector('#menuNewRepo').addEventListener('click', ()=>{ this.hideModal(); this.openCreateRepo(); });
+      box.querySelector('#menuSettings').addEventListener('click', ()=>{ this.hideModal(); this.openSettings(); });
+      box.querySelector('#menuLogout').addEventListener('click', ()=>{
+        localStorage.removeItem('gh_token'); this.s.token=''; this.s.currentRepo=null; this.showAuth();
+        this.hideModal();
+      });
+    });
+  },
+  openCreateMenu(){
+    const content = `
+      <h3>新建</h3>
+      <div class="cols">
+        ${!this.s.currentRepo ? '<button class="btn primary" id="mkRepo"><i class="fa fa-github"></i> 新建仓库</button>' : ''}
+        ${this.s.currentRepo ? '<button class="btn primary" id="mkFolder"><i class="fa fa-folder"></i> 新建文件夹</button>' : ''}
+        ${this.s.currentRepo ? '<button class="btn primary" id="mkFile"><i class="fa fa-file-o"></i> 新建文件</button>' : ''}
+      </div>`;
+    this.showModal(content, (box)=>{
+      if(!this.s.currentRepo) box.querySelector('#mkRepo')?.addEventListener('click', ()=>{ this.hideModal(); this.openCreateRepo(); });
+      else{
+        box.querySelector('#mkFolder')?.addEventListener('click', ()=>{ this.hideModal(); this.newFolder(); });
+        box.querySelector('#mkFile')?.addEventListener('click', ()=>{ this.hideModal(); this.newFile(); });
+      }
+    });
+  },
+  openSortMenu(){
+    const content = `
+      <h3>排序</h3>
+      <div class="row">
+        <label class="checkbox"><input type="radio" name="sort" value="updated" ${this.s.sortMode==='updated'?'checked':''}/> <span>按 最近修改</span></label>
+      </div>
+      <div class="row">
+        <label class="checkbox"><input type="radio" name="sort" value="name" ${this.s.sortMode==='name'?'checked':''}/> <span>按 名称</span></label>
+      </div>
+      <div class="row">
+        <label class="checkbox"><input type="radio" name="sort" value="size" ${this.s.sortMode==='size'?'checked':''}/> <span>按 大小</span></label>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="sortCancel">取消</button>
+        <button class="btn ok" id="sortOk">确定</button>
+      </div>
+    `;
+    this.showModal(content, (box)=>{
+      box.querySelector('#sortCancel').addEventListener('click',()=>this.hideModal());
+      box.querySelector('#sortOk').addEventListener('click',()=>{
+        const v = box.querySelector('input[name="sort"]:checked')?.value || 'updated';
+        this.s.sortMode = v;
+        this.hideModal();
+        if(!this.s.currentRepo) this.renderRepoGrid(this.el.searchInput.value.toLowerCase());
+        else this.fetchFiles(true);
+      });
+    });
+  },
+  openSettings(){
+    const list = this.s.proxyList.length? this.s.proxyList : [this.s.proxy];
+    const content = `
+      <h3>设置</h3>
+      <div class="hint">代理前缀用于加速 Raw 下载/媒体预览。例如: https://gh-proxy.com/</div>
+      <div class="row">
+        <input id="proxyInput" value="${this.s.proxy}" placeholder="代理前缀，如 https://gh-proxy.com/" />
+        <button class="btn ghost" id="proxyTest"><i class="fa fa-paper-plane"></i> 测试</button>
+      </div>
+      <div class="hint">常用代理</div>
+      <div class="proxy-list" id="proxyList">
+        ${list.map((p,i)=>`
+          <div class="proxy-row">
+            <input class="px" value="${p}">
+            <button class="btn ghost use" data-i="${i}">使用</button>
+            <button class="btn ghost del" data-i="${i}">删除</button>
+          </div>
+        `).join('')}
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="addProxy"><i class="fa fa-plus"></i> 添加条目</button>
+        <span class="sp"></span>
+        <button class="btn ok" id="saveProxy"><i class="fa fa-check"></i> 保存</button>
+      </div>
+    `;
+    this.showModal(content, (box)=>{
+      const listBox = box.querySelector('#proxyList');
+      const bindRows=()=>{
+        listBox.querySelectorAll('.use').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            const i=+btn.dataset.i;
+            const val = listBox.querySelectorAll('.px')[i]?.value.trim();
+            if(val){ box.querySelector('#proxyInput').value=val; this.toast('已选用: ' + val); }
+          });
+        });
+        listBox.querySelectorAll('.del').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            const i=+btn.dataset.i;
+            const rows = [...listBox.querySelectorAll('.proxy-row')];
+            rows[i]?.remove();
+          });
+        });
+      };
+      bindRows();
+      box.querySelector('#addProxy').addEventListener('click',()=>{
+        listBox.insertAdjacentHTML('beforeend', `
+          <div class="proxy-row">
+            <input class="px" value="" placeholder="https://.../">
+            <button class="btn ghost use">使用</button>
+            <button class="btn ghost del">删除</button>
+          </div>
+        `);
+        bindRows();
+      });
+      box.querySelector('#saveProxy').addEventListener('click',()=>{
+        const val = box.querySelector('#proxyInput').value.trim();
+        const arr = [...listBox.querySelectorAll('.px')].map(i=>i.value.trim()).filter(Boolean);
+        this.s.proxy = val || '';
+        this.s.proxyList = arr;
+        localStorage.setItem('gh_proxy', this.s.proxy);
+        localStorage.setItem('gh_proxy_list', JSON.stringify(this.s.proxyList));
+        this.toast('设置已保存');
+        this.hideModal();
+      });
+      box.querySelector('#proxyTest').addEventListener('click', async ()=>{
+        const val = box.querySelector('#proxyInput').value.trim();
+        if(!val) return this.toast('请先输入代理前缀');
+        try{
+          const t = Date.now();
+          const res = await fetch(val + 'https://raw.githubusercontent.com/github/explore/main/README.md', {method:'HEAD'});
+          if(res.ok) this.toast(`测试成功 ~${Date.now()-t}ms`);
+          else this.toast('响应异常: ' + res.status);
+        }catch(e){ this.toast('测试失败: ' + e.message); }
+      });
+    });
+  },
+  openCreateRepo(){
+    const content = `
+      <h3>新建仓库</h3>
+      <div class="cols">
+        <input id="repoName" placeholder="仓库名称（字母/数字/.-_）">
+        <textarea id="repoDesc" placeholder="仓库描述（可选）"></textarea>
+        <label class="checkbox"><input type="checkbox" id="repoPublic" checked> <span>公开仓库</span></label>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn primary" id="ok">创建</button>
+      </div>
+    `;
+    this.showModal(content, (box)=>{
+      const nameI = box.querySelector('#repoName');
+      const ok = box.querySelector('#ok');
+      const validate = ()=>{
+        const n=(nameI.value||'').trim();
+        const valid = /^[a-zA-Z0-9._-]+$/.test(n);
+        ok.disabled = !(n && valid);
+      };
+      nameI.addEventListener('input', validate); validate();
+      box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      ok.addEventListener('click', async ()=>{
+        const name=(nameI.value||'').trim();
+        const desc=box.querySelector('#repoDesc').value.trim();
+        const isPublic=box.querySelector('#repoPublic').checked;
+        try{
+          ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 创建中';
+          const res = await fetch('https://api.github.com/user/repos', {
+            method:'POST',
+            headers: this.ghHeaders({'Content-Type':'application/json'}),
+            body: JSON.stringify({name, description: desc||undefined, private: !isPublic, auto_init:true})
+          });
+          if(!res.ok){ const er = await res.json().catch(()=>({})); throw new Error(er.message||'创建失败'); }
+          this.toast('仓库创建成功');
+          this.hideModal();
+          this.fetchRepos(true);
+        }catch(e){ this.toast('创建失败：'+e.message); ok.disabled=false; ok.textContent='创建'; }
+      });
+    });
+  },
+  newFolder(){
+    if(!this.s.currentRepo) return this.toast('请先选择仓库');
+    const content = `
+      <h3>新建文件夹</h3>
+      <input id="foName" placeholder="文件夹名称，例如 src 或 assets">
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn primary" id="ok">创建</button>
+      </div>
+    `;
+    this.showModal(content,(box)=>{
+      const ok = box.querySelector('#ok');
+      const ip = box.querySelector('#foName');
+      const validate = ()=> ok.disabled = !(ip.value.trim());
+      ip.addEventListener('input',validate); validate();
+      box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      ok.addEventListener('click', async ()=>{
+        const name=ip.value.trim(); if(!name) return;
+        try{
+          ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 创建中';
+          const [owner, repo] = this.s.currentRepo.split('/');
+          const path = (this.s.currentPath? this.s.currentPath + name : name);
+          const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}/.gitkeep`;
+          const res = await fetch(url, {
+            method:'PUT',
+            headers:this.ghHeaders({'Content-Type':'application/json'}),
+            body: JSON.stringify({message: `create folder ${name}`, content: btoa('')})
+          });
+          if(!res.ok) throw new Error((await res.json()).message||'创建失败');
+          this.hideModal();
+          this.toast('文件夹已创建');
+          this.fetchFiles(true);
+        }catch(e){ this.toast('创建失败：'+e.message); ok.disabled=false; ok.textContent='创建'; }
+      });
+    });
+  },
+  newFile(){
+    if(!this.s.currentRepo) return this.toast('请先选择仓库');
+    const content = `
+      <h3>新建文件</h3>
+      <input id="fiName" placeholder="文件名，例如 index.html">
+      <textarea id="fiContent" placeholder="文件内容（可选）"></textarea>
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn primary" id="ok">创建</button>
+      </div>
+    `;
+    this.showModal(content,(box)=>{
+      const ok = box.querySelector('#ok');
+      const nameI = box.querySelector('#fiName');
+      const validate = ()=> ok.disabled = !(nameI.value.trim() && !nameI.value.trim().endsWith('/'));
+      nameI.addEventListener('input',validate); validate();
+      box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      ok.addEventListener('click', async ()=>{
+        const name=nameI.value.trim(), content=box.querySelector('#fiContent').value;
+        try{
+          ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 创建中';
+          const [owner, repo] = this.s.currentRepo.split('/');
+          const path = this.s.currentPath? this.s.currentPath+name : name;
+          const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`, {
+            method:'PUT',
+            headers: this.ghHeaders({'Content-Type':'application/json'}),
+            body: JSON.stringify({message:`create file ${name}`, content: btoa(unescape(encodeURIComponent(content)))})
+          });
+          if(!res.ok) throw new Error((await res.json()).message||'创建失败');
+          this.hideModal();
+          this.toast('文件已创建');
+          this.fetchFiles(true);
+        }catch(e){ this.toast('创建失败：'+e.message); ok.disabled=false; ok.textContent='创建'; }
+      });
+    });
+  },
+  getIcon(name){
+    const ext = name.split('.').pop().toLowerCase();
+    const map = { js:'fa-code', ts:'fa-code', mjs:'fa-code', cjs:'fa-code', jsx:'fa-code', tsx:'fa-code',
+      html:'fa-html5', css:'fa-css3', json:'fa-file-code-o', md:'fa-file-text-o',
+      png:'fa-file-image-o', jpg:'fa-file-image-o', jpeg:'fa-file-image-o', gif:'fa-file-image-o', webp:'fa-file-image-o', svg:'fa-file-image-o',
+      pdf:'fa-file-pdf-o', zip:'fa-file-zip-o', rar:'fa-file-zip-o', '7z':'fa-file-zip-o', gz:'fa-file-zip-o' };
+    return map[ext] || 'fa-file-o';
+  },
+  async openFile(file){
+    const name=file.name.toLowerCase();
+    const isImg = /\.(png|jpe?g|gif|webp|bmp|svg)$/.test(name);
+    const isVideo = /\.(mp4|webm|ogg|mov|avi|mkv)$/.test(name);
+    const isAudio = /\.(mp3|wav|ogg|flac|m4a)$/.test(name);
+    const raw = file.download_url ? file.download_url : file.html_url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+    const proxied = (this.s.proxy? this.s.proxy : '') + raw;
+    if(isImg){ this.previewImage(proxied); return; }
+    if(isVideo){ this.previewVideo(proxied); return; }
+    if(isAudio){ this.playAudio(proxied, file.name); return; }
+    this.showEditor(file);
+  },
+  previewImage(url){
+    this.el.pvVideo.classList.add('hidden'); this.el.pvVideo.pause(); this.el.pvVideo.src='';
+    this.el.pvImg.classList.remove('hidden'); this.el.pvImg.src=url;
+    this.el.mediaPreview.classList.add('show');
+    this.el.mediaPreview.onclick = ()=> this.closePreview();
+  },
+  previewVideo(url){
+    this.el.pvImg.classList.add('hidden'); this.el.pvImg.src='';
+    this.el.pvVideo.classList.remove('hidden'); this.el.pvVideo.src=url; this.el.pvVideo.load();
+    this.el.mediaPreview.classList.add('show');
+    this.el.mediaPreview.onclick = ()=> this.closePreview();
+  },
+  closePreview(){
+    this.el.mediaPreview.classList.remove('show');
+    this.el.pvImg.src=''; this.el.pvVideo.pause(); this.el.pvVideo.src='';
+  },
+  playAudio(url, name){
+    if(!this._audio){ this._audio=new Audio(); this._audio.crossOrigin='anonymous'; }
+    if(this._audio.src===url && !this._audio.paused){ this._audio.pause(); this.toast('已暂停: '+name); return; }
+    this._audio.src=url;
+    const p = this._audio.play();
+    if(p && p.catch) p.catch(()=>this.toast('需要用户交互才能播放'));
+    this.toast('正在播放: '+name);
+  },
+  async showEditor(file){
+    this.s.editingFile = file;
+    this.s.fileSha = '';
+    this.s.originalContent = '';
+    this.el.editorName.textContent = file.name;
+    this.el.editorStatus.textContent = '加载中...';
+    this.el.editorArea.value = '';
+    this.el.editorOverlay.classList.add('show');
+    this.el.editorModal.classList.add('show');
+    try{
+      const [owner, repo] = this.s.currentRepo.split('/');
+      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(file.path)}`;
+      const res = await fetch(url, {headers:this.ghHeaders()});
+      if(!res.ok){ const er = await res.json().catch(()=>({})); throw new Error(er.message||'获取内容失败'); }
+      const data = await res.json();
+      const text = decodeURIComponent(escape(atob(data.content||'')));
+      this.el.editorArea.value = text;
+      this.s.originalContent = text;
+      this.s.fileSha = data.sha || '';
+      this.el.editorStatus.textContent = '';
+    }catch(e){
+      this.el.editorStatus.textContent = '加载失败：' + e.message;
+    }finally{
+      this.el.editorOverlay.classList.remove('show');
+    }
+  },
+  hideEditor(){
+    this.el.editorModal.classList.remove('show');
+  },
+  async saveEdit(){
+    const f = this.s.editingFile; if(!f) return;
+    const current = this.el.editorArea.value;
+    if(current===this.s.originalContent){ this.toast('未修改'); return; }
+    this.el.editorOverlay.classList.add('show');
+    try{
+      const [owner, repo] = this.s.currentRepo.split('/');
+      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(f.path)}`;
+      const res = await fetch(url,{
+        method:'PUT',
+        headers:this.ghHeaders({'Content-Type':'application/json'}),
+        body: JSON.stringify({
+          message:`Update ${f.name} via web`,
+          content: btoa(unescape(encodeURIComponent(current))),
+          sha: this.s.fileSha
+        })
+      });
+      if(!res.ok){ const er = await res.json().catch(()=>({})); throw new Error(er.message||'保存失败'); }
+      const data = await res.json();
+      this.s.fileSha = data.content?.sha || '';
+      this.s.originalContent = current;
+      this.toast('已保存');
+      this.showEditorSaved();
+      this.fetchFiles(true);
+    }catch(e){ this.toast('保存失败：'+e.message); }
+    finally{ this.el.editorOverlay.classList.remove('show'); }
+  },
+  showEditorSaved(){
+    this.el.editorSaved.classList.add('show');
+    setTimeout(()=>this.el.editorSaved.classList.remove('show'), 1600);
+  },
+  pickFiles(){ if(!this.s.currentRepo) return this.toast('请先选择仓库'); this.el.filePicker.click() },
+  startUpload(files){
+    if(!files || !files.length) return;
+    this.el.uploadItems.innerHTML='';
+    this.el.uploadPanel.style.display='block';
+    const arr = Array.from(files);
+    const run = async (i)=>{
+      if(i>=arr.length){ setTimeout(()=>this.el.uploadPanel.style.display='none', 1200); this.fetchFiles(true); return; }
+      const f = arr[i];
+      const n = f.name.length>30 ? f.name.slice(0,27)+'...' : f.name;
+      const id = 'up'+i;
+      this.el.uploadItems.insertAdjacentHTML('beforeend', `
+        <div class="up-item" id="${id}">
+          <div class="up-meta"><span>${this.escape(n)}</span><span>${this.formatSize(f.size)}</span></div>
+          <div class="up-bar"><div class="bar"></div></div>
+          <div class="up-status">等待上传...</div>
+        </div>
+      `);
+      const box = document.getElementById(id);
+      const bar = box.querySelector('.bar');
+      const st = box.querySelector('.up-status');
+      try{
+        st.textContent='读取中...'; bar.style.width='8%';
+        const content = await f.arrayBuffer();
+        st.textContent='编码中...'; bar.style.width='30%';
+        const b64 = this.ab2b64(content);
+        st.textContent='上传中...'; bar.style.width='65%';
+        const [owner, repo] = this.s.currentRepo.split('/');
+        const path = this.s.currentPath? this.s.currentPath + f.name : f.name;
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`,{
+          method:'PUT',
+          headers:this.ghHeaders({'Content-Type':'application/json'}),
+          body: JSON.stringify({message:`Upload ${f.name}`, content: b64})
+        });
+        if(!res.ok){ const er = await res.json().catch(()=>({})); throw new Error(er.message||`HTTP ${res.status}`); }
+        bar.style.width='100%';
+        st.textContent='上传成功'; st.classList.add('ok');
+      }catch(e){
+        st.textContent='上传失败：' + e.message; st.classList.add('err');
+      }finally{ run(i+1); }
+    };
+    run(0);
+  },
+  ab2b64(buf){
+    let binary=''; const bytes=new Uint8Array(buf); const len=bytes.byteLength;
+    for(let i=0;i<len;i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  },
+  async downloadFile(file){
+    if(file.type==='dir') return;
+    try{
+      const raw = file.download_url ? file.download_url : file.html_url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+      const url = (this.s.proxy||'') + raw;
+      const res = await fetch(url);
+      if(!res.ok) throw new Error(`下载失败 ${res.status}`);
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = file.name; document.body.appendChild(a); a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+      this.toast('开始下载：' + file.name);
+    }catch(e){ this.toast('下载出错：' + e.message); }
+  },
+  copyLink(file){
+    const raw = file.download_url ? file.download_url : file.html_url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+    this.copyText(raw, 'Raw 链接已复制');
+  },
+  copyProxyLink(file){
+    const raw = file.download_url ? file.download_url : file.html_url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+    const url = (this.s.proxy||'') + raw;
+    this.copyText(url, '代理链接已复制');
+  },
+  copyText(text, ok='已复制'){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(()=>this.toast(ok)).catch(()=>this.fallbackCopy(text, ok));
+    }else this.fallbackCopy(text, ok);
+  },
+  fallbackCopy(text, ok){
+    const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove(); this.toast(ok);
+  },
+  showFileMenu(e, file){
+    const menu = [
+      ...(file.type!=='dir' ? [
+        {key:'open', icon:'fa-eye', text:'预览/编辑'},
+        {key:'download', icon:'fa-download', text:'下载'},
+        {key:'raw', icon:'fa-link', text:'复制直链'},
+        {key:'proxy', icon:'fa-share', text:'复制代理链接'},
+      ] : []),
+      {key:'rename', icon:'fa-pencil', text:'重命名'},
+      {key:'delete', icon:'fa-trash', text:'删除', danger:true},
+    ];
+    this.showContextMenu(e, menu, (key)=>{
+      if(key==='open') this.openFile(file);
+      if(key==='download') this.downloadFile(file);
+      if(key==='raw') this.copyLink(file);
+      if(key==='proxy') this.copyProxyLink(file);
+      if(key==='rename') this.renameItem(file, file.type==='dir');
+      if(key==='delete') this.deleteItem(file, file.type==='dir');
+    });
+  },
+  showRepoMenu(e, repo){
+    const menu = [
+      {key:'zip', icon:'fa-download', text:'下载 ZIP (代理)'},
+      {key:'rename', icon:'fa-pencil', text:'重命名'},
+      {key:'delete', icon:'fa-trash', text:'删除仓库', danger:true},
+    ];
+    this.showContextMenu(e, menu, (key)=>{
+      if(key==='zip') this.downloadRepoZip(repo);
+      if(key==='rename') this.renameRepo(repo);
+      if(key==='delete') this.deleteRepo(repo);
+    });
+  },
+  showContextMenu(e, items, onSel){
+    const cm = this.el.contextMenu, body = this.el.ctxItems;
+    body.innerHTML = items.map(it=>`<a href="javascript:;" data-k="${it.key}" class="${it.danger?'danger':''}"><i class="fa ${it.icon}"></i> ${it.text}</a>`).join('');
+    [...body.querySelectorAll('a')].forEach(a=>a.addEventListener('click', ()=>{ this.hideContextMenu(); onSel(a.dataset.k); }));
+    const rect = (e.target.closest('.file-row,.repo-card')||e.target).getBoundingClientRect();
+    const W = 220, vw = window.innerWidth, vh = window.innerHeight;
+    let left = e.clientX, top = e.clientY;
+    if(left+W+10>vw) left = vw-W-12;
+    if(top+200>vh) top = Math.max(10, vh-220);
+    cm.style.left = left+'px';
+    cm.style.top = top+'px';
+    cm.style.display='block';
+  },
+  hideContextMenu(){ this.el.contextMenu.style.display='none' },
+  renameItem(item, isDir){
+    const title = `重命名 ${isDir?'文件夹':'文件'}: ${item.name}`;
+    const content = `
+      <h3>${title}</h3>
+      <input id="nn" value="${item.name}">
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn primary" id="ok">保存</button>
+      </div>
+    `;
+    this.showModal(content, (box)=>{
+      const ok = box.querySelector('#ok'), nn = box.querySelector('#nn');
+      const validate = ()=> ok.disabled = !nn.value.trim() || nn.value.trim()===item.name;
+      nn.addEventListener('input', validate); validate();
+      box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      ok.addEventListener('click', async ()=>{
+        const newName = nn.value.trim();
+        if(!newName || newName===item.name) return;
+        ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 处理中';
+        try{
+          if(isDir){ await this.moveDir(item.path, newName) } else { await this.moveFile(item.path, newName) }
+          this.toast('重命名成功');
+          this.hideModal();
+          this.fetchFiles(true);
+        }catch(e){ this.toast('失败：'+e.message); ok.disabled=false; ok.textContent='保存'; }
+      });
+    });
+  },
+  async moveFile(oldPath, newName){
+    const [owner, repo] = this.s.currentRepo.split('/');
+    const cur = await (await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(oldPath)}`, {headers:this.ghHeaders()})).json();
+    const base = oldPath.slice(0, oldPath.lastIndexOf('/')+1);
+    const newPath = base + newName;
+    const put = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(newPath)}`,{
+      method:'PUT', headers:this.ghHeaders({'Content-Type':'application/json'}),
+      body: JSON.stringify({message:`Rename to ${newName}`, content: cur.content, sha: cur.sha})
+    });
+    if(!put.ok) throw new Error((await put.json()).message||'写入失败');
+    const del = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(oldPath)}`,{
+      method:'DELETE', headers:this.ghHeaders({'Content-Type':'application/json'}),
+      body: JSON.stringify({message:'Delete old file', sha: cur.sha})
+    });
+    if(!del.ok) throw new Error((await del.json()).message||'删除旧文件失败');
+  },
+  async moveDir(oldPath, newName){
+    const [owner, repo] = this.s.currentRepo.split('/');
+    const base = oldPath.slice(0, oldPath.lastIndexOf('/')+1);
+    const newBase = base + newName + '/';
+    const listAll = async (p)=>{
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(p)}`, {headers:this.ghHeaders()});
+      if(!res.ok) return [];
+      const arr = await res.json();
+      let ret=[];
+      for(const it of arr){
+        if(it.type==='dir') ret = ret.concat(await listAll(it.path));
+        else ret.push(it);
+      }
+      return ret;
+    };
+    const files = await listAll(oldPath);
+    for(const f of files){
+      const to = f.path.replace(oldPath, newBase.slice(0,-1));
+      const cur = await (await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(f.path)}`, {headers:this.ghHeaders()})).json();
+      const put = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(to)}`,{
+        method:'PUT', headers:this.ghHeaders({'Content-Type':'application/json'}),
+        body: JSON.stringify({message:`Move ${f.name}`, content: cur.content, sha: cur.sha})
+      });
+      if(!put.ok) throw new Error((await put.json()).message||'移动失败');
+      const del = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(f.path)}`,{
+        method:'DELETE', headers:this.ghHeaders({'Content-Type':'application/json'}),
+        body: JSON.stringify({message:`Delete ${f.name}`, sha: cur.sha})
+      });
+      if(!del.ok) throw new Error((await del.json()).message||'删除旧文件失败');
+    }
+  },
+  deleteItem(item, isDir){
+    const content = `
+      <h3>确认删除</h3>
+      <div class="hint">${isDir?`将删除文件夹 "${this.escape(item.name)}" 及其所有内容`:`将删除文件 "${this.escape(item.name)}"`}</div>
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn danger" id="ok">删除</button>
+      </div>
+    `;
+    this.showModal(content,(box)=>{
+      box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      const ok = box.querySelector('#ok');
+      ok.addEventListener('click', async ()=>{
+        ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 处理中';
+        try{
+          if(isDir){ await this.deleteDir(item.path) } else { await this.deleteFile(item.path, item.sha, item.name) }
+          this.toast('删除成功');
+          this.hideModal();
+          this.fetchFiles(true);
+        }catch(e){ this.toast('删除失败：'+e.message); ok.disabled=false; ok.textContent='删除'; }
+      });
+    });
+  },
+  async deleteFile(path, sha, name){
+    const [owner, repo] = this.s.currentRepo.split('/');
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`,{
+      method:'DELETE', headers:this.ghHeaders({'Content-Type':'application/json'}),
+      body: JSON.stringify({message:`Delete ${name}`, sha})
+    });
+    if(!res.ok) throw new Error((await res.json()).message||'删除失败');
+  },
+  async deleteDir(path){
+    const [owner, repo] = this.s.currentRepo.split('/');
+    const listAll = async (p)=>{
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(p)}`, {headers:this.ghHeaders()});
+      if(!res.ok) return [];
+      const arr = await res.json();
+      let ret=[];
+      for(const it of arr){
+        if(it.type==='dir') ret = ret.concat(await listAll(it.path));
+        else ret.push(it);
+      }
+      return ret;
+    };
+    const files = await listAll(path);
+    for(const f of files){ await this.deleteFile(f.path, f.sha, f.name) }
+  },
+  downloadRepoZip(repo){
+    const branch = repo.default_branch || 'main';
+    const url = (this.s.proxy||'') + `https://github.com/${repo.full_name}/archive/refs/heads/${branch}.zip`;
+    const a = document.createElement('a'); a.href=url; a.download=`${repo.name}.zip`; document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(), 200);
+    this.toast('开始下载 ZIP');
+  },
+  renameRepo(repo){
+    const content = `
+      <h3>重命名仓库</h3>
+      <input id="nn" value="${repo.name}">
+      <textarea id="dd" placeholder="描述（可选）">${this.escape(repo.description||'')}</textarea>
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn primary" id="ok">保存</button>
+      </div>
+    `;
+    this.showModal(content,(box)=>{
+      const ok=box.querySelector('#ok'), nn=box.querySelector('#nn'), dd=box.querySelector('#dd');
+      const validate=()=> ok.disabled = (nn.value.trim()===repo.name) && (dd.value.trim()===(repo.description||''));
+      nn.addEventListener('input',validate); dd.addEventListener('input',validate); validate();
+      box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      ok.addEventListener('click', async ()=>{
+        const name=nn.value.trim(), desc=dd.value.trim();
+        ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 保存中';
+        try{
+          const res = await fetch(`https://api.github.com/repos/${repo.full_name}`,{
+            method:'PATCH', headers:this.ghHeaders({'Content-Type':'application/json'}),
+            body: JSON.stringify({name, description:desc})
+          });
+          if(!res.ok) throw new Error((await res.json()).message||'修改失败');
+          this.toast('保存成功');
+          this.hideModal();
+          this.fetchRepos(true);
+        }catch(e){ this.toast('失败：'+e.message); ok.disabled=false; ok.textContent='保存'; }
+      });
+    });
+  },
+  deleteRepo(repo){
+    const content = `
+      <h3 class="text-danger">删除仓库</h3>
+      <div class="hint">即将永久删除仓库 "${this.escape(repo.name)}"，此操作不可恢复。</div>
+      <div class="actions">
+        <button class="btn ghost" id="cancel">取消</button>
+        <button class="btn danger" id="ok">确认删除</button>
+      </div>
+    `;
+    this.showModal(content,(box)=>{
+      const ok=box.querySelector('#ok'); box.querySelector('#cancel').addEventListener('click',()=>this.hideModal());
+      ok.addEventListener('click', async ()=>{
+        ok.disabled=true; ok.innerHTML='<i class="fa fa-spinner fa-spin"></i> 删除中';
+        try{
+          const res = await fetch(`https://api.github.com/repos/${repo.full_name}`, {method:'DELETE', headers:this.ghHeaders()});
+          if(!res.ok) throw new Error((await res.json()).message||'删除失败');
+          this.toast('仓库已删除');
+          this.hideModal();
+          this.fetchRepos(true);
+        }catch(e){ this.toast('删除失败：'+e.message); ok.disabled=false; ok.textContent='确认删除'; }
+      });
+    });
+  },
+  showModal(html, onReady){
+    this.el.modalPaper.innerHTML = html + `<div class="actions" style="margin-top:.2rem"><button class="btn ghost" id="closeModal"><i class="fa fa-times"></i> 关闭</button></div>`;
+    this.el.modal.classList.add('show');
+    this.el.modalPaper.querySelector('#closeModal').addEventListener('click',()=>this.hideModal());
+    this.el.modal.addEventListener('click',(e)=>{ if(e.target===this.el.modal) this.hideModal(); }, {once:true});
+    if(onReady) onReady(this.el.modalPaper);
+  },
+  hideModal(){ this.el.modal.classList.remove('show') },
+  openSearchPanel(){
+    const content = `
+      <h3>搜索</h3>
+      <div class="row">
+        <input id="mobileSearch" placeholder="搜索 仓库/文件..." value="${this.el.searchInput.value}">
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="sCancel">取消</button>
+        <button class="btn ok" id="sOk">确定</button>
+      </div>
+    `;
+    this.showModal(content, (box)=>{
+      const ip = box.querySelector('#mobileSearch');
+      const sync=()=>{ this.el.searchInput.value=ip.value; this.el.searchInput.dispatchEvent(new Event('input')) };
+      requestAnimationFrame(()=>{ ip.focus(); ip.setSelectionRange(ip.value.length, ip.value.length) });
+      ip.addEventListener('input', sync);
+      box.querySelector('#sCancel').addEventListener('click', ()=>this.hideModal());
+      box.querySelector('#sOk').addEventListener('click', ()=>{ sync(); this.hideModal() });
+    });
+  },
+  timeAgo(dt){
+    const d = new Date(dt); const diff = (Date.now()-d.getTime())/1000;
+    if(diff<60) return '刚刚';
+    if(diff<3600) return Math.floor(diff/60) + ' 分钟前';
+    if(diff<86400) return Math.floor(diff/3600) + ' 小时前';
+    if(diff<2592000) return Math.floor(diff/86400) + ' 天前';
+    return d.toLocaleDateString();
+  },
+  formatSize(bytes){ if(!bytes) return '0 B'; const k=1024, u=['B','KB','MB','GB','TB']; const i=Math.floor(Math.log(bytes)/Math.log(k)); return (bytes/Math.pow(k,i)).toFixed(2)+' '+u[i] },
+  escape(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])) },
+  toast(msg){
+    this.el.toastText.textContent = msg;
+    this.el.toast.classList.add('show');
+    clearTimeout(this._toastT);
+    this._toastT=setTimeout(()=>this.el.toast.classList.remove('show'), 2400);
+  },
+};
+document.addEventListener('DOMContentLoaded', ()=>{
+  app.init();
+  document.getElementById('filePicker').addEventListener('change', (e)=>{
+    const files = Array.from(e.target.files||[]);
+    e.target.value='';
+    if(!files.length) return;
+    app.startUpload(files);
+  });
+});
+</script>
+</body>
+</html>
