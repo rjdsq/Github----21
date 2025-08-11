@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub 文件管理器</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!-- 登录界面 -->
+<div id="authScreen" class="flex-center" style="height:100%;">
+  <div class="modal-content neon-border">
+    <div class="modal-header">GitHub Token 登录</div>
+    <input id="tokenInput" type="text" placeholder="输入 GitHub Token" style="width:100%;padding:0.5em;">
+    <div class="modal-footer">
+      <button id="authBtn" class="btn btn-primary">登录</button>
+    </div>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="app" class="hidden flex flex-col" style="height:100%;">
+  <!-- 顶部导航 -->
+  <div class="navbar">
+    <div class="nav-title">GitHub 管理器</div>
+    <div>
+      <button id="uploadBtn" class="btn btn-primary"><i class="fa fa-upload"></i> 上传</button>
+    </div>
+  </div>
+
+  <!-- 仓库列表 / 文件列表 -->
+  <div id="repoList" class="scroll-y" style="flex:1;"></div>
+  <div id="fileList" class="scroll-y hidden" style="flex:1;"></div>
+
+  <!-- 路径导航 -->
+  <div id="pathNav" class="hidden" style="padding:0.5em;border-top:1px solid #0ff;"></div>
+</div>
+
+<!-- 上传面板 -->
+<div id="uploadPanel" class="hidden fade-in">
+  <div id="uploadItems"></div>
+</div>
+
+<!-- 文件编辑弹窗 -->
+<div id="editModal" class="modal hidden">
+  <div class="modal-content neon-border" style="width:90%;max-width:600px;">
+    <div class="modal-header">
+      编辑文件：<span id="editFileName"></span>
+    </div>
+    <textarea id="fileContent" style="width:100%;height:300px;background:#000;color:#fff;padding:0.5em;"></textarea>
+    <div class="modal-footer">
+      <button id="closeEditModal" class="btn">取消</button>
+      <button id="saveEdit" class="btn btn-primary">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 提示 -->
+<div id="toast" class="hidden"><span id="toastMessage"></span></div>
+
+<!-- 上传文件 input -->
+<input id="fileUploadInput" type="file" multiple class="hidden">
+
+<!-- 模块化 JS -->
+<script src="state.js"></script>
+<script src="utils.js"></script>
+<script src="api.js"></script>
+<script src="proxy.js"></script>
+<script src="upload.js"></script>
+<script src="fileOps.js"></script>
+<script src="repo.js"></script>
+<script src="ui.js"></script>
+<script src="events.js"></script>
+
+</body>
+</html>
