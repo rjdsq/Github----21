@@ -1,0 +1,1950 @@
+/* 总容器*/
+.custom-branch-select-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 200px; /* 您可以根据喜好调整最大宽度 */
+    font-size: 0.8rem;
+}
+
+/* 触发按钮 (显示当前分支) */
+.custom-branch-select-trigger {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    color: #e0e7ff;
+    font-size:0.6rem;
+appearance: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    transition: border-color 0.2s;
+}
+
+.custom-branch-select-trigger:hover {
+    border-color: #6366f1;
+}
+
+/* 按钮中的分支名文本 */
+.custom-branch-select-trigger span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 按钮中的向下小箭头 */
+.custom-branch-select-trigger .fa {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    display: none;
+}
+
+/* 当菜单展开时，箭头旋转180度 */
+.custom-branch-select-wrapper.open .custom-branch-select-trigger .fa {
+    transform: rotate(0deg);
+}
+
+/* 下拉选项面板 */
+.custom-branch-select-options {
+    position: absolute;
+    top: calc(100% + 4px); /* 位于触发器下方，有4px间距 */
+    left: 0;
+    font-size:0.55rem;
+    background-color: #111827;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 100;
+    max-height: 250px; /* 分支过多时可滚动 */
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none; /* 隐藏时不可点击 */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 当菜单展开时，显示选项面板并启用动画 */
+.custom-branch-select-wrapper.open .custom-branch-select-options {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* 单个选项 */
+.custom-branch-select-option {
+    padding: 0.5rem 0.8rem;
+    color: #d1d5db;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* 鼠标悬停在选项上 */
+.custom-branch-select-option:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+    color: #ffffff;
+}
+
+/* 当前被选中的选项 */
+.custom-branch-select-option.selected {
+    background-color: #1f2937;
+    color: #22c55e;
+    font-weight: bold;
+}
+
+
+/* === 2. 模态框 - 新建/管理分支 === */
+/* 这部分样式专门用于“新建分支”弹窗内的表单元素 */
+
+/* 模态框内的表单组 */
+#createBranchModal .form-group {
+    margin-bottom: 0.7rem;
+    width: 100%;
+}
+
+#createBranchModal .form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.75rem;
+    color: #e0e7ff;
+}
+
+/* 模态框内"基于分支"的选择器和删除按钮的容器 */
+.branch-select-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    position: relative;
+    margin-top: 0.6rem;
+}
+
+#createBranchModal #deleteBranchBtn {
+    flex-shrink: 0;
+    min-width: 40px;
+    min-height: 40px;
+    margin-left: 0.5rem;
+}
+
+/* 模态框中的所有输入框和原生select选择框 */
+#createBranchModal input,
+#createBranchModal select {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    background-color: #030712;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    color: #e0e7ff;
+    font-size: 0.8rem;
+}
+
+#createBranchModal input:focus,
+#createBranchModal select:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+/* 模态框内删除按钮的响应式调整 */
+@media (max-width: 480px) {
+    #createBranchModal #deleteBranchBtn {
+        min-width: 36px;
+        min-height: 36px;
+    }
+}
+
+
+/* === 3. 通用动画与层级 === */
+
+/* “新建分支”模态框的淡入动画 */
+@keyframes branchFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#createBranchModal {
+    animation: branchFadeIn 0.3s ease-out forwards;
+}
+
+/* 确保删除确认框在最顶层 */
+#deleteModal {
+    z-index: 1001;
+}
+
+
+
+
+/* 通用选择器 */
+* {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    box-sizing: border-box;
+}
+
+/* 页面主体 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(ellipse at bottom, #1B2C4F 0%, #04091A 100%);
+    color: #f3f4f6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-image 1s ease-in-out;
+}
+
+/* 隐藏工具类 */
+.hidden {
+    display: none !important;
+}
+
+
+/* --- 2. 核心布局 --- */
+
+/* 认证界面容器 */
+#authScreen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    overflow: auto;
+}
+
+/* 应用主容器 */
+#app {
+    flex-direction: column;
+    height: 100vh;
+    display: flex;
+}
+
+/* 顶部栏 */
+header {
+    background-color: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2), -1px -1px 3px rgba(75, 85, 99, 0.05);
+    padding: 0.3rem 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* 主内容区域 */
+main {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 60px;
+}
+
+/* 底部固定栏 */
+footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2), -1px -1px 3px rgba(75, 85, 99, 0.05);
+    padding: 0.6rem 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    flex-shrink: 0;
+    z-index: 5;
+}
+
+
+/* --- 3. 认证界面组件 --- */
+
+/* 认证头部 */
+.auth-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* 认证头部图标 */
+.auth-header i {
+    font-size: 2.5rem;
+    color: #6366f1;
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+    margin-bottom: 0.8rem;
+}
+
+/* 认证主标题 */
+.auth-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #E0E7FF;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+}
+
+/* 认证副标题 */
+.auth-header p {
+    font-size: 0.8rem;
+    color: #A2A7C7;
+    line-height: 1.4;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+/* 认证表单 */
+.auth-form {
+    background: rgba(17, 24, 39, 0.95);
+    border-radius: 0.6rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 320px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 认证表单悬停 */
+.auth-form:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* 令牌输入框 */
+#tokenInput {
+    background-color: #0B1220;
+    border: 1px solid #374151;
+    border-radius: 0.4rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    color: #E0E7FF;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 输入框占位符 */
+#tokenInput::placeholder {
+    color: #7B859A;
+}
+
+/* 输入框聚焦状态 */
+#tokenInput:focus {
+    border-color: #0ea5e9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(14, 165, 233, 0.3);
+}
+
+/* 认证按钮 */
+#authBtn {
+    background: linear-gradient(90deg, #6366f1, #0ea5e9);
+    border-radius: 0.4rem;
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* 认证按钮悬停 */
+#authBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    background: linear-gradient(90deg, #0ea5e9, #6366f1);
+}
+
+/* 认证按钮点击 */
+#authBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+
+/* --- 4. 头部与工具栏组件 --- */
+
+/* 顶部栏左侧 */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+/* 顶部栏左侧图标 */
+.header-left i {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+/* 顶部栏右侧 */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+/* 当前仓库名称 */
+#currentRepo {
+    font-weight: bold;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+/* 主菜单按钮 */
+#mainMenuBtn {
+    padding: 0.3rem;
+    border-radius: 9999px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+/* 主菜单按钮悬停 */
+#mainMenuBtn:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* 路径导航 */
+#pathNav {
+
+    gap: 0.2rem;
+    font-size: 0.6rem;
+    padding:0.3rem;
+    
+}
+
+/* 路径导航项 */
+#pathNav span {
+    cursor: pointer;
+}
+
+/* 路径导航项悬停 */
+#pathNav span:hover {
+    color: #d1d5db;
+}
+
+/* 文件工具栏 */
+#toolbar {
+    background-color: rgba(10, 15, 25, 0.8);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #1f2937;
+    padding: 0rem 0.8rem;
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+}
+
+/* 工具栏左侧 */
+#toolbar .toolbar-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* 工具栏右侧 */
+#toolbar .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* 搜索输入框 */
+#searchInput {
+    display: none;
+    flex: 1;
+    min-width: 100px;
+    padding: 0.2rem 0.4rem;
+    background: #030712;
+    color: #f3f4f6;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    outline: none;
+    margin-left: 0.3rem;
+    font-size: 0.8rem;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 自定义下拉菜单容器 */
+.custom-select-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* 自定义下拉菜单 */
+.custom-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #111827;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+    min-width: 120px;
+    z-index: 30;
+    overflow: hidden;
+    padding: 0.1rem 0;
+}
+
+/* 下拉菜单项 */
+.dropdown-item {
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    color: #f3f4f6;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+
+/* 下拉菜单项悬停 */
+.dropdown-item:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* 选中的下拉项 */
+.dropdown-item.selected {
+    background-color: #1f2937;
+    color: #22c55e;
+    font-weight: bold;
+}
+
+/* 视图切换按钮 */
+#viewToggleBtn {
+    padding: 0.3rem;
+    background: none;
+    border: none;
+    color: #f3f4f6;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+/* 激活的视图切换按钮 */
+#viewToggleBtn.active {}
+
+
+/* --- 5. 列表与项目样式 --- */
+
+/* 仓库/文件列表容器 */
+#repoList,
+#fileList {
+    padding: 0.5rem;
+    margin: 5px;
+}
+
+/* (列表视图) 文件/仓库列表项 */
+.file-item {
+    border: 1px solid #374151;
+    background-color: #111827;
+    border-radius: 0.3rem;
+    padding: 0.1rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* (列表视图) 列表项悬停 */
+.file-item:hover {
+    background-color: rgba(107, 114, 128, 0.15);
+}
+
+/* (列表视图) 文件图标容器 */
+.file-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3rem;
+    flex-shrink: 0;
+}
+
+/* (列表视图) 文件图标 */
+.file-icon i {
+    font-size: 1rem;
+    color: #e0e7ff;
+}
+
+/* (列表视图) 列表项缩略图 */
+.file-item .file-thumbnail {
+    width: 2.6rem;
+    height: 2.8rem;
+    object-fit: cover;
+    border-radius: 0.3rem;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* (列表视图) 文件信息容器 */
+.file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+/* (列表视图) 文件名 */
+.file-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.8rem;
+    color: #e0e7ff;
+}
+
+/* (列表视图) 文件元信息 */
+.file-meta {
+    font-size: 0.7rem;
+    color: rgba(224, 231, 255, 0.75) !important;
+    margin-top: 0.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+
+/* --- 6. 宫格 (Grid) 视图样式 --- */
+
+/* 宫格布局容器 */
+#fileList.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.4rem;
+}
+
+/* 宫格视图中的列表项 */
+#fileList.grid .file-item {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.2rem;
+    padding: 0.5rem;
+    min-height: 90px;
+    background-color: transparent;
+    border: 1px solid #374151;
+    box-shadow: none;
+}
+
+/* (宫格视图) 图标容器 */
+#fileList.grid .file-icon {
+    padding-top: 1.2rem;
+}
+
+/* (宫格视图) 图标 */
+#fileList.grid .file-icon i {
+    font-size: 1.2rem;
+}
+
+/* (宫格视图) 缩略图 */
+#fileList.grid .file-thumbnail {
+    width: 3.2rem;
+    height: 3.2rem;
+    margin-bottom: 0.3rem;
+}
+
+/* (宫格视图) 文件名 */
+#fileList.grid .file-name {
+    font-size: 0.6rem;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-all;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* (宫格视图) 文件元信息 */
+#fileList.grid .file-meta {
+    -webkit-line-clamp: 1;
+    font-size: 0.55rem;
+    color: rgba(224, 231, 255, 0.75) !important;
+}
+
+/* (宫格视图) 图片背景项 */
+#fileList.grid .file-item.is-image-grid {
+    position: relative;
+    overflow: hidden;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+/* (宫格视图) 图片背景缩略图 */
+#fileList.grid .file-item.is-image-grid .file-thumbnail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.3rem;
+    z-index: 1;
+    margin-bottom: 0;
+}
+
+/* (宫格视图) 图片背景信息区 */
+#fileList.grid .file-item.is-image-grid .file-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 0.8rem 0.4rem 0.3rem;
+    text-align: left;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+/* (宫格视图) 图片背景文字 */
+#fileList.grid .file-item.is-image-grid .file-name,
+#fileList.grid .file-item.is-image-grid .file-meta {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* (宫格视图) 图片背景文件名 */
+#fileList.grid .file-item.is-image-grid .file-name {
+    font-size: 0.45rem;
+    -webkit-line-clamp: 2;
+    padding: 2px;
+    margin: 0px;
+}
+
+/* (宫格视图) 图片背景元信息 */
+#fileList.grid .file-item.is-image-grid .file-meta {
+    font-size: 0.4rem;
+    opacity: 0.9;
+    padding: 2px;
+    margin: 0px;
+}
+
+
+/* --- 7. 模态框与弹出层 --- */
+
+/* 模态框遮罩层 */
+#modalOverlay, .modal-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 模态框内容区 */
+.modal-content {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2), -1px -1px 3px rgba(75, 85, 99, 0.05);
+    background-color: #111827;
+    border-radius: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 90vw;
+    min-height: 40vh;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+/* 通用模态框内内容区 */
+#modalOverlay .modal-content {
+    max-width: 90vw;
+    width: 100%;
+    min-height: unset;
+    max-height: unset;
+    padding: 0;
+}
+
+/* 模态框头部 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0.4rem;
+    height: auto;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    flex-shrink: 0;
+}
+
+/* 模态框标题 */
+.modal-header h5 {
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 模态框底部 */
+.modal-footer {
+    display: flex;
+    gap: 0.4rem;
+    height: 35px;
+    margin: 12px;
+    flex-shrink: 0;
+}
+
+/* 模态框底部按钮 */
+.modal-footer button {
+    flex: 1;
+    border-radius: 0.3rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+/* 模态框表单容器 */
+.modal-form-container {
+    background: #111827;
+    border-radius: 0.4rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0.5px 1.5px rgba(75, 85, 99, 0.04);
+    padding: 0.8rem;
+    max-width: 320px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 280px;
+    width: 100%;
+}
+
+/* 模态框表单标题 */
+.modal-form-container h3 {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #f3f4f6;
+    margin-bottom: 0.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 模态框表单标题文本 */
+.modal-form-container h3 .modal-title-text {
+    flex: 1;
+    margin-right: 0.4rem;
+}
+
+/* 模态框表单描述 */
+.modal-form-container p {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin-bottom: 0.3rem;
+}
+
+/* 模态框表单输入框 */
+.modal-form-container input,
+.modal-form-container textarea {
+    background: #030712;
+    color: #f3f4f6;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 0.5rem;
+    transition: border 0.2s;
+}
+
+/* 模态框表单输入框聚焦 */
+.modal-form-container input:focus,
+.modal-form-container textarea:focus {
+    border-color: #6366f1;
+}
+
+/* 模态框表单文本域 */
+.modal-form-container textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* 模态框按钮组 */
+.modal-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* 模态框按钮 */
+.modal-buttons button {
+    flex: 1;
+    min-width: 60px;
+    height: 34px;
+}
+
+/* 编辑器模态框 */
+#editModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem;
+}
+
+/* 编辑器关闭按钮 */
+#closeEditModal,
+#toggleMaximizeModal {
+    padding: 0.3rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+}
+
+/* 编辑器关闭按钮悬停 */
+#closeEditModal:hover,
+#toggleMaximizeModal:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* 编辑状态栏 */
+#editStatus {
+    margin: 0.1rem 0.4rem;
+    border-radius: 0.3rem;
+    font-size: 0.65rem;
+    text-align: center;
+}
+
+/* 编辑器容器 */
+.editor-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 0 0.4rem 0.4rem 0.4rem;
+}
+
+/* 编辑器遮罩层 */
+#editorOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(17, 24, 39, 0.7);
+    z-index: 10;
+    border-radius: 0.3rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* 显示编辑器遮罩 */
+#editorOverlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 保存成功通知 */
+#saveNotification {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(15, 81, 50, 0.9);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 显示保存通知 */
+#saveNotification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 文件内容编辑区 */
+#fileContent {
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2), inset -1px -1px 3px rgba(75, 85, 99, 0.05);
+    background-color: #030712;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    min-height: 40VH;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: auto;
+    max-width: 1000px;
+    border-top: 1px solid #374151;
+    border-bottom: 1px solid #374151;
+    color: #a2a7c7;
+    resize: none;
+    border: none;
+    padding: 0.6rem;
+    align-items: center;
+}
+
+/* 编辑器最大化按钮 */
+#toggleMaximizeModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 最大化编辑器 */
+#editModal.maximized {
+    padding: 0 !important;
+}
+
+/* 最大化编辑器内容区 */
+#editModal.maximized .modal-content {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 最大化编辑器容器 */
+#editModal.maximized .editor-container {
+    height: calc(100vh - 80px) !important;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 最大化文件内容编辑区 */
+#editModal.maximized #fileContent {
+    height: 100% !important;
+    min-height: unset !important;
+}
+
+/* 最大化编辑器头部/底部 */
+#editModal.maximized .modal-header,
+#editModal.maximized .modal-footer {
+    flex-shrink: 0;
+}
+
+/* 右键菜单 */
+#contextMenu {
+    position: fixed;
+    background-color: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(75, 85, 99, 0.04);
+    border-radius: 0.3rem;
+    z-index: 50;
+    min-width: 120px;
+    max-width: 180px;
+    overflow: hidden;
+    padding: 0.5rem 0;
+}
+
+/* 右键菜单项容器 */
+#contextMenuItems a {
+    display: block;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.38rem;
+    margin-left: 0.2rem;
+}
+
+/* 右键菜单项悬停 */
+#contextMenuItems a:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* 右键菜单项图标 */
+#contextMenuItems a i {
+    margin-right: 0.5rem;
+}
+
+/* 吐司提示 */
+#toast {
+    position: fixed;
+    bottom: 3.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(17, 24, 39, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    z-index: 101;
+    font-size: 0.85rem;
+    color: #e0e7ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 主菜单弹出层 */
+#mainMenuPopup {
+    position: fixed;
+    top: 3.2rem;
+    right: 0.6rem;
+    z-index: 50;
+    background-color: #1a2033;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border: 1px solid #374151;
+    overflow: hidden;
+    font-size: 0.85rem;
+}
+
+/* 菜单用户头部 */
+#mainMenuPopup .user-profile-header {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    gap: 0.8rem;
+    border-bottom: 1px solid #374151;
+}
+
+/* 用户头像 */
+#userAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* 用户头像占位符 */
+#userAvatarPlaceholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #374151;
+    color: #e0e7ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* 用户名 */
+#userName {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #f3f4f6;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 菜单项容器 */
+#mainMenuPopup .menu-items-container button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    background: none;
+    border: none;
+    color: #d1d5db;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* 菜单项悬停 */
+#mainMenuPopup .menu-items-container button:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+    color: #ffffff;
+}
+
+/* 菜单项图标 */
+#mainMenuPopup .menu-items-container button i {
+    width: 1.2rem;
+    text-align: center;
+    color: #9ca3af;
+}
+
+/* 媒体预览层 */
+#mediaPreview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+/* 预览图片/视频 */
+#mediaPreview img,
+#mediaPreview video {
+    max-width: 95%;
+    max-height: 95vh;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+}
+
+
+/* --- 8. 功能组件 (上传, 代理) --- */
+
+
+
+/* 上传面板 */
+/* --- 新增：现代化上传面板样式 --- */
+
+/* 1. 上传面板容器 */
+#uploadPanel {
+    /* 调整位置，使其与底部栏有一定间距 */
+    bottom: calc(3.5rem + 10px); 
+    left: 0.6rem;
+    right: 0.6rem;
+    width: auto;
+    max-width: 30rem; /* 稍微加宽一点 */
+    transform: translate(0, 120%); /* 默认位置在屏幕外下方 */
+    opacity: 0;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out; /* 平滑动画 */
+    padding: 0.5rem;
+    border-radius: 0.6rem; /* 更大的圆角 */
+    border: 1px solid #374151;
+}
+
+/* 当面板可见时的状态 */
+#uploadPanel.upload-panel-visible {
+    transform: translate(0, 0); /* 移动到最终位置 */
+    opacity: 1;
+}
+
+/* 2. 上传项列表 (滚动容器) */
+#uploadItems {
+    gap: 0.5rem; /* 加大每个卡片之间的间距 */
+    max-height: 12rem; /* 增加最大高度，可以显示更多项 */
+    padding-right: 4px; /* 为滚动条留出一点空间 */
+}
+
+/* 3. 单个上传项 (卡片化) */
+.upload-item {
+    background-color: #1f2937; /* 更深的背景以作区分 */
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.4rem;
+    display: grid; /* 使用Grid布局，更灵活 */
+    grid-template-columns: 1fr auto; /* 左侧占满，右侧自适应 */
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        "info status"
+        "progress progress";
+    align-items: center;
+    gap: 0.3rem 0.8rem;
+}
+
+/* 4. 文件信息区域 */
+.upload-info {
+    grid-area: info; /* 放置在网格的'info'区域 */
+    font-size: 0.85rem;
+}
+.upload-name {
+    font-weight: 500;
+    color: #e0e7ff;
+}
+.upload-size {
+    font-size: 0.75rem;
+}
+
+/* 5. 进度条 */
+.upload-progress-container {
+    grid-area: progress; /* 放置在网格的'progress'区域 */
+    height: 6px; /* 更纤细的进度条 */
+    border-radius: 99px;
+}
+.upload-progress {
+    /* 移除彩虹色，使用更现代的单色 */
+    background: #6366f1; 
+    animation: none; /* 移除动画 */
+}
+/* 隐藏旧的百分比文字 */
+.upload-progress .percent-text {
+    display: none;
+}
+
+/* 6. 状态区域 (图标 + 文字) */
+.upload-status {
+    grid-area: status; /* 放置在网格的'status'区域 */
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    justify-content: flex-end; /* 靠右对齐 */
+    text-align: right;
+    margin-top: 0;
+}
+
+.upload-status i {
+    font-size: 0.9em;
+}
+
+/* 各种状态的颜色和图标 */
+.upload-status.status-waiting { color: #9ca3af; }
+.upload-status.status-uploading { color: #38bdf8; }
+.upload-status.status-success { color: #22c55e; }
+.upload-status.status-error { color: #ef4444; }
+
+/* 覆盖旧的 .upload-status 样式 */
+.upload-status.success, .upload-status.error {
+    color: inherit; /* 继承上面定义的状态颜色 */
+}
+
+/* 代理快速切换按钮 */
+#proxyQuickToggle {
+    padding: 0.3rem;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    border-radius: 9999px;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 1rem;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+/* 代理切换按钮悬停 */
+#proxyQuickToggle:hover {
+    background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* 激活的代理切换按钮 */
+#proxyQuickToggle.active {
+    color: #22c55e;
+}
+
+/* 代理列表 */
+#proxySettingsModal .proxy-list {
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    background-color: #030712;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* 代理列表项 */
+.proxy-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    background-color: #111827;
+    padding: 1.6rem 1rem 1.6rem 1rem;
+    border: 2px solid transparent;
+    border-radius: 0.3rem;
+    font-size: 0.75rem;
+    min-height: 38px;
+    position: relative;
+    transition: border-color 0.2s;
+    flex-wrap: nowrap;
+    cursor: pointer;
+}
+
+/* 激活的代理项 */
+.proxy-item.active {
+    border-color: #22c55e;
+}
+
+/* 代理信息区 */
+.proxy-item .proxy-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 代理URL */
+.proxy-item .proxy-url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+    line-height: 1.2;
+    font-size: 0.7rem;
+}
+
+/* 代理延迟 */
+.proxy-item .proxy-latency {
+    flex-shrink: 0;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: left;
+    font-size: 0.58rem;
+    margin-top: 0.1rem;
+}
+
+/* 代理类型 */
+.proxy-item .proxy-type {
+    font-size: 0.65rem;
+    color: #6b7280;
+    margin-top: 0.1rem;
+}
+
+/* 代理操作区 */
+.proxy-item .proxy-actions {
+    display: flex;
+    gap: 0.1rem;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+}
+
+/* 代理全局开关 */
+#proxyGlobalEnableToggle {
+    font-size: 1.1rem;
+    padding: 0.3rem;
+    min-width: 40px;
+    min-height: 40px;
+    color: #9ca3af;
+}
+
+/* 激活的代理全局开关 */
+#proxyGlobalEnableToggle.active {
+    color: #22c55e;
+}
+
+/* 禁用的代理全局开关 */
+#proxyGlobalEnableToggle.disabled {
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* 添加/编辑代理模态框 */
+#addEditProxyModal .modal-form-container {
+    max-width: 320px;
+    padding: 1.1rem;
+    gap: 0.6rem;
+}
+
+/* 添加/编辑代理模态框按钮 */
+#addEditProxyModal .modal-buttons {
+    margin-top: 0.2rem;
+    flex-wrap: wrap;
+}
+
+/* 测试代理按钮 */
+#addEditProxyTestBtn {
+    flex: 0 0 auto;
+    min-width: 80px;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+/* 代理测试结果 */
+#addEditProxyTestResult {
+    flex: 1;
+    text-align: right;
+    font-size: 0.75rem;
+    min-height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 确认删除代理模态框 */
+#confirmDeleteProxyModal .modal-form-container {
+    max-width: 280px;
+    padding: 0.2rem;
+    gap: 0.7rem;
+}
+
+/* 确认删除标题 */
+#confirmDeleteProxyModal h3 {
+    font-size: 0.9rem;
+}
+
+/* 确认删除描述 */
+#confirmDeleteProxyModal p {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* 确认删除按钮 */
+#confirmDeleteProxyModal .modal-buttons button {
+    height: 34px;
+    font-size: 0.8rem;
+}
+
+/* 确认清空代理模态框 */
+#confirmClearAllProxiesModal .modal-form-container {
+    max-width: 320px;
+    padding: 1rem;
+    gap: 0.7rem;
+}
+
+/* 确认清空标题 */
+#confirmClearAllProxiesModal h3 {
+    font-size: 0.9rem;
+}
+
+/* 确认清空描述 */
+#confirmClearAllProxiesModal p {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* 确认清空按钮 */
+#confirmClearAllProxiesModal .modal-buttons button {
+    height: 34px;
+    font-size: 0.8rem;
+}
+
+/* 代理类型选择区 */
+.proxy-type-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 0.3rem;
+}
+
+/* 代理类型选择标签 */
+.proxy-type-selection label {
+    font-size: 0.6rem;
+    color: #f3f4f6;
+    margin-bottom: 0.1rem;
+}
+
+/* 代理类型显示 */
+.proxy-type-display {
+    background-color: #030712;
+    border: 1px solid #374151;
+    border-radius: 0.3rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 34px;
+}
+
+/* 代理类型显示文本 */
+.proxy-type-display span {
+    flex: 1;
+}
+
+/* 代理类型显示图标 */
+.proxy-type-display i {
+    margin-left: 0.5rem;
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+/* 代理设置按钮组 */
+#proxySettingsModal .modal-buttons {
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+    justify-content: flex-start;
+}
+
+
+/* --- 9. 通用按钮样式 --- */
+
+/* 基础按钮 */
+.btn {
+    border-radius: 0.3rem;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    padding: 0.4rem 0.7rem;
+    min-height: 36px;
+}
+
+/* 主要按钮 */
+.btn-primary,
+#saveEdit {
+    background: #4338ca;
+    color: #fff;
+}
+
+/* 主要按钮悬停 */
+.btn-primary:hover:not(:disabled),
+#saveEdit:hover {
+    background: #4f46e5;
+}
+
+/* 已修改状态按钮 */
+.btn-primary.modified {
+    background: #4f46e5;
+}
+
+/* 已修改状态按钮悬停 */
+.btn-primary.modified:hover:not(:disabled) {
+    background: #4338ca;
+}
+
+/* 处理中状态按钮 */
+.btn-processing {
+    background: #22c55e !important;
+    color: #ffffff !important;
+    cursor: wait !important;
+}
+
+/* 危险按钮 */
+.btn-danger {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* 危险按钮悬停 */
+.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+/* 次要按钮 */
+.btn-secondary {
+    background-color: #374151;
+    color: #f3f4f6;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+}
+
+/* 次要按钮悬停 */
+.btn-secondary:hover:not(:disabled) {
+    background-color: #4b5563;
+}
+
+/* 禁用状态按钮 */
+.btn:disabled:not(.btn-processing),
+.btn.disabled:not(.btn-processing) {
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+/* 图标按钮 */
+.btn-icon {
+    background: none;
+    border: none;
+    color: #f3f4f6;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    min-width: 38px;
+    min-height: 38px;
+}
+
+/* 图标按钮悬停 */
+.btn-icon:hover:not(:disabled) {
+    background-color: rgba(107, 114, 128, 0.2);
+}
+
+/* 激活的图标按钮 */
+.btn-icon.active {
+    color: #22c55e;
+}
+
+/* 危险图标按钮 */
+.btn-icon.danger {
+    color: #ef4444;
+}
+
+/* 危险图标按钮悬停 */
+.btn-icon.danger:hover:not(:disabled) {
+    background-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 小图标按钮 */
+.btn-icon-sm {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+}
+
+/* 小图标按钮悬停 */
+.btn-icon-sm:hover:not(:disabled) {
+    background-color: rgba(107, 114, 128, 0.2);
+    color: #f3f4f6;
+}
+
+/* 激活的小图标按钮 */
+.btn-icon-sm.active {
+    color: #22c55e;
+}
+
+/* 危险的小图标按钮 */
+.btn-icon-sm.danger {
+    color: #ef4444;
+}
+
+/* 危险的小图标按钮悬停 */
+.btn-icon-sm.danger:hover:not(:disabled) {
+    background-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 底部栏按钮 */
+footer button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    width: 25%;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    min-height: 36px;
+}
+
+/* 底部按钮图标 */
+footer button i {
+    font-size: 0.9rem;
+}
+
+/* 编辑器取消按钮 */
+#cancelEdit, .btn-cancel {
+    background-color: rgba(167, 139, 250, 0.1);
+    border: 1px solid #a78bfa;
+    color: #a78bfa;
+}
+
+/* 编辑器取消按钮悬停 */
+#cancelEdit:hover, .btn-cancel:hover:not(:disabled) {
+    background-color: rgba(167, 139, 250, 0.1);
+    color: #c4b5fd;
+}
+
+/* 编辑器保存按钮 */
+#saveEdit {
+    background-color: #4338ca;
+    color: white;
+}
+
+/* 编辑器保存按钮悬停 */
+#saveEdit:hover {
+    background-color: #4338ca;
+}
+
+
+/* --- 10. 杂项与工具类 --- */
+
+/* 加载动画容器 */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.2rem 0;
+    grid-column: 1 / -1;
+    align-items: center;
+    height: 80vh;
+}
+
+/* 加载动画主体 */
+.spinner {
+    animation: spin 1s linear infinite;
+    border-radius: 9999px;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-top: 2px solid #6366f1;
+    border-bottom: 2px solid #6366f1;
+}
+
+/* 小加载动画 */
+.spinner-small {
+    animation: spin 1s linear infinite;
+    border-radius: 9999px;
+    height: 0.8em;
+    width: 0.8em;
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    vertical-align: middle;
+    margin-left: 0.2em;
+    flex-shrink: 0;
+}
+
+/* 空状态提示 */
+.empty-state {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: #9ca3af;
+}
+
+/* 空状态图标 */
+.empty-state i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #6366f1;
+}
+
+/* 空状态文本 */
+.empty-state p {
+    font-size: 0.85rem;
+}
+
+/* 红色文字 */
+.text-red-400 {
+    color: #f87171 !important;
+}
+
+/* 绿色文字 */
+.text-green-500 {
+    color: #22c55e !important;
+}
+
+/* 橙色文字 */
+.text-orange-400 {
+    color: #fb923c !important;
+}
+
+/* 灰色文字 */
+.text-gray-400 {
+    color: #9ca3af !important;
+}
+
+
+/* --- 11. 动画定义 --- */
+
+/* 旋转动画 */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 彩虹进度条动画 */
+@keyframes rainbow-bar {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+
+/* --- 12. 响应式布局 --- */
+
+/* 桌面端样式 */
+@media (min-width: 768px) {
+    /* 模态框内容区 */
+    .modal-content {
+        max-width: 70rem;
+    }
+}
+
+/* 移动端窄屏样式 */
+@media (max-width: 640px) {
+    /* 底部按钮 */
+    footer button {
+        width: 20%;
+    }
+ 
+}
+
+/* 移动端更窄屏样式 */
+@media (max-width: 480px) {
+    /* 模态框表单容器 */
+    .modal-form-container {
+        max-width: 80vw;
+        padding: 0.7rem 1rem;
+        min-width: unset;
+    }
+    /* 模态框按钮 */
+    .modal-buttons button {
+        flex-grow: 1;
+        width: auto;
+    }
+}
+
+
+
+
