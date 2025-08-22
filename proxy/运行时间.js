@@ -11,7 +11,7 @@ setInterval(() => {
         m = Math.floor((sec % 3600) / 60),
         second = sec % 60;
   
-  let timeStr = '分手距今：';
+  let timeStr = '开发距今：';
   if (year > 0) timeStr += `${year}年`;
   if (remMonth > 0 || year > 0) timeStr += `${remMonth}月`;
   if (remDay > 0 || remMonth > 0 || year > 0) timeStr += `${remDay}天`;
