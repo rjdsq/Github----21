@@ -2,5 +2,5 @@
   "version": "3.1",
   "forceUpdate": true,
   "downloadUrl": "https://www.123912.com/s/l85A-go9u3",
-  "updateLog": "优化了ui"
+  "updateLog": "优化了ui，进入仓库目录的加载速度，优化缓存策略，增强编辑功能，修复若干bug，"
 }
