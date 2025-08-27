@@ -1,6 +1,6 @@
 {
   "version": "3.3",
-  "forceUpdate": flash,
+  "forceUpdate": false,
 "downloadUrl":"https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/proxy/edition/Github%20king_3.3_20250827_221846.apk",
   "updateLog": "主题全面优化，增加界面动效，优化编辑功能，优化代理加载逻辑，优化排序功能，修复点击关闭长按菜单异常，仪表盘新增反馈和赞助，新增账号管理切换功能，"
 }
