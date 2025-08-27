@@ -4,6 +4,3 @@
 "downloadUrl":"https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/proxy/edition/Github%20king_3.3_20250827_221846.apk",
   "updateLog": "主题全面优化，增加界面动效，优化编辑功能，优化代理加载逻辑，优化排序功能和类型排序逻辑，修复网格图片异常显示，修复点击关闭长按菜单异常，仪表盘新增反馈和赞助，新增账号管理切换功能，增加退出登陆确认提示框，优化底层逻辑，本次更新为不强制更新"
 }
-
-
-"updateLog": "bug反馈来自mt@MW 修复创建/删除仓库不刷新列表。增加文件编辑恢复最初内容功能。其他bug等等"
