@@ -1,6 +1,6 @@
 {
   "version": "3.2",
   "forceUpdate": true,
-"downloadUrl":"https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/proxy/edition/Github%20king_3.1_20250822_130040.apk",
+"downloadUrl":"https://gh-proxy.com/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/proxy/edition/Github%20king_3.2_20250824_095110.apk",
   "updateLog": "bug反馈来自mt@MW 修复创建/删除仓库不刷新列表。增加文件编辑恢复最初内容功能。其他bug等等"
 }
