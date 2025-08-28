@@ -1,0 +1,26 @@
+{
+  "latestVersion": "3.3",
+  "forceUpdate": true,
+  "announcementEnabled": true,
+  "announcements": [
+    "这是第一条公告内容。",
+    "这是第二条公告内容。",
+    "这是第三条公告内容。"
+  ],
+  "versionHistory": [
+    {
+      "version": "3.3",
+      "releaseDate": "2025/8/25",
+      "optimizedFunctions": "1. 优化了UI流畅度。\n2. 减少了内存占用。",
+      "newFunctions": "1. 新增了夜间模式。",
+      "downloadUrl": "https://example.com/download/v3.3"
+    },
+    {
+      "version": "3.2",
+      "releaseDate": "2025/8/24",
+      "optimizedFunctions": "1. 修复了几个已知bug。",
+      "newFunctions": "1. 增加了对 xxx 格式的支持。",
+      "downloadUrl": "https://example.com/download/v3.2"
+    }
+  ]
+}
