@@ -3,9 +3,9 @@
   "forceUpdate": true,
   "announcementEnabled": true,
   "announcements": [
-    "这是第一条公告内容。",
-    "这是第二条公告内容。",
-    "这是第三条公告内容。"
+    "",
+    "",
+    ""
   ],
   "versionHistory": [
     {
