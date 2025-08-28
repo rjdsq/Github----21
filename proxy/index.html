@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub 管理面板</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        :root {
+            --primary-gradient: linear-gradient(45deg, #f86cfc, #5983f3);
+            --secondary-gradient: linear-gradient(45deg, #81e7f1, #30c7ec);
+            --background-gradient: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            --card-background: rgba(255, 255, 255, 0.7);
+            --text-color: #2c3e50;
+            --subtle-text-color: #7f8c8d;
+            --border-color: rgba(200, 200, 200, 0.5);
+            --shadow-color: rgba(100, 100, 150, 0.1);
+            --border-radius: 10px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-gradient); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 0 100px 0; }
+        .hidden { display: none !important; }
+
+        /* 登录 */
+        .login-container { width: 100%; max-width: 360px; padding: 30px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 var(--shadow-color); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); text-align: center; }
+        .login-container h1 { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+        .login-container p { font-size: 13px; color: var(--subtle-text-color); margin-bottom: 25px; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.5); border-radius: 6px; font-size: 14px; outline: none; }
+        .action-button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 6px; background: var(--primary-gradient); color: white; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        #status-message { margin-top: 15px; font-size: 13px; color: #d35400; min-height: 20px; }
+
+        /* 主面板 */
+        #dashboard-page { width: 100%; max-width: 650px; padding: 0 15px; }
+        .card { background: var(--card-background); border-radius: var(--border-radius); padding: 15px; box-shadow: 0 8px 32px 0 var(--shadow-color); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); margin-bottom: 12px; }
+        .card h2 { font-size: 14px; font-weight: 500; }
+        .form-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+        .form-group:last-child { margin-bottom: 0; }
+        .form-group label { color: var(--subtle-text-color); }
+        .form-group-column { display: flex; flex-direction: column; gap: 8px; }
+        .styled-input, .styled-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; background: rgba(255,255,255,0.4); }
+
+        /* 折叠样式 */
+        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .chevron { transition: transform 0.3s ease; }
+        .collapsible-header.expanded .chevron { transform: rotate(90deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, margin-top 0.4s ease-out; }
+        .collapsible-content.expanded { max-height: 1000px; /* A large enough value */ margin-top: 15px; transition: max-height 0.5s ease-in, margin-top 0.5s ease-in; }
+        .version-card .collapsible-header { border-left: 3px solid transparent; border-image: var(--secondary-gradient) 1; padding-left: 10px; }
+        .version-card .collapsible-header.expanded { border-image: var(--primary-gradient) 1; }
+        
+        /* 底部操作栏 */
+        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 12px 25px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(12px); border-top: 1px solid rgba(255, 255, 255, 0.18); }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.3s; font-weight: 500; }
+        .btn:disabled { background: #ccc !important; color: #888 !important; cursor: not-allowed; }
+        .primary-btn { background: var(--primary-gradient); color: white; }
+        .secondary-btn { background: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color); }
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .toggle-switch input { display: none; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--secondary-gradient); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-page">
+        <div class="login-container">
+            <h1>GitHub 管理面板</h1>
+            <p>输入您的 Personal Access Token 以继续</p>
+            <div class="input-group"> <input type="password" id="github-token" placeholder="ghp_..."> </div>
+            <button class="action-button" id="load-config-button">加载配置</button>
+            <div id="status-message"></div>
+        </div>
+    </div>
+
+    <main id="dashboard-page" class="hidden">
+        <div id="global-config-card" class="card">
+             <h2>全局配置</h2>
+             <div class="form-group"><label>强制更新</label><label class="toggle-switch"><input type="checkbox" id="force-update"><span class="slider"></span></label></div>
+             <div class="form-group"><label>公告开启</label><label class="toggle-switch"><input type="checkbox" id="announcement-enabled"><span class="slider"></span></label></div>
+        </div>
+
+        <div id="announcements-card" class="card">
+            <div class="collapsible-header">
+                <h2>公告内容</h2>
+                <span class="chevron">▶</span>
+            </div>
+            <div class="collapsible-content">
+                <div id="announcements-container" class="form-group-column"></div>
+            </div>
+        </div>
+
+        <div id="version-list"></div>
+        
+        <div class="action-bar">
+           <button class="btn secondary-btn" id="save-updates-button" disabled>保存更新</button>
+           <button class="btn primary-btn" id="add-version-button" disabled>新增版本</button>
+       </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 配置区域：请根据您的仓库信息修改这里 ---
+            const REPO_OWNER = "rjdsq";
+            const REPO_NAME = "rjdsq.github.io";
+            const FILE_PATH = "proxy/更新/config.json";
+            // --- 配置区域结束 ---
+
+            const loginPage = document.getElementById('login-page');
+            const dashboardPage = document.getElementById('dashboard-page');
+            const loadConfigBtn = document.getElementById('load-config-button');
+            const statusMessage = document.getElementById('status-message');
+            const githubTokenInput = document.getElementById('github-token');
+            const addVersionButton = document.getElementById('add-version-button');
+            const saveButton = document.getElementById('save-updates-button');
+            let fileSHA = null;
+            const API_BASE = 'https://api.github.com';
+
+            function setStatus(message, isError = false) {
+                statusMessage.textContent = message;
+                statusMessage.style.color = isError ? '#e74c3c' : '#2ecc71';
+            }
+
+            // 折叠/展开逻辑
+            dashboardPage.addEventListener('click', (event) => {
+                const header = event.target.closest('.collapsible-header');
+                if (!header) return;
+                
+                const content = header.nextElementSibling;
+                header.classList.toggle('expanded');
+                content.classList.toggle('expanded');
+            });
+
+            async function loadConfig() {
+                const token = githubTokenInput.value;
+                if (!token) { setStatus('请输入 Personal Access Token。', true); return; }
+
+                loadConfigBtn.disabled = true;
+                loadConfigBtn.textContent = '加载中...';
+                setStatus('正在连接 GitHub...', false);
+
+                try {
+                    const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    });
+                    if (!response.ok) throw new Error(`无法获取配置文件: ${response.statusText}`);
+                    const data = await response.json();
+                    fileSHA = data.sha;
+                    const content = atob(data.content);
+                    const config = JSON.parse(decodeURIComponent(escape(content)));
+                    populateUI(config);
+                    loginPage.classList.add('hidden');
+                    dashboardPage.classList.remove('hidden');
+                    saveButton.disabled = false;
+                    addVersionButton.disabled = false;
+                } catch (error) {
+                    setStatus(`加载失败: ${error.message}`, true);
+                    loadConfigBtn.disabled = false;
+                    loadConfigBtn.textContent = '加载配置';
+                }
+            }
+            
+            function populateUI(config) {
+                document.getElementById('force-update').checked = config.forceUpdate;
+                document.getElementById('announcement-enabled').checked = config.announcementEnabled;
+                
+                const announcementsContainer = document.getElementById('announcements-container');
+                announcementsContainer.innerHTML = '';
+                config.announcements.forEach(text => {
+                    announcementsContainer.innerHTML += `<textarea class="styled-textarea">${text}</textarea>`;
+                });
+                while (announcementsContainer.childElementCount < 3) {
+                     announcementsContainer.innerHTML += `<textarea class="styled-textarea" placeholder="新公告"></textarea>`;
+                }
+
+                const versionList = document.getElementById('version-list');
+                versionList.innerHTML = '';
+                config.versionHistory.forEach((v, index) => {
+                    versionList.innerHTML += createVersionCardHTML(v, index === 0); // 默认展开第一个
+                });
+            }
+
+            function collectDataFromUI() {
+                const announcements = Array.from(document.querySelectorAll('#announcements-container textarea')).map(t => t.value);
+                const versionHistory = Array.from(document.querySelectorAll('.version-card-content')).map(card => ({
+                    version: card.querySelector('[data-field="version"]').value,
+                    releaseDate: card.querySelector('[data-field="releaseDate"]').value,
+                    optimizedFunctions: card.querySelector('[data-field="optimizedFunctions"]').value,
+                    newFunctions: card.querySelector('[data-field="newFunctions"]').value,
+                    downloadUrl: card.querySelector('[data-field="downloadUrl"]').value,
+                }));
+                const latestVersion = versionHistory.length > 0 ? versionHistory[0].version : "1.0";
+                
+                return {
+                    latestVersion,
+                    forceUpdate: document.getElementById('force-update').checked,
+                    announcementEnabled: document.getElementById('announcement-enabled').checked,
+                    announcements,
+                    versionHistory
+                };
+            }
+            
+            async function saveConfig() {
+                const token = githubTokenInput.value;
+                saveButton.disabled = true; saveButton.textContent = '保存中...';
+                
+                try {
+                    const updatedConfig = collectDataFromUI();
+                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(updatedConfig, null, 2))));
+                    const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}` },
+                        body: JSON.stringify({ message: `[Admin Panel] Update config.json`, content: content, sha: fileSHA })
+                    });
+                    if (!response.ok) throw new Error(`保存失败: ${response.statusText}`);
+                    const data = await response.json();
+                    fileSHA = data.content.sha;
+                    alert('配置已成功更新到 GitHub！');
+                } catch(error) {
+                    alert(`保存出错: ${error.message}`);
+                } finally {
+                    saveButton.disabled = false; saveButton.textContent = '保存更新';
+                }
+            }
+            
+            function addNewVersionCard() {
+                const firstVersionInput = document.querySelector('#version-list [data-field="version"]');
+                let newVersion = "1.0";
+                if(firstVersionInput) {
+                    const [major, minor = 0] = firstVersionInput.value.split('.').map(Number);
+                    newVersion = `${major}.${minor + 1}`;
+                }
+                
+                // 折叠所有已打开的卡片
+                document.querySelectorAll('.collapsible-content.expanded').forEach(el => el.classList.remove('expanded'));
+                document.querySelectorAll('.collapsible-header.expanded').forEach(el => el.classList.remove('expanded'));
+
+                const today = new Date();
+                const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+                const newVersionData = { version: newVersion, releaseDate: formattedDate, optimizedFunctions: "", newFunctions: "", downloadUrl: "" };
+                
+                const versionList = document.getElementById('version-list');
+                versionList.insertAdjacentHTML('afterbegin', createVersionCardHTML(newVersionData, true)); // 新增的卡片默认展开
+            }
+            
+            function createVersionCardHTML(v, isExpanded = false) {
+                const expandedClass = isExpanded ? 'expanded' : '';
+                return `
+                <div class="card version-card">
+                    <div class="collapsible-header ${expandedClass}">
+                        <h2>版本: ${v.version} <span style="font-size: 12px; color: var(--subtle-text-color); font-weight: 400;">(${v.releaseDate})</span></h2>
+                        <span class="chevron">▶</span>
+                    </div>
+                    <div class="collapsible-content ${expandedClass}">
+                        <div class="form-group-column version-card-content">
+                            <div style="display: flex; gap: 10px;">
+                                <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${v.version}"></div>
+                                <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${v.releaseDate}"></div>
+                            </div>
+                            <label>优化功能</label><textarea class="styled-textarea" data-field="optimizedFunctions">${v.optimizedFunctions}</textarea>
+                            <label>新增功能</label><textarea class="styled-textarea" data-field="newFunctions">${v.newFunctions}</textarea>
+                            <label>下载地址</label><input type="text" class="styled-input" data-field="downloadUrl" value="${v.downloadUrl}">
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            loadConfigBtn.addEventListener('click', loadConfig);
+            saveButton.addEventListener('click', saveConfig);
+            addVersionButton.addEventListener('click', addNewVersionCard);
+        });
+    </script>
+</body>
+</html>
