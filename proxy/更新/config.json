@@ -3,16 +3,25 @@
   "forceUpdate": true,
   "announcementEnabled": true,
   "announcements": [
-    "",
-    "",
-    ""
-  ],
+  {
+    "title": "系统维护通知",
+    "type": "警告",
+    "content": "我们将于今晚进行停机维护...",
+    "link": "https://status.example.com"
+  },
+  {
+    "title": "新版本发布！",
+    "type": "更新",
+    "content": "我们很高兴地发布了3.4版本...",
+    "link": ""
+  }
+]
   "versionHistory": [
     {
       "version": "3.3",
       "releaseDate": "2025/8/25",
-      "optimizedFunctions": "1. 我非常好\n2. 你这非常好。\n1. 我非常好\n2. 你这非常好。\n",
-      "newFunctions": "1. 新增了夜间模式",
+      "optimizedFunctions": "1. 我非常好\n2. 你这非常好。",
+      "newFunctions": "1. 新增了夜间模式。",
       "downloadUrl": "https://example.com/download/v3.3"
     },
     {
