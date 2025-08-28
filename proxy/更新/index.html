@@ -8,59 +8,65 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         :root {
             --primary-color: #5983f3;
-            --primary-gradient: linear-gradient(45deg, #8B5CF6, #5983f3);
-            --secondary-gradient: linear-gradient(45deg, #30c7ec, #81e7f1);
-            --background-gradient: linear-gradient(120deg, #f6f7fb 0%, #eef1f5 100%);
-            --card-background: rgba(255, 255, 255, 0.85);
-            --text-color: #2c3e50;
-            --subtle-text-color: #8D99AE;
-            --border-color: rgba(200, 200, 220, 0.6);
-            --shadow-color: rgba(100, 100, 150, 0.1);
-            --border-radius: 10px;
+            --primary-gradient: linear-gradient(45deg, #7c4dff, #5983f3);
+            --secondary-gradient: linear-gradient(45deg, #29b6f6, #81e7f1);
+            --background-gradient: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
+            --card-background: rgba(255, 255, 255, 0.9);
+            --text-color: #343a40;
+            --subtle-text-color: #6c757d;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --border-radius: 8px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { font-size: 14px; }
+        html { font-size: 12px; }
         body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-gradient); color: var(--text-color); min-height: 100vh; }
         .hidden { display: none !important; }
 
-        /* 登录页容器 */
-        #login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .login-container { width: 100%; max-width: 340px; padding: 30px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 10px 35px 0 var(--shadow-color); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); text-align: center; }
-        .login-container h1 { font-size: 1.25rem; font-weight: 500; margin-bottom: 8px; }
+        /* 登录页 */
+        #login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
+        .login-container { width: 100%; max-width: 320px; padding: 25px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 5px 25px var(--shadow-color); backdrop-filter: blur(8px); text-align: center; }
+        .login-container h1 { font-size: 1.2rem; font-weight: 500; margin-bottom: 5px; }
         .login-container p { font-size: 0.9rem; color: var(--subtle-text-color); margin-bottom: 20px; }
-        .input-group input { width: 100%; padding: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.7); border-radius: 6px; font-size: 0.95rem; outline: none; }
-        .action-button { width: 100%; padding: 10px; margin-top: 15px; border: none; border-radius: 6px; background: var(--primary-gradient); color: white; font-size: 1rem; font-weight: 500; cursor: pointer; }
-        #status-message { margin-top: 15px; font-size: 0.9rem; color: #d35400; min-height: 20px; }
+        .input-group input { width: 100%; padding: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.7); border-radius: 5px; font-size: 0.95rem; }
+        .action-button { width: 100%; padding: 9px; margin-top: 15px; border: none; border-radius: 5px; background: var(--primary-gradient); color: white; font-size: 1rem; font-weight: 500; cursor: pointer; }
+        #status-message { margin-top: 12px; font-size: 0.85rem; color: #d35400; min-height: 18px; }
 
         /* 主面板 */
-        #dashboard-page { width: 100%; max-width: 620px; margin: 40px auto 120px auto; padding: 0 15px; }
-        .card { background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 8px 30px 0 var(--shadow-color); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 12px; padding: 15px; }
-        .card h2 { font-size: 1rem; font-weight: 500; }
-        .form-group { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; font-size: 0.9rem; }
+        #dashboard-page { width: 100%; max-width: 520px; margin: 30px auto 100px auto; padding: 0 10px; }
+        .card { background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 5px 25px var(--shadow-color); backdrop-filter: blur(8px); margin-bottom: 10px; padding: 12px; }
+        .card h2 { font-size: 0.95rem; font-weight: 500; }
+        .form-group { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; font-size: 0.9rem; }
         .form-group label { color: var(--subtle-text-color); }
-        .form-group-column { display: flex; flex-direction: column; gap: 8px; }
-        .styled-input, .styled-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.9rem; font-family: 'Noto Sans SC', sans-serif; background: rgba(240,245,255,0.5); }
-        .styled-textarea { resize: vertical; min-height: 38px; }
+        .form-group-column { display: flex; flex-direction: column; gap: 6px; }
+        .form-group-column label { font-size: 0.8rem; color: var(--subtle-text-color); margin-bottom: -2px;}
+        .styled-input, .styled-textarea { width: 100%; padding: 5px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; font-family: inherit; background: rgba(240,245,255,0.5); }
+        .styled-textarea { resize: vertical; min-height: 35px; }
         
-        /* 折叠动画 */
-        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
-        .chevron { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.8rem; }
+        /* 折叠 */
+        .collapsible-header { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; display: flex; justify-content: space-between; align-items: center; }
+        .chevron { transition: transform 0.2s ease; font-size: 0.7rem; }
         .collapsible-header.expanded .chevron { transform: rotate(90deg); }
-        .collapsible-content { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
+        .collapsible-content { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease-out; }
         .collapsible-content > div { overflow: hidden; }
         .collapsible-content.expanded { grid-template-rows: 1fr; opacity: 1; }
-        .collapsible-content-inner { padding-top: 15px; }
+        .collapsible-content-inner { padding-top: 12px; }
         .version-card { padding: 0; border-left: 3px solid var(--subtle-text-color); transition: border-color 0.3s ease; }
         .version-card.expanded { border-color: var(--primary-color); }
-        .version-card .collapsible-header { padding: 12px 15px; }
+        .version-card .collapsible-header { padding: 10px 12px; }
         
         /* 底部操作栏 */
-        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 10px 20px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-top: 1px solid rgba(255, 255, 255, 0.18); z-index: 1000; }
-        .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 15px; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(0, 0, 0, 0.05); z-index: 1000; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 10px; border: none; border-radius: 5px; font-size: 0.85rem; cursor: pointer; font-weight: 500; }
         .btn:disabled { background: #ccc !important; color: #888 !important; cursor: not-allowed; }
-        .primary-btn { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px -5px rgba(89, 131, 243, 0.6); }
+        .primary-btn { background: var(--primary-gradient); color: white; }
         .secondary-btn { background: white; color: var(--text-color); border: 1px solid var(--border-color); }
-        .toggle-switch { width: 38px; height: 20px; } .slider:before { height: 14px; width: 14px; } input:checked + .slider:before { transform: translateX(18px); }
+        .toggle-switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .toggle-switch input { display: none; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 18px; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--secondary-gradient); }
+        input:checked + .slider:before { transform: translateX(16px); }
     </style>
 </head>
 <body>
@@ -68,9 +74,9 @@
     <div id="login-wrapper">
         <div class="login-container">
             <h1>GitHub 管理面板</h1>
-            <p>输入您的 Personal Access Token 以继续</p>
+            <p>输入您的 Personal Access Token</p>
             <div class="input-group"> <input type="password" id="github-token" placeholder="ghp_..."> </div>
-            <button class="action-button" id="load-config-button">加载配置</button>
+            <button class="action-button" id="load-config-button">连接并加载</button>
             <div id="status-message"></div>
         </div>
     </div>
@@ -128,7 +134,7 @@
             async function loadConfig() {
                 const token = githubTokenInput.value;
                 if (!token) { setStatus('请输入 Personal Access Token。', true); return; }
-                loadConfigBtn.disabled = true; loadConfigBtn.textContent = '加载中...'; setStatus('正在连接 GitHub...', false);
+                loadConfigBtn.disabled = true; loadConfigBtn.textContent = '加载中...'; setStatus('正在连接...', false);
                 try {
                     const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, { headers: { 'Authorization': `token ${token}` } });
                     if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
@@ -140,7 +146,7 @@
                     saveButton.disabled = false; addVersionButton.disabled = false;
                 } catch (error) {
                     setStatus(`加载失败: ${error.message}`, true);
-                    loadConfigBtn.disabled = false; loadConfigBtn.textContent = '加载配置';
+                    loadConfigBtn.disabled = false; loadConfigBtn.textContent = '连接并加载';
                 }
             }
             
@@ -179,7 +185,7 @@
                     });
                     if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
                     fileSHA = (await response.json()).content.sha;
-                    alert('配置已成功更新到 GitHub！');
+                    alert('配置已成功更新！');
                 } catch(error) {
                     alert(`保存出错: ${error.message}`);
                 } finally {
@@ -208,7 +214,7 @@
                     <div class="collapsible-content ${expandedClass}">
                        <div class="collapsible-content-inner">
                             <div class="form-group-column version-card-content">
-                                <div style="display: flex; gap: 10px;">
+                                <div style="display: flex; gap: 8px;">
                                     <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${v.version}"></div>
                                     <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${v.releaseDate}"></div>
                                 </div>
@@ -220,11 +226,6 @@
                     </div>
                 </div>`;
             }
-
-            // CSS 动态添加 .toggle-switch 的样式，以减少静态CSS代码量
-            const style = document.createElement('style');
-            style.textContent = '.toggle-switch { position: relative; display: inline-block; } .toggle-switch input { display: none; } .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; } .slider:before { position: absolute; content: ""; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }';
-            document.head.appendChild(style);
 
             loadConfigBtn.addEventListener('click', loadConfig);
             saveButton.addEventListener('click', saveConfig);
