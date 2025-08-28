@@ -11,8 +11,8 @@
     {
       "version": "3.3",
       "releaseDate": "2025/8/25",
-      "optimizedFunctions": "1. 我非常好\n2. 你这非常好。",
-      "newFunctions": "1. 新增了夜间模式。",
+      "optimizedFunctions": "1. 我非常好\n2. 你这非常好。\n1. 我非常好\n2. 你这非常好。\n",
+      "newFunctions": "1. 新增了夜间模式",
       "downloadUrl": "https://example.com/download/v3.3"
     },
     {
