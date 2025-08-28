@@ -21,16 +21,14 @@
         body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-gradient); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 100px; }
         .hidden { display: none !important; }
 
-        /* 登录与配置 */
-        .login-container { width: 100%; max-width: 360px; padding: 25px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 var(--shadow-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); text-align: center; }
-        .login-container h1 { font-size: 20px; font-weight: 500; margin-bottom: 20px; }
-        .input-group { margin-bottom: 12px; text-align: left; }
-        .input-group label { font-size: 12px; color: var(--subtle-text-color); display: block; margin-bottom: 4px; }
-        .input-group input { width: 100%; padding: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.5); border-radius: 6px; font-size: 14px; outline: none; transition: all 0.3s; }
+        /* 登录 */
+        .login-container { width: 100%; max-width: 360px; padding: 30px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 var(--shadow-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); text-align: center; }
+        .login-container h1 { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+        .login-container p { font-size: 13px; color: var(--subtle-text-color); margin-bottom: 25px; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.5); border-radius: 6px; font-size: 14px; outline: none; transition: all 0.3s; }
         .input-group input:focus { border-color: #5983f3; box-shadow: 0 0 0 3px rgba(89, 131, 243, 0.2); }
-        .action-button { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 6px; background: var(--primary-gradient); color: white; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .action-button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 6px; background: var(--primary-gradient); color: white; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
         .action-button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(100, 100, 150, 0.2); }
-        .action-button:disabled { background: #ccc; cursor: not-allowed; }
         #status-message { margin-top: 15px; font-size: 13px; color: #d35400; min-height: 20px; }
 
         /* 主面板 */
@@ -42,10 +40,8 @@
         .form-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
         .form-group label { color: var(--subtle-text-color); }
         .form-group-column { display: flex; flex-direction: column; gap: 8px; }
-        .styled-input, .styled-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; background: rgba(255,255,255,0.4); transition: all 0.3s; }
-        .styled-textarea { resize: vertical; min-height: 35px; }
-        .version-card { border-left: 3px solid transparent; border-image: var(--secondary-gradient) 1; margin-bottom: 12px; animation: fadeIn 0.5s; }
-        .version-card .card:hover { border-color: #5983f3; }
+        .styled-input, .styled-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; background: rgba(255,255,255,0.4); }
+        .version-card { border-left: 3px solid transparent; border-image: var(--secondary-gradient) 1; margin-bottom: 12px; }
         .version-card.new { border-image: linear-gradient(to top, #2ed573, #7bed9f) 1; }
         .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .toggle-switch input { display: none; }
@@ -57,144 +53,125 @@
         /* 底部操作栏 */
         .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 12px 25px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(12px); border-top: 1px solid rgba(255, 255, 255, 0.18); }
         .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.3s; font-weight: 500; }
-        .btn:disabled { background: #ccc !important; color: #888 !important; cursor: not-allowed; transform: none; box-shadow: none;}
+        .btn:disabled { background: #ccc !important; color: #888 !important; cursor: not-allowed; }
         .primary-btn { background: var(--primary-gradient); color: white; }
         .secondary-btn { background: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color); }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="login-page">
         <div class="login-container">
-            <h1>GitHub 配置面板</h1>
+            <h1>GitHub 管理面板</h1>
+            <p>输入您的 Personal Access Token 以继续</p>
             <div class="input-group">
-                <label for="github-token">Personal Access Token</label>
                 <input type="password" id="github-token" placeholder="ghp_...">
             </div>
-            <div class="input-group">
-                <label for="repo-owner">仓库所有者 (用户名)</label>
-                <input type="text" id="repo-owner" placeholder="e.g., your-username">
-            </div>
-             <div class="input-group">
-                <label for="repo-name">仓库名称</label>
-                <input type="text" id="repo-name" placeholder="e.g., your-repo-name">
-            </div>
-            <div class="input-group">
-                <label for="file-path">配置文件路径</label>
-                <input type="text" id="file-path" value="config.json">
-            </div>
-            <button class="action-button" id="load-config-button">连接并加载配置</button>
+            <button class="action-button" id="load-config-button">加载配置</button>
             <div id="status-message"></div>
         </div>
     </div>
 
     <main id="dashboard-page" class="hidden">
+        <!-- 主面板的动态内容将由JS填充 -->
         <div class="config-row">
             <div class="card">
                 <h2>全局配置</h2>
-                <div class="form-group">
-                    <label for="latest-version">最新版本</label>
-                    <input type="text" id="latest-version" class="styled-input" style="width: 60px; text-align: center;">
-                </div>
-                <div class="form-group">
-                    <label>强制更新</label>
-                    <label class="toggle-switch"><input type="checkbox" id="force-update"><span class="slider"></span></label>
-                </div>
-                <div class="form-group">
-                    <label>公告开启</label>
-                    <label class="toggle-switch"><input type="checkbox" id="announcement-enabled"><span class="slider"></span></label>
-                </div>
+                <div class="form-group"><label>最新版本</label><input type="text" id="latest-version" class="styled-input" style="width: 60px; text-align: center;"></div>
+                <div class="form-group"><label>强制更新</label><label class="toggle-switch"><input type="checkbox" id="force-update"><span class="slider"></span></label></div>
+                <div class="form-group"><label>公告开启</label><label class="toggle-switch"><input type="checkbox" id="announcement-enabled"><span class="slider"></span></label></div>
             </div>
             <div class="card">
                 <h2>公告内容</h2>
-                 <div id="announcements-container" class="form-group-column">
-                    <textarea class="styled-textarea" data-announcement-index="0"></textarea>
-                    <textarea class="styled-textarea" data-announcement-index="1"></textarea>
-                    <textarea class="styled-textarea" data-announcement-index="2"></textarea>
-                </div>
+                 <div id="announcements-container" class="form-group-column"></div>
             </div>
         </div>
-        
         <div class="version-history card">
             <h2>版本历史</h2>
             <div id="version-list"></div>
         </div>
         
         <div class="action-bar">
-           <button class="btn secondary-btn" id="save-updates-button" disabled>
-               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-               保存更新
-           </button>
-           <button class="btn primary-btn" id="add-version-button" disabled>
-               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-               新增版本
-           </button>
+           <button class="btn secondary-btn" id="save-updates-button" disabled>保存更新</button>
+           <button class="btn primary-btn" id="add-version-button" disabled>新增版本</button>
        </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // DOM 元素
             const loginPage = document.getElementById('login-page');
             const dashboardPage = document.getElementById('dashboard-page');
             const loadConfigBtn = document.getElementById('load-config-button');
             const statusMessage = document.getElementById('status-message');
-            
             const githubTokenInput = document.getElementById('github-token');
-            const repoOwnerInput = document.getElementById('repo-owner');
-            const repoNameInput = document.getElementById('repo-name');
-            const filePathInput = document.getElementById('file-path');
-            
             const addVersionButton = document.getElementById('add-version-button');
             const saveButton = document.getElementById('save-updates-button');
             
+            // 全局变量
             let fileSHA = null;
-            let currentConfig = {};
-
+            let repoInfo = {};
             const API_BASE = 'https://api.github.com';
 
             function setStatus(message, isError = false) {
                 statusMessage.textContent = message;
                 statusMessage.style.color = isError ? '#e74c3c' : '#2ecc71';
             }
+            
+            // 自动检测仓库信息
+            function determineRepoInfo() {
+                const hostname = window.location.hostname;
+                const pathname = window.location.pathname;
 
-            function setButtonsState(button, isLoading, defaultText) {
-                if (isLoading) {
-                    button.disabled = true;
-                    button.textContent = '处理中...';
-                } else {
-                    button.disabled = false;
-                    button.innerHTML = defaultText;
+                if (!hostname.endsWith('github.io')) {
+                    throw new Error("此面板必须托管在 GitHub Pages 上才能自动检测仓库信息。");
                 }
+
+                const owner = hostname.split('.')[0];
+                const pathSegments = pathname.split('/').filter(Boolean);
+                
+                const repo = pathSegments.length > 0 ? pathSegments[0] : `${owner}.github.io`;
+
+                let filePath = pathname;
+                if (pathname.startsWith(`/${repo}/`)) {
+                    filePath = pathname.substring(`/${repo}/`.length);
+                }
+                filePath = filePath.substring(0, filePath.lastIndexOf('/')) + '/config.json';
+                
+                return { owner, repo, path: filePath.replace(/^\//, '') };
             }
 
             async function loadConfig() {
                 const token = githubTokenInput.value;
-                const owner = repoOwnerInput.value;
-                const repo = repoNameInput.value;
-                const path = filePathInput.value;
-
-                if (!token || !owner || !repo || !path) {
-                    setStatus('所有字段均为必填项。', true);
+                if (!token) {
+                    setStatus('请输入 Personal Access Token。', true);
                     return;
                 }
 
-                setButtonsState(loadConfigBtn, true);
-                setStatus('正在加载配置...', false);
+                try {
+                    repoInfo = determineRepoInfo();
+                } catch(e) {
+                    setStatus(e.message, true);
+                    return;
+                }
+
+                loadConfigBtn.disabled = true;
+                loadConfigBtn.textContent = '加载中...';
+                setStatus('正在连接 GitHub...', false);
 
                 try {
-                    const response = await fetch(`${API_BASE}/repos/${owner}/${repo}/contents/${path}`, {
+                    const response = await fetch(`${API_BASE}/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${repoInfo.path}`, {
                         headers: { 'Authorization': `token ${token}` }
                     });
 
-                    if (!response.ok) throw new Error(`无法获取文件: ${response.statusText}`);
+                    if (!response.ok) throw new Error(`无法获取配置文件: ${response.statusText}`);
 
                     const data = await response.json();
                     fileSHA = data.sha;
                     const content = atob(data.content);
-                    currentConfig = JSON.parse(content);
+                    const config = JSON.parse(content);
                     
-                    populateUI(currentConfig);
+                    populateUI(config);
 
                     loginPage.classList.add('hidden');
                     dashboardPage.classList.remove('hidden');
@@ -203,7 +180,8 @@
 
                 } catch (error) {
                     setStatus(`加载失败: ${error.message}`, true);
-                    setButtonsState(loadConfigBtn, false, '连接并加载配置');
+                    loadConfigBtn.disabled = false;
+                    loadConfigBtn.textContent = '加载配置';
                 }
             }
             
@@ -211,11 +189,16 @@
                 document.getElementById('latest-version').value = config.latestVersion;
                 document.getElementById('force-update').checked = config.forceUpdate;
                 document.getElementById('announcement-enabled').checked = config.announcementEnabled;
-
-                const announcementInputs = document.querySelectorAll('#announcements-container textarea');
-                announcementInputs.forEach((textarea, index) => {
-                    textarea.value = config.announcements[index] || '';
+                
+                const announcementsContainer = document.getElementById('announcements-container');
+                announcementsContainer.innerHTML = '';
+                config.announcements.forEach((text, index) => {
+                    announcementsContainer.innerHTML += `<textarea class="styled-textarea" data-announcement-index="${index}">${text}</textarea>`;
                 });
+                 // 保证至少有几个输入框
+                while (announcementsContainer.childElementCount < 2) {
+                     announcementsContainer.innerHTML += `<textarea class="styled-textarea" placeholder="新公告"></textarea>`;
+                }
 
                 const versionList = document.getElementById('version-list');
                 versionList.innerHTML = '';
@@ -225,21 +208,14 @@
             }
 
             function collectDataFromUI() {
-                const announcements = [];
-                document.querySelectorAll('#announcements-container textarea').forEach(textarea => {
-                    announcements.push(textarea.value);
-                });
-
-                const versionHistory = [];
-                document.querySelectorAll('.version-card-content').forEach(card => {
-                    versionHistory.push({
-                        version: card.querySelector('[data-field="version"]').value,
-                        releaseDate: card.querySelector('[data-field="releaseDate"]').value,
-                        optimizedFunctions: card.querySelector('[data-field="optimizedFunctions"]').value,
-                        newFunctions: card.querySelector('[data-field="newFunctions"]').value,
-                        downloadUrl: card.querySelector('[data-field="downloadUrl"]').value,
-                    });
-                });
+                const announcements = Array.from(document.querySelectorAll('#announcements-container textarea')).map(t => t.value);
+                const versionHistory = Array.from(document.querySelectorAll('.version-card-content')).map(card => ({
+                    version: card.querySelector('[data-field="version"]').value,
+                    releaseDate: card.querySelector('[data-field="releaseDate"]').value,
+                    optimizedFunctions: card.querySelector('[data-field="optimizedFunctions"]').value,
+                    newFunctions: card.querySelector('[data-field="newFunctions"]').value,
+                    downloadUrl: card.querySelector('[data-field="downloadUrl"]').value,
+                }));
                 
                 return {
                     latestVersion: document.getElementById('latest-version').value,
@@ -252,18 +228,14 @@
             
             async function saveConfig() {
                 const token = githubTokenInput.value;
-                const owner = repoOwnerInput.value;
-                const repo = repoNameInput.value;
-                const path = filePathInput.value;
-
-                const defaultBtnText = saveButton.innerHTML;
-                setButtonsState(saveButton, true, defaultBtnText);
+                saveButton.disabled = true;
+                saveButton.textContent = '保存中...';
                 
                 try {
                     const updatedConfig = collectDataFromUI();
-                    const content = btoa(JSON.stringify(updatedConfig, null, 2));
+                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(updatedConfig, null, 2))));
 
-                    const response = await fetch(`${API_BASE}/repos/${owner}/${repo}/contents/${path}`, {
+                    const response = await fetch(`${API_BASE}/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${repoInfo.path}`, {
                         method: 'PUT',
                         headers: { 'Authorization': `token ${token}` },
                         body: JSON.stringify({
@@ -276,50 +248,44 @@
                     if (!response.ok) throw new Error(`保存失败: ${response.statusText}`);
 
                     const data = await response.json();
-                    fileSHA = data.content.sha; // Update SHA for next save
+                    fileSHA = data.content.sha;
                     alert('配置已成功更新到 GitHub！');
 
                 } catch(error) {
                     alert(`保存出错: ${error.message}`);
                 } finally {
-                    setButtonsState(saveButton, false, defaultBtnText);
+                    saveButton.disabled = false;
+                    saveButton.textContent = '保存更新';
                 }
             }
             
             function addNewVersionCard() {
                 const latestVersionInput = document.getElementById('latest-version');
-                const currentVersion = latestVersionInput.value;
-                const versionParts = currentVersion.split('.').map(Number);
-                versionParts[versionParts.length - 1] = (versionParts[versionParts.length - 1] || 0) + 1;
-                const newVersion = versionParts.join('.');
+                const [major, minor = 0] = latestVersionInput.value.split('.').map(Number);
+                const newVersion = `${major}.${minor + 1}`;
                 latestVersionInput.value = newVersion;
                 
                 const today = new Date();
                 const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
                 
-                const newVersionData = {
-                    version: newVersion,
-                    releaseDate: formattedDate,
-                    optimizedFunctions: "", newFunctions: "", downloadUrl: ""
-                };
+                const newVersionData = { version: newVersion, releaseDate: formattedDate, optimizedFunctions: "", newFunctions: "", downloadUrl: "" };
                 
                 const versionList = document.getElementById('version-list');
-                const newCardHTML = createVersionCardHTML(newVersionData, true);
-                versionList.insertAdjacentHTML('afterbegin', newCardHTML);
+                versionList.insertAdjacentHTML('afterbegin', createVersionCardHTML(newVersionData, true));
             }
             
-            function createVersionCardHTML(versionData, isNew = false) {
+            function createVersionCardHTML(v, isNew = false) {
                 return `
                 <div class="version-card ${isNew ? 'new' : ''}">
-                    <div class="card version-card-content" style="backdrop-filter: none; background: rgba(255,255,255,0.4)">
+                    <div class="card version-card-content" style="background: rgba(255,255,255,0.4)">
                         <div class="form-group-column">
                             <div style="display: flex; gap: 10px;">
-                                <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${versionData.version}"></div>
-                                <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${versionData.releaseDate}"></div>
+                                <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${v.version}"></div>
+                                <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${v.releaseDate}"></div>
                             </div>
-                            <label>优化功能</label><textarea class="styled-input" data-field="optimizedFunctions">${versionData.optimizedFunctions}</textarea>
-                            <label>新增功能</label><textarea class="styled-input" data-field="newFunctions">${versionData.newFunctions}</textarea>
-                            <label>下载地址</label><input type="text" class="styled-input" data-field="downloadUrl" value="${versionData.downloadUrl}">
+                            <label>优化功能</label><textarea class="styled-textarea" data-field="optimizedFunctions">${v.optimizedFunctions}</textarea>
+                            <label>新增功能</label><textarea class="styled-textarea" data-field="newFunctions">${v.newFunctions}</textarea>
+                            <label>下载地址</label><input type="text" class="styled-input" data-field="downloadUrl" value="${v.downloadUrl}">
                         </div>
                     </div>
                 </div>`;
