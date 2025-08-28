@@ -8,64 +8,59 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         :root {
             --primary-color: #5983f3;
-            --primary-gradient: linear-gradient(45deg, #7c4dff, #5983f3);
-            --secondary-gradient: linear-gradient(45deg, #29b6f6, #81e7f1);
-            --background-gradient: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
-            --card-background: rgba(255, 255, 255, 0.9);
-            --text-color: #343a40;
+            --background-color: #f4f5f7;
+            --card-background: #ffffff;
+            --text-color: #333;
             --subtle-text-color: #6c757d;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.05);
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.06);
             --border-radius: 8px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { font-size: 12px; }
-        body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-gradient); color: var(--text-color); min-height: 100vh; }
+        html { font-size: 13px; } /* 减小基础字号 */
+        body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-color); color: var(--text-color); min-height: 100vh; }
         .hidden { display: none !important; }
 
         /* 登录页 */
         #login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
-        .login-container { width: 100%; max-width: 320px; padding: 25px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 5px 25px var(--shadow-color); backdrop-filter: blur(8px); text-align: center; }
+        .login-container { width: 100%; max-width: 320px; padding: 25px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 4px 20px var(--shadow-color); text-align: center; }
         .login-container h1 { font-size: 1.2rem; font-weight: 500; margin-bottom: 5px; }
         .login-container p { font-size: 0.9rem; color: var(--subtle-text-color); margin-bottom: 20px; }
-        .input-group input { width: 100%; padding: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.7); border-radius: 5px; font-size: 0.95rem; }
-        .action-button { width: 100%; padding: 9px; margin-top: 15px; border: none; border-radius: 5px; background: var(--primary-gradient); color: white; font-size: 1rem; font-weight: 500; cursor: pointer; }
+        .input-group input { width: 100%; padding: 8px; border: 1px solid var(--border-color); background: #f8f9fa; border-radius: 5px; font-size: 0.95rem; }
+        .action-button { width: 100%; padding: 9px; margin-top: 15px; border: none; border-radius: 5px; background: var(--primary-color); color: white; font-size: 1rem; font-weight: 500; cursor: pointer; }
         #status-message { margin-top: 12px; font-size: 0.85rem; color: #d35400; min-height: 18px; }
 
         /* 主面板 */
-        #dashboard-page { width: 100%; max-width: 520px; margin: 30px auto 100px auto; padding: 0 10px; }
-        .card { background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 5px 25px var(--shadow-color); backdrop-filter: blur(8px); margin-bottom: 10px; padding: 12px; }
-        .card h2 { font-size: 0.95rem; font-weight: 500; }
-        .form-group { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; font-size: 0.9rem; }
+        #dashboard-page { width: 100%; max-width: 580px; margin: 30px auto 100px auto; padding: 0 10px; }
+        .card { background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 4px 20px var(--shadow-color); margin-bottom: 12px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; cursor: pointer; transition: background-color 0.2s ease; border-radius: var(--border-radius); }
+        .card-header:hover { background-color: #f8f9fa; }
+        .card-header h2 { font-size: 1rem; font-weight: 500; }
+        .card-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease-out; }
+        .card-body > div { overflow: hidden; }
+        .card-body.expanded { grid-template-rows: 1fr; }
+        .card-content { padding: 0px 15px 15px 15px; border-top: 1px solid #f1f3f5; }
+        
+        .form-group { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 0.9rem; }
         .form-group label { color: var(--subtle-text-color); }
-        .form-group-column { display: flex; flex-direction: column; gap: 6px; }
-        .form-group-column label { font-size: 0.8rem; color: var(--subtle-text-color); margin-bottom: -2px;}
-        .styled-input, .styled-textarea { width: 100%; padding: 5px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; font-family: inherit; background: rgba(240,245,255,0.5); }
-        .styled-textarea { resize: vertical; min-height: 35px; }
-        
-        /* 折叠 */
-        .collapsible-header { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; display: flex; justify-content: space-between; align-items: center; }
-        .chevron { transition: transform 0.2s ease; font-size: 0.7rem; }
-        .collapsible-header.expanded .chevron { transform: rotate(90deg); }
-        .collapsible-content { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease-out; }
-        .collapsible-content > div { overflow: hidden; }
-        .collapsible-content.expanded { grid-template-rows: 1fr; opacity: 1; }
-        .collapsible-content-inner { padding-top: 12px; }
-        .version-card { padding: 0; border-left: 3px solid var(--subtle-text-color); transition: border-color 0.3s ease; }
-        .version-card.expanded { border-color: var(--primary-color); }
-        .version-card .collapsible-header { padding: 10px 12px; }
-        
+        .form-group-column { display: flex; flex-direction: column; gap: 8px; }
+        .form-group-column label { font-size: 0.85rem; color: var(--subtle-text-color); margin-bottom: -4px;}
+        .styled-input, .styled-textarea { width: 100%; padding: 6px 9px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.9rem; font-family: inherit; background: #f8f9fa; }
+        .styled-textarea { resize: vertical; min-height: 40px; }
+        .chevron { transition: transform 0.2s ease; font-size: 0.8rem; }
+        .card-header.expanded .chevron { transform: rotate(90deg); }
+
         /* 底部操作栏 */
-        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 15px; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(0, 0, 0, 0.05); z-index: 1000; }
-        .btn { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 10px; border: none; border-radius: 5px; font-size: 0.85rem; cursor: pointer; font-weight: 500; }
-        .btn:disabled { background: #ccc !important; color: #888 !important; cursor: not-allowed; }
-        .primary-btn { background: var(--primary-gradient); color: white; }
+        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 15px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border-top: 1px solid var(--border-color); z-index: 1000; }
+        .btn { padding: 6px 12px; border: none; border-radius: 5px; font-size: 0.9rem; cursor: pointer; font-weight: 500; }
+        .btn:disabled { background: #e9ecef !important; color: #adb5bd !important; cursor: not-allowed; }
+        .primary-btn { background: var(--primary-color); color: white; }
         .secondary-btn { background: white; color: var(--text-color); border: 1px solid var(--border-color); }
-        .toggle-switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
         .toggle-switch input { display: none; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 18px; }
-        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background: var(--secondary-gradient); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #28a745; }
         input:checked + .slider:before { transform: translateX(16px); }
     </style>
 </head>
@@ -83,17 +78,18 @@
 
     <main id="dashboard-page" class="hidden">
         <div class="card">
-             <h2>全局配置</h2>
-             <div class="form-group"><label>强制更新</label><label class="toggle-switch"><input type="checkbox" id="force-update"><span class="slider"></span></label></div>
-             <div class="form-group"><label>公告开启</label><label class="toggle-switch"><input type="checkbox" id="announcement-enabled"><span class="slider"></span></label></div>
+            <div class="card-content" style="border-top: none; padding-top: 10px;">
+                <div class="form-group"><label>强制更新</label><label class="toggle-switch"><input type="checkbox" id="force-update"><span class="slider"></span></label></div>
+                <div class="form-group"><label>公告开启</label><label class="toggle-switch"><input type="checkbox" id="announcement-enabled"><span class="slider"></span></label></div>
+            </div>
         </div>
         <div class="card">
-            <div class="collapsible-header">
+            <div class="card-header">
                 <h2>公告内容</h2>
                 <span class="chevron">▶</span>
             </div>
-            <div class="collapsible-content">
-                <div class="collapsible-content-inner"><div id="announcements-container" class="form-group-column"></div></div>
+            <div class="card-body">
+                <div><div class="card-content form-group-column" id="announcements-container"></div></div>
             </div>
         </div>
         <div id="version-list"></div>
@@ -119,16 +115,16 @@
             let fileSHA = null;
             const API_BASE = 'https://api.github.com';
 
-            function setStatus(message, isError = false) { statusMessage.textContent = message; statusMessage.style.color = isError ? '#e74c3c' : '#2ecc71'; }
+            function setStatus(message, isError = false) { statusMessage.textContent = message; statusMessage.style.color = isError ? '#d35400' : '#2ecc71'; }
 
             dashboardPage.addEventListener('click', (event) => {
-                const header = event.target.closest('.collapsible-header');
+                const header = event.target.closest('.card-header');
                 if (!header) return;
-                const card = header.closest('.card');
-                const content = header.nextElementSibling;
+                const body = header.nextElementSibling;
                 const isExpanded = header.classList.toggle('expanded');
-                content.classList.toggle('expanded', isExpanded);
-                if (card) card.classList.toggle('expanded', isExpanded);
+                if (body && body.classList.contains('card-body')) {
+                    body.classList.toggle('expanded', isExpanded);
+                }
             });
 
             async function loadConfig() {
@@ -194,10 +190,10 @@
             }
             
             function addNewVersionCard() {
-                const firstVersionInput = document.querySelector('#version-list [data-field="version"]');
+                const firstVersionInput = document.querySelector('.version-card-content [data-field="version"]');
                 const [major = 1, minor = 0] = firstVersionInput ? firstVersionInput.value.split('.').map(Number) : [];
                 const newVersion = `${major}.${(minor || 0) + 1}`;
-                document.querySelectorAll('.collapsible-header.expanded').forEach(el => el.click());
+                document.querySelectorAll('.card-header.expanded').forEach(header => header.click());
                 const today = new Date(); const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
                 const newVersionData = { version: newVersion, releaseDate: formattedDate, optimizedFunctions: "", newFunctions: "", downloadUrl: "" };
                 document.getElementById('version-list').insertAdjacentHTML('afterbegin', createVersionCardHTML(newVersionData, true));
@@ -206,14 +202,14 @@
             function createVersionCardHTML(v, isExpanded = false) {
                 const expandedClass = isExpanded ? 'expanded' : '';
                 return `
-                <div class="card version-card ${expandedClass}">
-                    <div class="collapsible-header ${expandedClass}">
+                <div class="card version-card">
+                    <div class="card-header ${expandedClass}">
                         <h2>版本: ${v.version} <span style="font-size: 0.8rem; color: var(--subtle-text-color); font-weight: 400;">(${v.releaseDate})</span></h2>
                         <span class="chevron">▶</span>
                     </div>
-                    <div class="collapsible-content ${expandedClass}">
-                       <div class="collapsible-content-inner">
-                            <div class="form-group-column version-card-content">
+                    <div class="card-body ${expandedClass}">
+                        <div>
+                            <div class="card-content form-group-column version-card-content">
                                 <div style="display: flex; gap: 8px;">
                                     <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${v.version}"></div>
                                     <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${v.releaseDate}"></div>
@@ -222,7 +218,7 @@
                                 <label>新增功能</label><textarea class="styled-textarea" data-field="newFunctions">${v.newFunctions}</textarea>
                                 <label>下载地址</label><input type="text" class="styled-input" data-field="downloadUrl" value="${v.downloadUrl}">
                             </div>
-                       </div>
+                        </div>
                     </div>
                 </div>`;
             }
