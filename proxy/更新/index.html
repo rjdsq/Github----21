@@ -73,7 +73,6 @@
     </div>
 
     <main id="dashboard-page" class="hidden">
-        <!-- 主面板的动态内容将由JS填充 -->
         <div class="config-row">
             <div class="card">
                 <h2>全局配置</h2>
@@ -99,6 +98,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 配置区域：请根据您的仓库信息修改这里 ---
+            const REPO_OWNER = "rjdsq";
+            const REPO_NAME = "rjdsq.github.io";
+            const FILE_PATH = "proxy/更新/config.json";
+            // --- 配置区域结束 ---
+
             // DOM 元素
             const loginPage = document.getElementById('login-page');
             const dashboardPage = document.getElementById('dashboard-page');
@@ -110,35 +115,11 @@
             
             // 全局变量
             let fileSHA = null;
-            let repoInfo = {};
             const API_BASE = 'https://api.github.com';
 
             function setStatus(message, isError = false) {
                 statusMessage.textContent = message;
                 statusMessage.style.color = isError ? '#e74c3c' : '#2ecc71';
-            }
-            
-            // 自动检测仓库信息
-            function determineRepoInfo() {
-                const hostname = window.location.hostname;
-                const pathname = window.location.pathname;
-
-                if (!hostname.endsWith('github.io')) {
-                    throw new Error("此面板必须托管在 GitHub Pages 上才能自动检测仓库信息。");
-                }
-
-                const owner = hostname.split('.')[0];
-                const pathSegments = pathname.split('/').filter(Boolean);
-                
-                const repo = pathSegments.length > 0 ? pathSegments[0] : `${owner}.github.io`;
-
-                let filePath = pathname;
-                if (pathname.startsWith(`/${repo}/`)) {
-                    filePath = pathname.substring(`/${repo}/`.length);
-                }
-                filePath = filePath.substring(0, filePath.lastIndexOf('/')) + '/config.json';
-                
-                return { owner, repo, path: filePath.replace(/^\//, '') };
             }
 
             async function loadConfig() {
@@ -148,19 +129,12 @@
                     return;
                 }
 
-                try {
-                    repoInfo = determineRepoInfo();
-                } catch(e) {
-                    setStatus(e.message, true);
-                    return;
-                }
-
                 loadConfigBtn.disabled = true;
                 loadConfigBtn.textContent = '加载中...';
                 setStatus('正在连接 GitHub...', false);
 
                 try {
-                    const response = await fetch(`${API_BASE}/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${repoInfo.path}`, {
+                    const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
                         headers: { 'Authorization': `token ${token}` }
                     });
 
@@ -169,7 +143,7 @@
                     const data = await response.json();
                     fileSHA = data.sha;
                     const content = atob(data.content);
-                    const config = JSON.parse(content);
+                    const config = JSON.parse(decodeURIComponent(escape(content)));
                     
                     populateUI(config);
 
@@ -195,7 +169,6 @@
                 config.announcements.forEach((text, index) => {
                     announcementsContainer.innerHTML += `<textarea class="styled-textarea" data-announcement-index="${index}">${text}</textarea>`;
                 });
-                 // 保证至少有几个输入框
                 while (announcementsContainer.childElementCount < 2) {
                      announcementsContainer.innerHTML += `<textarea class="styled-textarea" placeholder="新公告"></textarea>`;
                 }
@@ -235,7 +208,7 @@
                     const updatedConfig = collectDataFromUI();
                     const content = btoa(unescape(encodeURIComponent(JSON.stringify(updatedConfig, null, 2))));
 
-                    const response = await fetch(`${API_BASE}/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${repoInfo.path}`, {
+                    const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
                         method: 'PUT',
                         headers: { 'Authorization': `token ${token}` },
                         body: JSON.stringify({
