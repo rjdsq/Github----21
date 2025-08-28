@@ -7,60 +7,64 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         :root {
-            --primary-gradient: linear-gradient(45deg, #f86cfc, #5983f3);
-            --secondary-gradient: linear-gradient(45deg, #81e7f1, #30c7ec);
-            --background-gradient: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
-            --card-background: rgba(255, 255, 255, 0.7);
+            --primary-color: #5983f3;
+            --primary-gradient: linear-gradient(45deg, #8B5CF6, #5983f3);
+            --secondary-gradient: linear-gradient(45deg, #30c7ec, #81e7f1);
+            --background-gradient: linear-gradient(120deg, #f6f7fb 0%, #eef1f5 100%);
+            --card-background: rgba(255, 255, 255, 0.85);
             --text-color: #2c3e50;
-            --subtle-text-color: #7f8c8d;
-            --border-color: rgba(200, 200, 200, 0.5);
-            --shadow-color: rgba(100, 100, 150, 0.1);
-            --border-radius: 10px;
+            --subtle-text-color: #8D99AE;
+            --border-color: rgba(200, 200, 220, 0.6);
+            --shadow-color: rgba(100, 100, 150, 0.12);
+            --border-radius: 12px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-gradient); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 0 100px 0; }
+        body { font-family: 'Noto Sans SC', sans-serif; background: var(--background-gradient); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 0 120px 0; }
         .hidden { display: none !important; }
 
         /* 登录 */
-        .login-container { width: 100%; max-width: 360px; padding: 30px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 var(--shadow-color); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); text-align: center; }
+        .login-container { width: 100%; max-width: 360px; padding: 30px; background: var(--card-background); border-radius: var(--border-radius); box-shadow: 0 10px 35px 0 var(--shadow-color); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); text-align: center; }
         .login-container h1 { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
         .login-container p { font-size: 13px; color: var(--subtle-text-color); margin-bottom: 25px; }
-        .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.5); border-radius: 6px; font-size: 14px; outline: none; }
-        .action-button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 6px; background: var(--primary-gradient); color: white; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.7); border-radius: 8px; font-size: 14px; outline: none; transition: all 0.2s; }
+        .input-group input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(89, 131, 243, 0.2); }
+        .action-button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 8px; background: var(--primary-gradient); color: white; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
         #status-message { margin-top: 15px; font-size: 13px; color: #d35400; min-height: 20px; }
 
         /* 主面板 */
-        #dashboard-page { width: 100%; max-width: 650px; padding: 0 15px; }
-        .card { background: var(--card-background); border-radius: var(--border-radius); padding: 15px; box-shadow: 0 8px 32px 0 var(--shadow-color); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); margin-bottom: 12px; }
-        .card h2 { font-size: 14px; font-weight: 500; }
-        .form-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
-        .form-group:last-child { margin-bottom: 0; }
+        #dashboard-page { width: 100%; max-width: 680px; padding: 0 15px; }
+        .card { background: var(--card-background); border-radius: var(--border-radius); padding: 18px; box-shadow: 0 10px 35px 0 var(--shadow-color); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 15px; }
+        .card h2 { font-size: 15px; font-weight: 500; }
+        .form-group { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; font-size: 14px; }
         .form-group label { color: var(--subtle-text-color); }
-        .form-group-column { display: flex; flex-direction: column; gap: 8px; }
-        .styled-input, .styled-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; background: rgba(255,255,255,0.4); }
-
-        /* 折叠样式 */
-        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .chevron { transition: transform 0.3s ease; }
+        .form-group-column { display: flex; flex-direction: column; gap: 10px; }
+        .styled-input, .styled-textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; font-family: 'Noto Sans SC', sans-serif; background: rgba(240,245,255,0.5); }
+        .styled-textarea { resize: vertical; min-height: 40px; }
+        
+        /* 全新折叠动画样式 */
+        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+        .chevron { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .collapsible-header.expanded .chevron { transform: rotate(90deg); }
-        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, margin-top 0.4s ease-out; }
-        .collapsible-content.expanded { max-height: 1000px; /* A large enough value */ margin-top: 15px; transition: max-height 0.5s ease-in, margin-top 0.5s ease-in; }
-        .version-card .collapsible-header { border-left: 3px solid transparent; border-image: var(--secondary-gradient) 1; padding-left: 10px; }
-        .version-card .collapsible-header.expanded { border-image: var(--primary-gradient) 1; }
+        .collapsible-content { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
+        .collapsible-content > div { overflow: hidden; }
+        .collapsible-content.expanded { grid-template-rows: 1fr; opacity: 1; }
+        .collapsible-content-inner { padding-top: 18px; }
+        .version-card { padding: 0; border-left: 4px solid var(--subtle-text-color); transition: border-color 0.3s ease; }
+        .version-card.expanded { border-color: var(--primary-color); }
+        .version-card .collapsible-header { padding: 15px 18px; }
         
         /* 底部操作栏 */
-        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 12px 25px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(12px); border-top: 1px solid rgba(255, 255, 255, 0.18); }
-        .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.3s; font-weight: 500; }
+        .action-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 12px 25px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-top: 1px solid rgba(255, 255, 255, 0.18); }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 15px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
         .btn:disabled { background: #ccc !important; color: #888 !important; cursor: not-allowed; }
-        .primary-btn { background: var(--primary-gradient); color: white; }
-        .secondary-btn { background: var(--card-background); color: var(--text-color); border: 1px solid var(--border-color); }
+        .primary-btn { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px -5px rgba(89, 131, 243, 0.6); }
+        .secondary-btn { background: white; color: var(--text-color); border: 1px solid var(--border-color); }
         .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .toggle-switch input { display: none; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background: var(--secondary-gradient); }
         input:checked + .slider:before { transform: translateX(18px); }
-
     </style>
 </head>
 <body>
@@ -88,7 +92,9 @@
                 <span class="chevron">▶</span>
             </div>
             <div class="collapsible-content">
-                <div id="announcements-container" class="form-group-column"></div>
+                <div class="collapsible-content-inner">
+                    <div id="announcements-container" class="form-group-column"></div>
+                </div>
             </div>
         </div>
 
@@ -102,11 +108,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- 配置区域：请根据您的仓库信息修改这里 ---
             const REPO_OWNER = "rjdsq";
             const REPO_NAME = "rjdsq.github.io";
             const FILE_PATH = "proxy/更新/config.json";
-            // --- 配置区域结束 ---
 
             const loginPage = document.getElementById('login-page');
             const dashboardPage = document.getElementById('dashboard-page');
@@ -123,42 +127,46 @@
                 statusMessage.style.color = isError ? '#e74c3c' : '#2ecc71';
             }
 
-            // 折叠/展开逻辑
             dashboardPage.addEventListener('click', (event) => {
                 const header = event.target.closest('.collapsible-header');
                 if (!header) return;
                 
+                const card = header.closest('.card');
                 const content = header.nextElementSibling;
-                header.classList.toggle('expanded');
-                content.classList.toggle('expanded');
+                const isExpanded = header.classList.contains('expanded');
+
+                if (!isExpanded) {
+                    header.classList.add('expanded');
+                    content.classList.add('expanded');
+                    if (card.classList.contains('version-card')) {
+                         card.classList.add('expanded');
+                    }
+                } else {
+                    header.classList.remove('expanded');
+                    content.classList.remove('expanded');
+                    if (card.classList.contains('version-card')) {
+                         card.classList.remove('expanded');
+                    }
+                }
             });
 
             async function loadConfig() {
                 const token = githubTokenInput.value;
                 if (!token) { setStatus('请输入 Personal Access Token。', true); return; }
-
-                loadConfigBtn.disabled = true;
-                loadConfigBtn.textContent = '加载中...';
-                setStatus('正在连接 GitHub...', false);
+                loadConfigBtn.disabled = true; loadConfigBtn.textContent = '加载中...'; setStatus('正在连接 GitHub...', false);
 
                 try {
-                    const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-                        headers: { 'Authorization': `token ${token}` }
-                    });
+                    const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, { headers: { 'Authorization': `token ${token}` } });
                     if (!response.ok) throw new Error(`无法获取配置文件: ${response.statusText}`);
                     const data = await response.json();
                     fileSHA = data.sha;
                     const content = atob(data.content);
                     const config = JSON.parse(decodeURIComponent(escape(content)));
                     populateUI(config);
-                    loginPage.classList.add('hidden');
-                    dashboardPage.classList.remove('hidden');
-                    saveButton.disabled = false;
-                    addVersionButton.disabled = false;
+                    loginPage.classList.add('hidden'); dashboardPage.classList.remove('hidden'); saveButton.disabled = false; addVersionButton.disabled = false;
                 } catch (error) {
                     setStatus(`加载失败: ${error.message}`, true);
-                    loadConfigBtn.disabled = false;
-                    loadConfigBtn.textContent = '加载配置';
+                    loadConfigBtn.disabled = false; loadConfigBtn.textContent = '加载配置';
                 }
             }
             
@@ -168,38 +176,24 @@
                 
                 const announcementsContainer = document.getElementById('announcements-container');
                 announcementsContainer.innerHTML = '';
-                config.announcements.forEach(text => {
-                    announcementsContainer.innerHTML += `<textarea class="styled-textarea">${text}</textarea>`;
-                });
-                while (announcementsContainer.childElementCount < 3) {
-                     announcementsContainer.innerHTML += `<textarea class="styled-textarea" placeholder="新公告"></textarea>`;
-                }
+                config.announcements.forEach(text => { announcementsContainer.innerHTML += `<textarea class="styled-textarea">${text}</textarea>`; });
+                while (announcementsContainer.childElementCount < 3) { announcementsContainer.innerHTML += `<textarea class="styled-textarea" placeholder="新公告"></textarea>`; }
 
                 const versionList = document.getElementById('version-list');
                 versionList.innerHTML = '';
-                config.versionHistory.forEach((v, index) => {
-                    versionList.innerHTML += createVersionCardHTML(v, index === 0); // 默认展开第一个
-                });
+                config.versionHistory.forEach((v, index) => { versionList.innerHTML += createVersionCardHTML(v, index === 0); });
             }
 
             function collectDataFromUI() {
                 const announcements = Array.from(document.querySelectorAll('#announcements-container textarea')).map(t => t.value);
                 const versionHistory = Array.from(document.querySelectorAll('.version-card-content')).map(card => ({
-                    version: card.querySelector('[data-field="version"]').value,
-                    releaseDate: card.querySelector('[data-field="releaseDate"]').value,
-                    optimizedFunctions: card.querySelector('[data-field="optimizedFunctions"]').value,
-                    newFunctions: card.querySelector('[data-field="newFunctions"]').value,
+                    version: card.querySelector('[data-field="version"]').value, releaseDate: card.querySelector('[data-field="releaseDate"]').value,
+                    optimizedFunctions: card.querySelector('[data-field="optimizedFunctions"]').value, newFunctions: card.querySelector('[data-field="newFunctions"]').value,
                     downloadUrl: card.querySelector('[data-field="downloadUrl"]').value,
                 }));
                 const latestVersion = versionHistory.length > 0 ? versionHistory[0].version : "1.0";
                 
-                return {
-                    latestVersion,
-                    forceUpdate: document.getElementById('force-update').checked,
-                    announcementEnabled: document.getElementById('announcement-enabled').checked,
-                    announcements,
-                    versionHistory
-                };
+                return { latestVersion, forceUpdate: document.getElementById('force-update').checked, announcementEnabled: document.getElementById('announcement-enabled').checked, announcements, versionHistory };
             }
             
             async function saveConfig() {
@@ -210,13 +204,11 @@
                     const updatedConfig = collectDataFromUI();
                     const content = btoa(unescape(encodeURIComponent(JSON.stringify(updatedConfig, null, 2))));
                     const response = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-                        method: 'PUT',
-                        headers: { 'Authorization': `token ${token}` },
+                        method: 'PUT', headers: { 'Authorization': `token ${token}` },
                         body: JSON.stringify({ message: `[Admin Panel] Update config.json`, content: content, sha: fileSHA })
                     });
                     if (!response.ok) throw new Error(`保存失败: ${response.statusText}`);
-                    const data = await response.json();
-                    fileSHA = data.content.sha;
+                    const data = await response.json(); fileSHA = data.content.sha;
                     alert('配置已成功更新到 GitHub！');
                 } catch(error) {
                     alert(`保存出错: ${error.message}`);
@@ -229,40 +221,38 @@
                 const firstVersionInput = document.querySelector('#version-list [data-field="version"]');
                 let newVersion = "1.0";
                 if(firstVersionInput) {
-                    const [major, minor = 0] = firstVersionInput.value.split('.').map(Number);
-                    newVersion = `${major}.${minor + 1}`;
+                    const [major, minor = 0] = firstVersionInput.value.split('.').map(Number); newVersion = `${major}.${minor + 1}`;
                 }
                 
-                // 折叠所有已打开的卡片
-                document.querySelectorAll('.collapsible-content.expanded').forEach(el => el.classList.remove('expanded'));
-                document.querySelectorAll('.collapsible-header.expanded').forEach(el => el.classList.remove('expanded'));
+                document.querySelectorAll('.collapsible-content.expanded, .collapsible-header.expanded, .card.version-card.expanded').forEach(el => el.classList.remove('expanded'));
 
-                const today = new Date();
-                const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+                const today = new Date(); const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
                 const newVersionData = { version: newVersion, releaseDate: formattedDate, optimizedFunctions: "", newFunctions: "", downloadUrl: "" };
                 
                 const versionList = document.getElementById('version-list');
-                versionList.insertAdjacentHTML('afterbegin', createVersionCardHTML(newVersionData, true)); // 新增的卡片默认展开
+                versionList.insertAdjacentHTML('afterbegin', createVersionCardHTML(newVersionData, true));
             }
             
             function createVersionCardHTML(v, isExpanded = false) {
                 const expandedClass = isExpanded ? 'expanded' : '';
                 return `
-                <div class="card version-card">
+                <div class="card version-card ${expandedClass}">
                     <div class="collapsible-header ${expandedClass}">
                         <h2>版本: ${v.version} <span style="font-size: 12px; color: var(--subtle-text-color); font-weight: 400;">(${v.releaseDate})</span></h2>
                         <span class="chevron">▶</span>
                     </div>
                     <div class="collapsible-content ${expandedClass}">
-                        <div class="form-group-column version-card-content">
-                            <div style="display: flex; gap: 10px;">
-                                <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${v.version}"></div>
-                                <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${v.releaseDate}"></div>
+                       <div class="collapsible-content-inner">
+                            <div class="form-group-column version-card-content">
+                                <div style="display: flex; gap: 10px;">
+                                    <div style="flex: 1;"><label>版本号</label><input type="text" class="styled-input" data-field="version" value="${v.version}"></div>
+                                    <div style="flex: 1;"><label>发布日期</label><input type="text" class="styled-input" data-field="releaseDate" value="${v.releaseDate}"></div>
+                                </div>
+                                <label>优化功能</label><textarea class="styled-textarea" data-field="optimizedFunctions">${v.optimizedFunctions}</textarea>
+                                <label>新增功能</label><textarea class="styled-textarea" data-field="newFunctions">${v.newFunctions}</textarea>
+                                <label>下载地址</label><input type="text" class="styled-input" data-field="downloadUrl" value="${v.downloadUrl}">
                             </div>
-                            <label>优化功能</label><textarea class="styled-textarea" data-field="optimizedFunctions">${v.optimizedFunctions}</textarea>
-                            <label>新增功能</label><textarea class="styled-textarea" data-field="newFunctions">${v.newFunctions}</textarea>
-                            <label>下载地址</label><input type="text" class="styled-input" data-field="downloadUrl" value="${v.downloadUrl}">
-                        </div>
+                       </div>
                     </div>
                 </div>`;
             }
