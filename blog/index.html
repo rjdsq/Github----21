@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>正在加载...</title>
     <style>
-        :root{--bg-color:#f8f9fa;--text-color:#212529;--heading-color:#343a40;--accent-color:#0d6efd;--link-hover-color:#0a58ca;--border-color:#dee2e6;--card-bg:#fff;--card-shadow:0 4px 8px rgba(0,0,0,.05)}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.7;color:var(--text-color);background-color:var(--bg-color);margin:0;padding:0}a{color:var(--accent-color);text-decoration:none;transition:color .2s}a:hover{color:var(--link-hover-color)}.container{max-width:840px;margin:0 auto;padding:1rem}.site-header{padding:2rem 0;text-align:center;border-bottom:1px solid var(--border-color);margin-bottom:2rem}.site-title{font-size:2.2rem;margin:0;color:var(--heading-color)}.site-description{font-size:1rem;margin:10px 0 0;color:#6c757d}.post-excerpt{background-color:var(--card-bg);margin-bottom:2rem;padding:1.5rem;border-radius:8px;box-shadow:var(--card-shadow);transition:box-shadow .2s}.post-excerpt:hover{box-shadow:0 8px 16px rgba(0,0,0,.08)}.post-title{margin:0 0 10px}.post-title a{font-size:1.5rem;color:var(--heading-color);text-decoration:none}.post-meta{font-size:.85rem;color:#6c757d;margin-bottom:1rem}.post-summary{color:#495057;margin-bottom:1.5rem}.post-summary p:last-of-type{margin-bottom:0}.post-images-preview{display:grid;grid-gap:10px;margin-bottom:1.5rem;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}.post-images-preview img{width:100%;height:120px;object-fit:cover;border-radius:5px}.read-more-btn{display:inline-block;padding:8px 16px;background-color:var(--accent-color);color:#fff;border-radius:5px;font-size:.9rem;transition:background-color .2s}.read-more-btn:hover{background-color:var(--link-hover-color)}.site-footer{text-align:center;padding:2rem 0;margin-top:1rem;border-top:1px solid var(--border-color);color:#6c757d;font-size:.9rem}@media(min-width: 768px){.container{padding:20px}.site-header{padding:40px 0;margin-bottom:40px}.site-title{font-size:2.5rem}.site-description{font-size:1.1rem}.post-excerpt{padding:30px}.post-title a{font-size:1.8rem}.post-images-preview{grid-template-columns:repeat(3,1fr)}.post-images-preview img{height:150px}}
+        :root{--bg-color:#f8f9fa;--text-color:#212529;--heading-color:#343a40;--accent-color:#0d6efd;--link-hover-color:#0a58ca;--border-color:#dee2e6;--card-bg:#fff;--card-shadow:0 4px 8px rgba(0,0,0,.05);--meta-color:#6c757d}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.7;color:var(--text-color);background-color:var(--bg-color);margin:0;padding:0;transition:background-color .3s,color .3s}a{color:var(--accent-color);text-decoration:none;transition:color .2s}a:hover{color:var(--link-hover-color)}.container{max-width:840px;margin:0 auto;padding:1rem}.site-header{padding:2rem 0;text-align:center;border-bottom:1px solid var(--border-color);margin-bottom:2rem}.site-title{font-size:2.2rem;margin:0;color:var(--heading-color)}.site-description{font-size:1rem;margin:10px 0 0;color:var(--meta-color)}.post-excerpt{background-color:var(--card-bg);margin-bottom:2rem;padding:1.5rem;border-radius:8px;box-shadow:var(--card-shadow);transition:box-shadow .2s}.post-excerpt:hover{box-shadow:0 8px 16px rgba(0,0,0,.08)}.post-title{margin:0 0 10px}.post-title a{font-size:1.5rem;color:var(--heading-color);text-decoration:none}.post-meta{font-size:.85rem;color:var(--meta-color);margin-bottom:1rem}.post-summary{color:#495057;margin-bottom:1.5rem;word-wrap:break-word}.post-summary p:last-of-type{margin-bottom:0}.post-images-preview{display:grid;grid-gap:10px;margin-bottom:1.5rem;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}.post-images-preview img{width:100%;height:120px;object-fit:cover;border-radius:5px}.read-more-btn{display:inline-block;padding:8px 16px;background-color:var(--accent-color);color:#fff;border-radius:5px;font-size:.9rem;transition:background-color .2s}.read-more-btn:hover{background-color:var(--link-hover-color)}.site-footer{text-align:center;padding:2rem 0;margin-top:1rem;border-top:1px solid var(--border-color);color:var(--meta-color);font-size:.9rem}#post-detail-view{display:none}.post-full-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-color)}.post-full-title{font-size:2rem;color:var(--heading-color);margin:0 0 1rem}.post-full-meta{font-size:.9rem;color:var(--meta-color)}.post-full-content{font-size:1.05rem;word-wrap:break-word}.post-full-content h2{font-size:1.8rem;margin-top:2.5rem}.post-full-content h3{font-size:1.5rem;margin-top:2rem}.post-full-content p{margin-bottom:1.5rem}.post-full-content img{max-width:100%;height:auto;border-radius:8px;margin:1.5rem 0}.post-full-content blockquote{margin:1.5rem 0;padding:0 1.5rem;border-left:4px solid var(--accent-color);color:var(--meta-color)}.post-full-content pre{background-color:#282c34;color:#abb2bf;padding:1rem;border-radius:8px;overflow-x:auto;font-family:Menlo,Monaco,Consolas,"Courier New",monospace}.back-to-home{display:inline-block;margin-top:2.5rem;font-size:1rem}@media(min-width: 768px){.container{padding:20px}.site-header{padding:40px 0;margin-bottom:40px}.site-title{font-size:2.5rem}.site-description{font-size:1.1rem}.post-excerpt{padding:30px}.post-title a{font-size:1.8rem}.post-images-preview{grid-template-columns:repeat(3,1fr)}.post-images-preview img{height:150px}.post-full-title{font-size:2.8rem}}
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="site-header">
+        <header id="site-header" class="site-header">
             <h1 id="blog-title" class="site-title"></h1>
             <p id="blog-description" class="site-description"></p>
         </header>
-        <main id="posts-container">
-            <p>正在加载文章...</p>
+        <main>
+            <div id="posts-list-view"></div>
+            <div id="post-detail-view"></div>
         </main>
         <footer class="site-footer">
             <p>Powered by GitHub</p>
@@ -29,11 +30,16 @@
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const converter = new showdown.Converter();
+            const converter = new showdown.Converter({ extensions: ['github'] });
             const body = document.body;
+            const siteHeader = document.getElementById('site-header');
             const blogTitleEl = document.getElementById('blog-title');
             const blogDescriptionEl = document.getElementById('blog-description');
-            const postsContainer = document.getElementById('posts-container');
+            const postsListView = document.getElementById('posts-list-view');
+            const postDetailView = document.getElementById('post-detail-view');
+
+            let allPosts = [];
+            let siteConfig = {};
 
             const getFileFromApi = async (owner, repo, path) => {
                 const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
@@ -44,36 +50,15 @@
                 return b64_to_utf8(data.content);
             };
 
-            try {
-                const owner = window.location.hostname.split('.')[0];
-                const repo = `${owner}.github.io`;
-                const basePath = window.location.pathname.split('/').filter(p => p && p.toLowerCase() !== 'index.html').join('/');
-                const getPath = (fileName) => basePath ? `${basePath}/${fileName}` : fileName;
+            const renderPostList = () => {
+                postsListView.innerHTML = '';
+                postDetailView.style.display = 'none';
+                postsListView.style.display = 'block';
+                siteHeader.style.display = 'block';
 
-                const configContent = await getFileFromApi(owner, repo, getPath('config.json'));
-                const config = JSON.parse(configContent);
-
-                document.title = config.site.title;
-                blogTitleEl.textContent = config.site.title;
-                blogDescriptionEl.textContent = config.site.description;
-
-                const { backgroundColor, textColor, accentColor, backgroundImageUrl } = config.styling;
-                if(backgroundColor) document.documentElement.style.setProperty('--bg-color', backgroundColor);
-                if(textColor) document.documentElement.style.setProperty('--text-color', textColor);
-                if(accentColor) document.documentElement.style.setProperty('--accent-color', accentColor);
-                if (backgroundImageUrl) {
-                    body.style.backgroundImage = `url(${backgroundImageUrl})`;
-                } else {
-                    body.style.backgroundImage = 'none';
-                }
-
-                const postsContent = await getFileFromApi(owner, repo, getPath('posts.json'));
-                const posts = JSON.parse(postsContent);
-
-                postsContainer.innerHTML = '';
-                if (posts.length > 0) {
-                    posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                    posts.forEach(post => {
+                if (allPosts.length > 0) {
+                    allPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    allPosts.forEach(post => {
                         const postEl = document.createElement('article');
                         postEl.className = 'post-excerpt';
                         
@@ -92,31 +77,102 @@
                         let imagesHtml = '';
                         if (images.length > 0) {
                             imagesHtml += '<div class="post-images-preview">';
-                            images.forEach(imgUrl => {
-                                imagesHtml += `<img src="${imgUrl}" alt="Post image preview">`;
-                            });
+                            images.forEach(imgUrl => { imagesHtml += `<img src="${imgUrl}" alt="Post image preview">`; });
                             imagesHtml += '</div>';
                         }
                         
                         postEl.innerHTML = `
                             <header class="post-header">
-                                <h2 class="post-title"><a href="#">${post.title}</a></h2>
+                                <h2 class="post-title"><a href="#/post/${post.id}">${post.title}</a></h2>
                                 <p class="post-meta">发布于 ${new Date(post.createdAt).toLocaleDateString()}</p>
                             </header>
-                            <div class="post-summary">
-                                ${converter.makeHtml(summary)}
-                            </div>
+                            <div class="post-summary">${converter.makeHtml(summary)}</div>
                             ${imagesHtml}
-                            <a href="#" class="read-more-btn">阅读全文 &rarr;</a>
+                            <a href="#/post/${post.id}" class="read-more-btn">阅读全文 &rarr;</a>
                         `;
-                        postsContainer.appendChild(postEl);
+                        postsListView.appendChild(postEl);
                     });
                 } else {
-                    postsContainer.innerHTML = '<p>暂无文章。开始您的第一篇创作吧！</p>';
+                    postsListView.innerHTML = '<p>暂无文章。开始您的第一篇创作吧！</p>';
                 }
+            };
+
+            const renderSinglePost = (postId) => {
+                const post = allPosts.find(p => p.id === postId);
+                postsListView.style.display = 'none';
+                postDetailView.style.display = 'block';
+                siteHeader.style.display = 'none';
+
+                if (post) {
+                    document.title = `${post.title} - ${siteConfig.site.title}`;
+                    postDetailView.innerHTML = `
+                        <article class="post-full">
+                            <header class="post-full-header">
+                                <h1 class="post-full-title">${post.title}</h1>
+                                <p class="post-full-meta">
+                                    发布于 ${new Date(post.createdAt).toLocaleDateString()}
+                                    ${post.tags && post.tags.length > 0 ? `| 标签: ${post.tags.join(', ')}` : ''}
+                                </p>
+                            </header>
+                            <section class="post-full-content">${converter.makeHtml(post.content)}</section>
+                            <a href="#" class="back-to-home">&larr; 返回首页</a>
+                        </article>
+                    `;
+                } else {
+                    document.title = `未找到文章 - ${siteConfig.site.title}`;
+                    postDetailView.innerHTML = `
+                        <article class="post-full">
+                            <h1 class="post-full-title">404 - 未找到文章</h1>
+                            <p>抱歉，您要查找的文章不存在。</p>
+                            <a href="#" class="back-to-home">&larr; 返回首页</a>
+                        </article>
+                    `;
+                }
+            };
+            
+            const handleRoute = () => {
+                const hash = window.location.hash;
+                if (hash.startsWith('#/post/')) {
+                    const postId = hash.substring(7);
+                    renderSinglePost(postId);
+                } else {
+                    renderPostList();
+                    document.title = siteConfig.site.title || '博客';
+                }
+            };
+
+            try {
+                const owner = window.location.hostname.split('.')[0];
+                const repo = `${owner}.github.io`;
+                const basePath = window.location.pathname.split('/').filter(p => p && p.toLowerCase() !== 'index.html').join('/');
+                const getPath = (fileName) => basePath ? `${basePath}/${fileName}` : fileName;
+
+                const configContent = await getFileFromApi(owner, repo, getPath('config.json'));
+                siteConfig = JSON.parse(configContent);
+
+                document.title = siteConfig.site.title;
+                blogTitleEl.textContent = siteConfig.site.title;
+                blogDescriptionEl.textContent = siteConfig.site.description;
+
+                const { backgroundColor, textColor, accentColor, backgroundImageUrl } = siteConfig.styling;
+                if(backgroundColor) document.documentElement.style.setProperty('--bg-color', backgroundColor);
+                if(textColor) document.documentElement.style.setProperty('--text-color', textColor);
+                if(accentColor) document.documentElement.style.setProperty('--accent-color', accentColor);
+                if (backgroundImageUrl) {
+                    body.style.backgroundImage = `url(${backgroundImageUrl})`;
+                } else {
+                    body.style.backgroundImage = 'none';
+                }
+
+                const postsContent = await getFileFromApi(owner, repo, getPath('posts.json'));
+                allPosts = JSON.parse(postsContent);
+
+                window.addEventListener('hashchange', handleRoute);
+                handleRoute(); 
+
             } catch (error) {
                 blogTitleEl.textContent = '博客加载失败';
-                postsContainer.innerHTML = `<p>${error.message}。</p>`;
+                postsListView.innerHTML = `<p>${error.message}。</p>`;
             }
         });
     </script>
