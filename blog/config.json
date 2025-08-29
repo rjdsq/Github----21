@@ -1,0 +1,12 @@
+{
+  "site": {
+    "title": "rjdsq的博客",
+    "description": "由单个仓库驱动的博客"
+  },
+  "styling": {
+    "backgroundColor": "#ffffff",
+    "textColor": "#333333",
+    "accentColor": "#007bff",
+    "backgroundImageUrl": ""
+  }
+}
