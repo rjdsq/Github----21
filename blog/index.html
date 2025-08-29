@@ -11,11 +11,13 @@
 <body>
     <div class="container">
         <header id="site-header" class="site-header">
-            <h1 id="blog-title" class="site-title"></h1>
-            <p id="blog-description" class="site-description"></p>
+            <h1 id="blog-title"></h1>
+            <p id="blog-description"></p>
         </header>
         <main>
-            <div id="posts-list-view"></div>
+            <div id="posts-list-view">
+                <p>正在加载文章...</p>
+            </div>
             <div id="post-detail-view"></div>
         </main>
         <footer class="site-footer">
@@ -30,7 +32,6 @@
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const converter = new showdown.Converter({ extensions: ['github'] });
             const body = document.body;
             const siteHeader = document.getElementById('site-header');
             const blogTitleEl = document.getElementById('blog-title');
@@ -40,6 +41,7 @@
 
             let allPosts = [];
             let siteConfig = {};
+            let converter;
 
             const getFileFromApi = async (owner, repo, path) => {
                 const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
@@ -142,6 +144,11 @@
             };
 
             try {
+                if (typeof showdown === 'undefined') {
+                    throw new Error("核心转换库(showdown.js)加载失败，请检查网络连接或广告拦截插件。");
+                }
+                converter = new showdown.Converter({ extensions: ['github'] });
+
                 const owner = window.location.hostname.split('.')[0];
                 const repo = `${owner}.github.io`;
                 const basePath = window.location.pathname.split('/').filter(p => p && p.toLowerCase() !== 'index.html').join('/');
