@@ -83,6 +83,18 @@
     </div>
 
     <script>
+        const utf8_to_b64 = (str) => {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+        };
+
+        const b64_to_utf8 = (str) => {
+            try {
+                return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+            } catch (e) {
+                return atob(str); 
+            }
+        };
+
         const GitHubAPI = {
             BASE_URL: 'https://api.github.com',
             async request(token, endpoint, options = {}) {
@@ -101,7 +113,7 @@
                 try {
                     const result = await this.request(token, `/repos/${owner}/${repo}/contents/${path}`);
                     if (!result || typeof result.content !== 'string') return null;
-                    return { content: atob(result.content), sha: result.sha };
+                    return { content: b64_to_utf8(result.content), sha: result.sha };
                 } catch (error) {
                     if (error.message.toLowerCase().includes('not found')) return null;
                     throw error;
@@ -109,11 +121,11 @@
             },
             createFile: (token, owner, repo, path, content, message, isBinary = false) => GitHubAPI.request(token, `/repos/${owner}/${repo}/contents/${path}`, {
                 method: 'PUT',
-                body: JSON.stringify({ message, content: isBinary ? content : btoa(unescape(encodeURIComponent(content))) }),
+                body: JSON.stringify({ message, content: isBinary ? content : utf8_to_b64(content) }),
             }),
             updateFile: (token, owner, repo, path, content, sha, message) => GitHubAPI.request(token, `/repos/${owner}/${repo}/contents/${path}`, {
                 method: 'PUT',
-                body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(content))), sha }),
+                body: JSON.stringify({ message, content: utf8_to_b64(content), sha }),
             }),
         };
 
@@ -156,7 +168,7 @@
                     const configPath = getPath('config.json');
                     let configData = await GitHubAPI.getFile(token, owner, repo, configPath);
 
-                    if (!configData || !configData.content) { 
+                    if (!configData || !configData.content) {
                         messageEl.textContent = '未检测到配置，正在为您激活系统...';
                         const initialConfig = {
                             site: { title: `${user.login}的博客`, description: "由单个仓库驱动的博客" },
@@ -276,7 +288,7 @@
             
             const saveSettings = async () => {
                 setButtonsDisabled(true);
-                const newConfig = { ...config };
+                const newConfig = JSON.parse(JSON.stringify(config));
                 newConfig.site.title = document.getElementById('setting-title').value.trim();
                 newConfig.site.description = document.getElementById('setting-description').value.trim();
                 newConfig.styling.backgroundColor = document.getElementById('setting-bg-color').value;
