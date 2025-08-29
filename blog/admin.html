@@ -100,7 +100,7 @@
             async getFile(token, owner, repo, path) {
                 try {
                     const result = await this.request(token, `/repos/${owner}/${repo}/contents/${path}`);
-                    if (!result) return null;
+                    if (!result || typeof result.content !== 'string') return null;
                     return { content: atob(result.content), sha: result.sha };
                 } catch (error) {
                     if (error.message.toLowerCase().includes('not found')) return null;
@@ -151,28 +151,23 @@
                     const user = await GitHubAPI.getUser(token);
                     owner = user.login;
                     repo = `${owner}.github.io`;
-                    const pathSegments = window.location.pathname.split('/').filter(p => p && p !== 'admin.html');
-                    basePath = pathSegments.join('/');
+                    basePath = window.location.pathname.split('/').filter(p => p && p !== 'admin.html').join('/');
 
                     const configPath = getPath('config.json');
-                    const configData = await GitHubAPI.getFile(token, owner, repo, configPath);
+                    let configData = await GitHubAPI.getFile(token, owner, repo, configPath);
 
-                    if (configData) {
-                        const postsPath = getPath('posts.json');
-                        const postsData = await GitHubAPI.getFile(token, owner, repo, postsPath);
-                        posts = JSON.parse(postsData.content);
-                        postsSha = postsData.sha;
-                        config = JSON.parse(configData.content);
-                        configSha = configData.sha;
-                    } else {
+                    if (!configData || !configData.content) { 
                         messageEl.textContent = '未检测到配置，正在为您激活系统...';
                         const initialConfig = {
                             site: { title: `${user.login}的博客`, description: "由单个仓库驱动的博客" },
                             styling: { backgroundColor: "#ffffff", textColor: "#333333", accentColor: "#007bff", backgroundImageUrl: "" }
                         };
+                        const configContent = JSON.stringify(initialConfig, null, 2);
+                        const postsContent = '[]';
+                        
                         const [configRes, postsRes] = await Promise.all([
-                             GitHubAPI.createFile(token, owner, repo, getPath('config.json'), JSON.stringify(initialConfig, null, 2), 'feat: initialize config'),
-                             GitHubAPI.createFile(token, owner, repo, getPath('posts.json'), '[]', 'feat: initialize posts'),
+                             GitHubAPI.createFile(token, owner, repo, getPath('config.json'), configContent, 'feat: initialize config'),
+                             GitHubAPI.createFile(token, owner, repo, getPath('posts.json'), postsContent, 'feat: initialize posts'),
                              GitHubAPI.createFile(token, owner, repo, getPath('images/.gitkeep'), '', 'feat: initialize images directory')
                         ]);
                         config = initialConfig;
@@ -180,6 +175,13 @@
                         posts = [];
                         postsSha = postsRes.content.sha;
                         alert('系统激活成功！');
+                    } else {
+                        const postsPath = getPath('posts.json');
+                        const postsData = await GitHubAPI.getFile(token, owner, repo, postsPath);
+                        config = JSON.parse(configData.content);
+                        configSha = configData.sha;
+                        posts = postsData && postsData.content ? JSON.parse(postsData.content) : [];
+                        postsSha = postsData ? postsData.sha : null;
                     }
                     
                     initialView.style.display = 'none';
