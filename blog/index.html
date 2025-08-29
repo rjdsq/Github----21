@@ -5,46 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>正在加载...</title>
     <style>
-        :root {
-            --primary-color: #333;
-            --secondary-color: #777;
-            --bg-color: #fff;
-            --accent-color: #007bff;
-            --border-color: #eee;
-            --danger-color: #dc3545;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color, #333);
-            background-color: var(--bg-color, #fff);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        header, .admin-header {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        h1, h2, h3 { color: var(--primary-color); }
-        a { color: var(--accent-color, #007bff); }
-        .post { margin-bottom: 40px; }
-        .post-title a { color: var(--primary-color); text-decoration: none; }
-        .post-content img { max-width: 100%; height: auto; border-radius: 5px; }
+        :root{--primary-color:#333;--secondary-color:#777;--bg-color:#fff;--accent-color:#007bff;--border-color:#eee;--danger-color:#dc3545}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6;color:var(--text-color,#333);background-color:var(--bg-color,#fff);background-size:cover;background-position:center;background-attachment:fixed;margin:0;padding:20px;transition:background-color .3s,color .3s}.container{max-width:800px;margin:0 auto;padding:20px;background-color:rgba(255,255,255,.95);border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,.1)}header, .admin-header{border-bottom:2px solid var(--border-color);padding-bottom:20px;margin-bottom:30px}h1,h2,h3{color:var(--primary-color)}a{color:var(--accent-color,#007bff)}.post{margin-bottom:40px}.post-title a{color:var(--primary-color);text-decoration:none}.post-content img{max-width:100%;height:auto;border-radius:5px}footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border-color);color:var(--secondary-color)}
     </style>
-    <style id="dynamic-styles"></style>
 </head>
 <body>
     <div class="container">
@@ -69,10 +31,27 @@
             const blogDescriptionEl = document.getElementById('blog-description');
             const postsContainer = document.getElementById('posts-container');
 
+            const getFileFromApi = async (owner, repo, path) => {
+                const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`无法从API获取文件: ${path}`);
+                }
+                const data = await response.json();
+                if (typeof data.content !== 'string') {
+                     throw new Error(`API返回的文件内容格式不正确: ${path}`);
+                }
+                return atob(data.content);
+            };
+
             try {
-                const configRes = await fetch('config.json?t=' + new Date().getTime());
-                if (!configRes.ok) throw new Error('博客未初始化');
-                const config = await configRes.json();
+                const owner = window.location.hostname.split('.')[0];
+                const repo = `${owner}.github.io`;
+                const basePath = window.location.pathname.split('/').filter(p => p && p !== 'index.html').join('/');
+                const getPath = (fileName) => basePath ? `${basePath}/${fileName}` : fileName;
+
+                const configContent = await getFileFromApi(owner, repo, getPath('config.json'));
+                const config = JSON.parse(configContent);
 
                 document.title = config.site.title;
                 blogTitleEl.textContent = config.site.title;
@@ -89,9 +68,8 @@
                     body.style.backgroundImage = 'none';
                 }
 
-                const postsRes = await fetch('posts.json?t=' + new Date().getTime());
-                if (!postsRes.ok) throw new Error('无法加载文章');
-                const posts = await postsRes.json();
+                const postsContent = await getFileFromApi(owner, repo, getPath('posts.json'));
+                const posts = JSON.parse(postsContent);
 
                 postsContainer.innerHTML = '';
                 if (posts.length > 0) {
@@ -111,7 +89,7 @@
                 }
             } catch (error) {
                 blogTitleEl.textContent = '错误';
-                postsContainer.innerHTML = `<p>${error.message}。请访问管理后台进行激活。</p>`;
+                postsContainer.innerHTML = `<p>${error.message}。请确认后台已激活，并等待几分钟让GitHub Pages更新。</p>`;
             }
         });
     </script>
