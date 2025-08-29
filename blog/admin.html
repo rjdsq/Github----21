@@ -28,12 +28,16 @@
     </div>
 
     <div id="admin-panel" class="container" style="display: none;">
-        <header>
+        <header class="admin-header">
             <h1>管理后台</h1>
-            <a href="index.html" target="_blank">查看博客 &rarr;</a>
+            <nav>
+                <button id="nav-posts" class="nav-btn active">文章管理</button>
+                <button id="nav-settings" class="nav-btn">网站设置</button>
+                <a href="index.html" target="_blank">查看博客 &rarr;</a>
+            </nav>
         </header>
 
-        <main>
+        <main id="posts-view">
             <div id="post-list-container">
                 <h2>文章列表 <button id="new-post-btn">+</button></h2>
                 <ul id="post-list"></ul>
@@ -43,9 +47,9 @@
                 <h3>文章编辑器</h3>
                 <input type="hidden" id="post-id">
                 <input type="text" id="post-title" placeholder="文章标题">
-                <textarea id="post-content" rows="20" placeholder="在这里写下你的内容 (支持Markdown)"></textarea>
+                <textarea id="post-content" rows="15" placeholder="在这里写下你的内容 (支持Markdown)"></textarea>
                 <input type="text" id="post-tags" placeholder="标签, 用英文逗号分隔">
-                <label for="image-upload">上传图片:</label>
+                <label for="image-upload">上传图片到文章:</label>
                 <input type="file" id="image-upload" accept="image/*">
                 <div class="editor-buttons">
                     <button id="save-post-btn">保存文章</button>
@@ -53,6 +57,37 @@
                     <button id="delete-post-btn" class="delete-btn" style="display:none;">删除文章</button>
                 </div>
             </div>
+        </main>
+
+        <main id="settings-view" style="display: none;">
+            <h2>网站设置</h2>
+            <div class="setting-item">
+                <label for="setting-title">网站标题</label>
+                <input type="text" id="setting-title">
+            </div>
+            <div class="setting-item">
+                <label for="setting-description">网站描述</label>
+                <input type="text" id="setting-description">
+            </div>
+            <div class="setting-item">
+                <label for="setting-bg-color">背景颜色</label>
+                <input type="color" id="setting-bg-color">
+            </div>
+            <div class="setting-item">
+                <label for="setting-text-color">文字颜色</label>
+                <input type="color" id="setting-text-color">
+            </div>
+            <div class="setting-item">
+                <label for="setting-accent-color">链接/强调色</label>
+                <input type="color" id="setting-accent-color">
+            </div>
+            <div class="setting-item">
+                <label for="setting-bg-image">上传网站背景图</label>
+                <input type="file" id="setting-bg-image" accept="image/*">
+                <input type="text" id="setting-bg-image-url" placeholder="背景图URL将显示在这里" readonly>
+                 <button id="clear-bg-image-btn">清除背景图</button>
+            </div>
+             <button id="save-settings-btn">保存网站设置</button>
         </main>
     </div>
 
