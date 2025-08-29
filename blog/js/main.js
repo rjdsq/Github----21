@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const converter = new showdown.Converter();
-    const dynamicStyles = document.getElementById('dynamic-styles');
     const body = document.body;
     const blogTitleEl = document.getElementById('blog-title');
     const blogDescriptionEl = document.getElementById('blog-description');
