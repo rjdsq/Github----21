@@ -3,363 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>博客管理后台</title>
+    <title>正在加载...</title>
     <style>
-        :root{--bg-color:#f4f6f8;--sidebar-bg:#2c3e50;--sidebar-text:#ecf0f1;--sidebar-hover-bg:#34495e;--sidebar-active-bg:#1abc9c;--content-bg:#fff;--text-color:#34495e;--accent-color:#3498db;--border-color:#e0e0e0;--danger-color:#e74c3c;--success-color:#2ecc71;--shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;margin:0;background-color:var(--bg-color);color:var(--text-color);font-size:14px}a{text-decoration:none}input,textarea,button{font-family:inherit}#login-wrapper{display:flex;justify-content:center;align-items:center;height:100vh}.login-box{width:90%;max-width:360px;padding:40px;background:var(--content-bg);box-shadow:var(--shadow);border-radius:4px;text-align:center}.login-box h1{margin-bottom:20px}.login-box p{margin-bottom:20px;color:#7f8c8d}.login-box input{width:100%;padding:10px;margin-bottom:20px;border:1px solid var(--border-color);border-radius:4px;box-sizing:border-box}.login-box button{width:100%;padding:10px;background:var(--accent-color);color:#fff;border:0;border-radius:4px;cursor:pointer;transition:background .2s}.login-box button:hover{background:#2980b9}.admin-wrapper{display:flex;min-height:100vh}#admin-sidebar{position:fixed;top:0;left:0;height:100%;width:220px;background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;flex-shrink:0;transform:translateX(-100%);transition:transform .3s ease-in-out;z-index:1000}.admin-wrapper.sidebar-visible #admin-sidebar{transform:translateX(0)}.admin-wrapper.sidebar-visible #mobile-overlay{display:block}#admin-sidebar .logo{padding:20px;font-size:1.5rem;font-weight:700;text-align:center;background-color:rgba(0,0,0,.2)}#admin-sidebar .nav{flex-grow:1;list-style:none;margin:0;padding:20px 0}#admin-sidebar .nav a{display:block;padding:15px 20px;color:var(--sidebar-text);transition:background .2s}#admin-sidebar .nav a:hover{background:var(--sidebar-hover-bg)}#admin-sidebar .nav a.active{background:var(--sidebar-active-bg)}#admin-content{width:100%;padding:20px}#mobile-header{display:flex;justify-content:space-between;align-items:center;background:var(--content-bg);padding:10px 20px;box-shadow:var(--shadow);margin-bottom:20px}.mobile-menu-btn{font-size:1.5rem;background:0 0;border:0;cursor:pointer;color:var(--text-color)}.mobile-logo{font-size:1.2rem;font-weight:700}#mobile-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999;display:none}@media(min-width: 768px){#admin-sidebar{position:static;transform:translateX(0)}#admin-content{width:calc(100% - 220px);padding:30px}#mobile-header{display:none}}#admin-content h2{border-bottom:1px solid var(--border-color);padding-bottom:10px;margin-top:0}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.admin-table-wrapper{overflow-x:auto}.admin-table{width:100%;border-collapse:collapse;background:var(--content-bg);box-shadow:var(--shadow)}.admin-table th,.admin-table td{padding:15px;text-align:left;border-bottom:1px solid var(--border-color);white-space:nowrap}.admin-table th{background:#f9fafb}.admin-table .actions a{margin-right:10px;color:var(--accent-color)}.admin-table .actions .delete{color:var(--danger-color)}button,a.btn{display:inline-block;padding:8px 16px;border:none;border-radius:4px;background:var(--accent-color);color:#fff;cursor:pointer;transition:background .2s}button:hover,a.btn:hover{opacity:.9}.btn-success{background:var(--success-color)}.btn-danger{background:var(--danger-color)}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:700}.form-group input[type=text],.form-group input[type=password],.form-group textarea{width:100%;padding:10px;border:1px solid var(--border-color);border-radius:4px;box-sizing:border-box}.form-group textarea{resize:vertical;min-height:200px}.editor-container{display:none}
+        :root{--bg-color:#f8f9fa;--text-color:#212529;--heading-color:#343a40;--accent-color:#0d6efd;--link-hover-color:#0a58ca;--border-color:#dee2e6;--card-bg:#fff;--card-shadow:0 4px 8px rgba(0,0,0,.05);--meta-color:#6c757d}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.7;color:var(--text-color);background-color:var(--bg-color);margin:0;padding:0;transition:background-color .3s,color .3s}a{color:var(--accent-color);text-decoration:none;transition:color .2s}a:hover{color:var(--link-hover-color)}.container{max-width:840px;margin:0 auto;padding:1rem}.site-header{padding:2rem 0;text-align:center;border-bottom:1px solid var(--border-color);margin-bottom:2rem}.site-title{font-size:2.2rem;margin:0;color:var(--heading-color)}.site-description{font-size:1rem;margin:10px 0 0;color:var(--meta-color)}.post-excerpt{background-color:var(--card-bg);margin-bottom:2rem;padding:1.5rem;border-radius:8px;box-shadow:var(--card-shadow);transition:box-shadow .2s}.post-excerpt:hover{box-shadow:0 8px 16px rgba(0,0,0,.08)}.post-title{margin:0 0 10px}.post-title a{font-size:1.5rem;color:var(--heading-color);text-decoration:none}.post-meta{font-size:.85rem;color:var(--meta-color);margin-bottom:1rem}.post-summary{color:#495057;margin-bottom:1.5rem;word-wrap:break-word}.post-summary p:last-of-type{margin-bottom:0}.post-images-preview{display:grid;grid-gap:10px;margin-bottom:1.5rem;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}.post-images-preview img{width:100%;height:120px;object-fit:cover;border-radius:5px}.read-more-btn{display:inline-block;padding:8px 16px;background-color:var(--accent-color);color:#fff;border-radius:5px;font-size:.9rem;transition:background-color .2s}.read-more-btn:hover{background-color:var(--link-hover-color)}.site-footer{text-align:center;padding:2rem 0;margin-top:1rem;border-top:1px solid var(--border-color);color:var(--meta-color);font-size:.9rem}#post-detail-view{display:none}.post-full-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-color)}.post-full-title{font-size:2rem;color:var(--heading-color);margin:0 0 1rem}.post-full-meta{font-size:.9rem;color:var(--meta-color)}.post-full-content{font-size:1.05rem;word-wrap:break-word}.post-full-content h2{font-size:1.8rem;margin-top:2.5rem}.post-full-content h3{font-size:1.5rem;margin-top:2rem}.post-full-content p{margin-bottom:1.5rem}.post-full-content img{max-width:100%;height:auto;border-radius:8px;margin:1.5rem 0}.post-full-content blockquote{margin:1.5rem 0;padding:0 1.5rem;border-left:4px solid var(--accent-color);color:var(--meta-color)}.post-full-content pre{background-color:#282c34;color:#abb2bf;padding:1rem;border-radius:8px;overflow-x:auto;font-family:Menlo,Monaco,Consolas,"Courier New",monospace}.back-to-home{display:inline-block;margin-top:2.5rem;font-size:1rem}@media(min-width: 768px){.container{padding:20px}.site-header{padding:40px 0;margin-bottom:40px}.site-title{font-size:2.5rem}.site-description{font-size:1.1rem}.post-excerpt{padding:30px}.post-title a{font-size:1.8rem}.post-images-preview{grid-template-columns:repeat(3,1fr)}.post-images-preview img{height:150px}.post-full-title{font-size:2.8rem}}
     </style>
 </head>
 <body>
-
-    <div id="login-wrapper">
-        <div id="login-box" class="login-box">
-            <h1>博客管理</h1>
-            <p>请输入您的GitHub Personal Access Token开始。</p>
-            <input type="password" id="token-input" placeholder="输入具备 repo 权限的Token">
-            <button id="start-btn">开始</button>
-            <p id="initial-message" style="color:red; margin-top: 15px;"></p>
-        </div>
-    </div>
-
-    <div id="admin-wrapper" class="admin-wrapper" style="display: none;">
-        <div id="mobile-overlay"></div>
-        <aside id="admin-sidebar">
-            <div class="logo">My Blog</div>
-            <ul class="nav">
-                <li><a href="#" id="nav-posts" class="active">管理文章</a></li>
-                <li><a href="#" id="nav-settings">网站设置</a></li>
-                <li><a href="index.html" target="_blank">查看站点</a></li>
-            </ul>
-        </aside>
-
-        <main id="admin-content">
-            <header id="mobile-header">
-                <button id="mobile-menu-btn">&#9776;</button>
-                <div class="mobile-logo">管理后台</div>
-            </header>
-
-            <div id="posts-view">
-                <div class="page-header">
-                    <h2>文章管理</h2>
-                    <button id="new-post-btn">撰写新文章</button>
-                </div>
-                <div class="admin-table-wrapper">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>标题</th>
-                                <th>发布日期</th>
-                                <th class="actions">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="post-list"></tbody>
-                    </table>
-                </div>
+    <div class="container">
+        <header id="site-header" class="site-header">
+            <h1 id="blog-title"></h1>
+            <p id="blog-description" class="site-description"></p>
+        </header>
+        <main>
+            <div id="posts-list-view">
+                <p>正在加载文章...</p>
             </div>
-            
-            <div id="editor-container">
-                <h2 id="editor-title">撰写新文章</h2>
-                 <input type="hidden" id="post-id">
-                <div class="form-group">
-                    <label for="post-title">标题</label>
-                    <input type="text" id="post-title">
-                </div>
-                <div class="form-group">
-                    <label for="post-content">内容 (请直接编写HTML, 使用 `&lt;!--more--&gt;` 创建摘要)</label>
-                    <textarea id="post-content" rows="15"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="post-tags">标签 (用英文逗号分隔)</label>
-                    <input type="text" id="post-tags">
-                </div>
-                <div class="form-group">
-                    <label for="image-upload">上传图片到文章</label>
-                    <input type="file" id="image-upload" accept="image/*">
-                </div>
-                <button id="save-post-btn" class="btn-success">发布文章</button>
-                <button id="cancel-edit-btn">取消</button>
-                <button id="delete-post-btn" class="btn-danger" style="display:none;">删除文章</button>
-            </div>
-
-            <div id="settings-view" style="display: none;">
-                <div class="page-header">
-                    <h2>网站设置</h2>
-                </div>
-                <div class="form-group">
-                    <label for="setting-title">网站标题</label>
-                    <input type="text" id="setting-title">
-                </div>
-                <div class="form-group">
-                    <label for="setting-description">网站描述</label>
-                    <input type="text" id="setting-description">
-                </div>
-                <div class="form-group">
-                    <label for="setting-bg-color">背景颜色</label>
-                    <input type="color" id="setting-bg-color">
-                </div>
-                <div class="form-group">
-                    <label for="setting-text-color">文字颜色</label>
-                    <input type="color" id="setting-text-color">
-                </div>
-                <div class="form-group">
-                    <label for="setting-accent-color">链接/强调色</label>
-                    <input type="color" id="setting-accent-color">
-                </div>
-                <div class="form-group">
-                    <label for="setting-bg-image">上传网站背景图</label>
-                    <input type="file" id="setting-bg-image" accept="image/*">
-                    <input type="text" id="setting-bg-image-url" placeholder="背景图URL将显示在这里" readonly>
-                    <button id="clear-bg-image-btn" style="margin-top: 5px;">清除背景图</button>
-                </div>
-                <button id="save-settings-btn" class="btn-success">保存设置</button>
-            </div>
+            <div id="post-detail-view"></div>
         </main>
+        <footer class="site-footer">
+            <p>Powered by GitHub</p>
+        </footer>
     </div>
 
     <script>
-        const utf8_to_b64 = (str) => btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
         const b64_to_utf8 = (str) => {
             try { return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')); } catch (e) { return atob(str); }
         };
 
-        const GitHubAPI = {
-            BASE_URL: 'https://api.github.com',
-            async request(token, endpoint, options = {}) {
-                const url = `${this.BASE_URL}${endpoint}`;
-                const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', ...options.headers };
-                const response = await fetch(url, { ...options, headers });
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ message: `HTTP Error: ${response.statusText}` }));
-                    throw new Error(errorData.message || 'GitHub API request failed');
-                }
-                if (response.status === 204 || response.headers.get("Content-Length") === "0") return null;
-                return response.json();
-            },
-            getUser: (token) => GitHubAPI.request(token, '/user'),
-            async getFile(token, owner, repo, path) {
-                try {
-                    const result = await this.request(token, `/repos/${owner}/${repo}/contents/${path}`);
-                    if (!result || typeof result.content !== 'string') return null;
-                    return { content: b64_to_utf8(result.content), sha: result.sha };
-                } catch (error) {
-                    if (error.message.toLowerCase().includes('not found')) return null;
-                    throw error;
-                }
-            },
-            createFile: (token, owner, repo, path, content, message, isBinary = false) => GitHubAPI.request(token, `/repos/${owner}/${repo}/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message, content: isBinary ? content : utf8_to_b64(content) }) }),
-            updateFile: (token, owner, repo, path, content, sha, message) => GitHubAPI.request(token, `/repos/${owner}/${repo}/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message, content: utf8_to_b64(content), sha }) }),
-        };
+        document.addEventListener('DOMContentLoaded', async () => {
+            const body = document.body;
+            const siteHeader = document.getElementById('site-header');
+            const blogTitleEl = document.getElementById('blog-title');
+            const blogDescriptionEl = document.getElementById('blog-description');
+            const postsListView = document.getElementById('posts-list-view');
+            const postDetailView = document.getElementById('post-detail-view');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginWrapper = document.getElementById('login-wrapper');
-            const adminWrapper = document.getElementById('admin-wrapper');
-            const mainViews = { posts: document.getElementById('posts-view'), settings: document.getElementById('settings-view') };
-            const navButtons = { posts: document.getElementById('nav-posts'), settings: document.getElementById('nav-settings') };
-            const editorContainer = document.getElementById('editor-container');
-            const postListBody = document.getElementById('post-list');
-            const messageEl = document.getElementById('initial-message');
+            let allPosts = [];
+            let siteConfig = {};
 
-            let token = null, owner = '', repo = '', basePath = '';
-            let posts = [], postsSha = '';
-            let config = {}, configSha = '';
-            
-            const getPath = (fileName) => basePath ? `${basePath}/${fileName}` : fileName;
-
-            const showMainView = (view) => {
-                Object.values(mainViews).forEach(v => v.style.display = 'none');
-                editorContainer.style.display = 'none';
-                Object.values(navButtons).forEach(b => b.classList.remove('active'));
-                Object.values(navButtons).forEach(b => b.parentElement.classList.remove('active'));
-                mainViews[view].style.display = 'block';
-                navButtons[view].classList.add('active');
-                navButtons[view].parentElement.classList.add('active');
-                document.querySelector('.admin-wrapper').classList.remove('sidebar-visible');
+            const getFileFromApi = async (owner, repo, path) => {
+                const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+                const response = await fetch(url, { cache: "no-store" });
+                if (!response.ok) throw new Error(`无法从API获取文件: ${path}`);
+                const data = await response.json();
+                if (typeof data.content !== 'string') throw new Error(`API返回的文件内容格式不正确: ${path}`);
+                return b64_to_utf8(data.content);
             };
-            const setButtonsDisabled = (disabled) => document.querySelectorAll('button').forEach(b => b.disabled = disabled);
 
-            const start = async () => {
-                const userToken = document.getElementById('token-input').value;
-                if (!userToken) { messageEl.textContent = 'Token 不能为空。'; return; }
-                token = userToken;
-                setButtonsDisabled(true);
-                messageEl.textContent = '正在验证并加载...';
-
-                try {
-                    const user = await GitHubAPI.getUser(token);
-                    owner = user.login;
-                    repo = `${owner}.github.io`;
-                    basePath = window.location.pathname.split('/').filter(p => p && p.toLowerCase() !== 'admin.html').join('/');
-
-                    let configData = await GitHubAPI.getFile(token, owner, repo, getPath('config.json'));
-
-                    if (!configData || !configData.content) {
-                        messageEl.textContent = '未检测到配置，正在为您激活系统...';
-                        const initialConfig = { site: { title: `${user.login}的博客`, description: "由单个仓库驱动的博客" }, styling: { backgroundColor: "#f8f9fa", textColor: "#212529", accentColor: "#0d6efd", backgroundImageUrl: "" } };
-                        const [configRes, postsRes] = await Promise.all([
-                             GitHubAPI.createFile(token, owner, repo, getPath('config.json'), JSON.stringify(initialConfig, null, 2), 'feat: initialize config'),
-                             GitHubAPI.createFile(token, owner, repo, getPath('posts.json'), '[]', 'feat: initialize posts'),
-                             GitHubAPI.createFile(token, owner, repo, getPath('images/.gitkeep'), '', 'feat: initialize images directory')
-                        ]);
-                        config = initialConfig; configSha = configRes.content.sha;
-                        posts = []; postsSha = postsRes.content.sha;
-                        alert('系统激活成功！');
-                    } else {
-                        const postsData = await GitHubAPI.getFile(token, owner, repo, getPath('posts.json'));
-                        config = JSON.parse(configData.content); configSha = configData.sha;
-                        posts = postsData && postsData.content ? JSON.parse(postsData.content) : [];
-                        postsSha = postsData ? postsData.sha : null;
-                    }
-                    
-                    loginWrapper.style.display = 'none';
-                    adminWrapper.style.display = 'flex';
-                    showMainView('posts');
-                    renderPostList();
-                    populateSettings();
-
-                } catch (error) {
-                    messageEl.textContent = `操作失败: ${error.message}`;
-                    token = null;
-                } finally {
-                    setButtonsDisabled(false);
-                }
-            };
-            
             const renderPostList = () => {
-                postListBody.innerHTML = '';
-                [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(post => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${post.title}</td>
-                        <td>${new Date(post.createdAt).toLocaleDateString()}</td>
-                        <td class="actions">
-                            <a href="#" class="edit" data-id="${post.id}">编辑</a>
-                            <a href="#" class="delete" data-id="${post.id}">删除</a>
-                        </td>
-                    `;
-                    postListBody.appendChild(tr);
-                });
-            };
+                postsListView.innerHTML = '';
+                postDetailView.style.display = 'none';
+                postsListView.style.display = 'block';
+                siteHeader.style.display = 'block';
 
-            const openEditor = (postId = null) => {
-                showMainView('posts');
-                mainViews.posts.style.display = 'none';
-                editorContainer.style.display = 'block';
-                const post = posts.find(p => p.id === postId);
-                document.getElementById('editor-title').textContent = post ? '编辑文章' : '撰写新文章';
-                document.getElementById('save-post-btn').textContent = post ? '更新文章' : '发布文章';
-                document.getElementById('post-id').value = post?.id || '';
-                document.getElementById('post-title').value = post?.title || '';
-                document.getElementById('post-content').value = post?.content || '';
-                document.getElementById('post-tags').value = post?.tags?.join(', ') || '';
-                document.getElementById('delete-post-btn').style.display = post ? 'inline-block' : 'none';
-            };
-
-            const savePost = async () => {
-                const id = document.getElementById('post-id').value;
-                const title = document.getElementById('post-title').value.trim();
-                const content = document.getElementById('post-content').value.trim();
-                if (!title || !content) return alert('标题和内容不能为空！');
-                
-                setButtonsDisabled(true);
-                const tags = document.getElementById('post-tags').value.split(',').map(t => t.trim()).filter(Boolean);
-                const postIndex = posts.findIndex(p => p.id === id);
-
-                if (postIndex > -1) {
-                    Object.assign(posts[postIndex], { title, content, tags, updatedAt: new Date().toISOString() });
-                } else {
-                    posts.push({ id: `post_${Date.now()}`, title, content, tags, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
-                }
-                
-                try {
-                    const res = await GitHubAPI.updateFile(token, owner, repo, getPath('posts.json'), JSON.stringify(posts, null, 2), postsSha, `docs: ${id ? 'update' : 'create'} post`);
-                    postsSha = res.content.sha;
-                    alert('保存成功！');
-                    renderPostList();
-                    showMainView('posts');
-                } catch (error) { alert(`保存失败: ${error.message}`);
-                } finally { setButtonsDisabled(false); }
-            };
-
-            const deletePost = async (postId) => {
-                if (!postId || !confirm('确定要删除这篇文章吗？')) return;
-                setButtonsDisabled(true);
-                posts = posts.filter(p => p.id !== postId);
-                try {
-                    const res = await GitHubAPI.updateFile(token, owner, repo, getPath('posts.json'), JSON.stringify(posts, null, 2), postsSha, 'docs: delete post');
-                    postsSha = res.content.sha;
-                    alert('删除成功！');
-                    renderPostList();
-                } catch (error) { alert(`删除失败: ${error.message}`);
-                } finally { setButtonsDisabled(false); }
-            };
-            
-            const populateSettings = () => {
-                document.getElementById('setting-title').value = config.site.title;
-                document.getElementById('setting-description').value = config.site.description;
-                document.getElementById('setting-bg-color').value = config.styling.backgroundColor;
-                document.getElementById('setting-text-color').value = config.styling.textColor;
-                document.getElementById('setting-accent-color').value = config.styling.accentColor;
-                document.getElementById('setting-bg-image-url').value = config.styling.backgroundImageUrl;
-            };
-            
-            const saveSettings = async () => {
-                setButtonsDisabled(true);
-                const newConfig = JSON.parse(JSON.stringify(config));
-                newConfig.site = { title: document.getElementById('setting-title').value.trim(), description: document.getElementById('setting-description').value.trim() };
-                newConfig.styling = {
-                    backgroundColor: document.getElementById('setting-bg-color').value,
-                    textColor: document.getElementById('setting-text-color').value,
-                    accentColor: document.getElementById('setting-accent-color').value,
-                    backgroundImageUrl: document.getElementById('setting-bg-image-url').value,
-                };
-                try {
-                    const res = await GitHubAPI.updateFile(token, owner, repo, getPath('config.json'), JSON.stringify(newConfig, null, 2), configSha, 'docs: update config');
-                    configSha = res.content.sha;
-                    config = newConfig;
-                    alert('网站设置已保存！');
-                } catch (error) { alert(`设置保存失败: ${error.message}`);
-                } finally { setButtonsDisabled(false); }
-            };
-            
-            const uploadFile = async (file, isBgImage = false) => {
-                if (!file) return;
-                setButtonsDisabled(true);
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    const content = e.target.result.split(',')[1];
-                    const path = getPath(`images/${new Date().toISOString().replace(/[-:.]/g, '')}_${file.name}`);
-                    try {
-                        const result = await GitHubAPI.createFile(token, owner, repo, path, content, 'feat: upload image', true);
-                        const url = result.content.download_url;
-                        if (isBgImage) {
-                            document.getElementById('setting-bg-image-url').value = url;
+                if (allPosts.length > 0) {
+                    allPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    allPosts.forEach(post => {
+                        const postEl = document.createElement('article');
+                        postEl.className = 'post-excerpt';
+                        
+                        let summary = '';
+                        const moreMarker = '<!--more-->';
+                        const content = post.content;
+                        const markerIndex = content.indexOf(moreMarker);
+                        if (markerIndex !== -1) {
+                            summary = content.substring(0, markerIndex);
                         } else {
-                            const htmlToInsert = `<img src="${url}" alt="${file.name}">`;
-                            const contentTextarea = document.getElementById('post-content');
-                            contentTextarea.value += `\n${htmlToInsert}\n`;
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            summary = tempDiv.textContent.substring(0, 150) + (tempDiv.textContent.length > 150 ? '...' : '');
                         }
-                    } catch (error) { alert(`图片上传失败: ${error.message}`);
-                    } finally { setButtonsDisabled(false); }
-                };
-                reader.readAsDataURL(file);
+                        
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+                        const images = Array.from(tempDiv.querySelectorAll('img')).map(img => img.src).slice(0, 3);
+                        let imagesHtml = '';
+                        if (images.length > 0) {
+                            imagesHtml += '<div class="post-images-preview">';
+                            images.forEach(imgUrl => { imagesHtml += `<img src="${imgUrl}" alt="Post image preview">`; });
+                            imagesHtml += '</div>';
+                        }
+                        
+                        postEl.innerHTML = `
+                            <header class="post-header">
+                                <h2 class="post-title"><a href="#/post/${post.id}">${post.title}</a></h2>
+                                <p class="post-meta">发布于 ${new Date(post.createdAt).toLocaleDateString()}</p>
+                            </header>
+                            <div class="post-summary">${summary}</div>
+                            ${imagesHtml}
+                            <a href="#/post/${post.id}" class="read-more-btn">阅读全文 &rarr;</a>
+                        `;
+                        postsListView.appendChild(postEl);
+                    });
+                } else {
+                    postsListView.innerHTML = '<p>暂无文章。开始您的第一篇创作吧！</p>';
+                }
+            };
+
+            const renderSinglePost = (postId) => {
+                const post = allPosts.find(p => p.id === postId);
+                postsListView.style.display = 'none';
+                postDetailView.style.display = 'block';
+                siteHeader.style.display = 'none';
+
+                if (post) {
+                    document.title = `${post.title} - ${siteConfig.site.title}`;
+                    postDetailView.innerHTML = `
+                        <article class="post-full">
+                            <header class="post-full-header">
+                                <h1 class="post-full-title">${post.title}</h1>
+                                <p class="post-full-meta">
+                                    发布于 ${new Date(post.createdAt).toLocaleDateString()}
+                                    ${post.tags && post.tags.length > 0 ? `| 标签: ${post.tags.join(', ')}` : ''}
+                                </p>
+                            </header>
+                            <section class="post-full-content">${post.content}</section>
+                            <a href="#" class="back-to-home">&larr; 返回首页</a>
+                        </article>
+                    `;
+                } else {
+                    document.title = `未找到文章 - ${siteConfig.site.title}`;
+                    postDetailView.innerHTML = `
+                        <article class="post-full">
+                            <h1 class="post-full-title">404 - 未找到文章</h1>
+                            <p>抱歉，您要查找的文章不存在。</p>
+                            <a href="#" class="back-to-home">&larr; 返回首页</a>
+                        </article>
+                    `;
+                }
             };
             
-            document.getElementById('start-btn').onclick = start;
-            navButtons.posts.onclick = () => showMainView('posts');
-            navButtons.settings.onclick = () => showMainView('settings');
-            document.getElementById('new-post-btn').onclick = () => openEditor();
-            document.getElementById('cancel-edit-btn').onclick = () => showMainView('posts');
-            document.getElementById('save-post-btn').onclick = savePost;
-            postListBody.addEventListener('click', (e) => {
-                if (e.target.classList.contains('edit')) { e.preventDefault(); openEditor(e.target.dataset.id); }
-                if (e.target.classList.contains('delete')) { e.preventDefault(); deletePost(e.target.dataset.id); }
-            });
-            document.getElementById('delete-post-btn').onclick = () => deletePost(document.getElementById('post-id').value);
-            document.getElementById('save-settings-btn').onclick = saveSettings;
-            document.getElementById('image-upload').onchange = (e) => uploadFile(e.target.files[0], false);
-            document.getElementById('setting-bg-image').onchange = (e) => uploadFile(e.target.files[0], true);
-            document.getElementById('clear-bg-image-btn').onclick = () => { document.getElementById('setting-bg-image-url').value = ''; };
-            document.getElementById('mobile-menu-btn').onclick = () => document.getElementById('admin-wrapper').classList.toggle('sidebar-visible');
-            document.getElementById('mobile-overlay').onclick = () => document.getElementById('admin-wrapper').classList.remove('sidebar-visible');
+            const handleRoute = () => {
+                const hash = window.location.hash;
+                if (hash.startsWith('#/post/')) {
+                    const postId = hash.substring(7);
+                    renderSinglePost(postId);
+                } else {
+                    renderPostList();
+                    document.title = siteConfig.site.title || '博客';
+                }
+                window.scrollTo(0, 0);
+            };
+
+            try {
+                const owner = window.location.hostname.split('.')[0];
+                const repo = `${owner}.github.io`;
+                const basePath = window.location.pathname.split('/').filter(p => p && p.toLowerCase() !== 'index.html').join('/');
+                const getPath = (fileName) => basePath ? `${basePath}/${fileName}` : fileName;
+
+                const configContent = await getFileFromApi(owner, repo, getPath('config.json'));
+                siteConfig = JSON.parse(configContent);
+
+                document.title = siteConfig.site.title;
+                blogTitleEl.textContent = siteConfig.site.title;
+                blogDescriptionEl.textContent = siteConfig.site.description;
+
+                const { backgroundColor, textColor, accentColor, backgroundImageUrl } = siteConfig.styling;
+                if(backgroundColor) document.documentElement.style.setProperty('--bg-color', backgroundColor);
+                if(textColor) document.documentElement.style.setProperty('--text-color', textColor);
+                if(accentColor) document.documentElement.style.setProperty('--accent-color', accentColor);
+                if (backgroundImageUrl) {
+                    body.style.backgroundImage = `url(${backgroundImageUrl})`;
+                } else {
+                    body.style.backgroundImage = 'none';
+                }
+
+                const postsContent = await getFileFromApi(owner, repo, getPath('posts.json'));
+                allPosts = JSON.parse(postsContent);
+
+                window.addEventListener('hashchange', handleRoute);
+                handleRoute(); 
+
+            } catch (error) {
+                blogTitleEl.textContent = '博客加载失败';
+                postsListView.innerHTML = `<p><b>错误:</b> ${error.message}。</p><p>请确认后台已激活,并已发布文章。</p>`;
+            }
         });
     </script>
 </body>
