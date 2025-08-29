@@ -1,71 +1,76 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const appLoader = document.getElementById('app-loader');
-    const loaderMessage = document.getElementById('loader-message');
-    const activationView = document.getElementById('activation-view');
-    const loginView = document.getElementById('login-view');
-    const adminPanel = document.getElementById('admin-panel');
+    const views = {
+        loader: document.getElementById('app-loader'),
+        activation: document.getElementById('activation-view'),
+        login: document.getElementById('login-view'),
+        panel: document.getElementById('admin-panel'),
+    };
+    const mainViews = {
+        posts: document.getElementById('posts-view'),
+        settings: document.getElementById('settings-view'),
+    };
+    const navButtons = {
+        posts: document.getElementById('nav-posts'),
+        settings: document.getElementById('nav-settings'),
+    };
     const editorContainer = document.getElementById('editor-container');
     const postList = document.getElementById('post-list');
 
-    let token = null;
-    let owner = '';
-    let repo = '';
-    let posts = [];
-    let postsSha = '';
+    let token = null, owner = '', repo = '';
+    let posts = [], postsSha = '';
+    let config = {}, configSha = '';
 
-    const path = window.location.pathname;
-    const pathSegments = path.split('/').filter(v => v);
+    const pathSegments = window.location.pathname.split('/').filter(v => v);
     owner = pathSegments[0] || 'your-username';
     repo = pathSegments[1] || 'your-repo';
 
-    const showView = (view) => {
-        [appLoader, activationView, loginView, adminPanel].forEach(v => v.style.display = 'none');
-        view.style.display = 'block';
+    const showView = (view) => Object.values(views).forEach(v => v.style.display = v === view ? 'block' : 'none');
+    const showMainView = (view) => {
+        Object.values(mainViews).forEach(v => v.style.display = 'none');
+        Object.values(navButtons).forEach(b => b.classList.remove('active'));
+        mainViews[view].style.display = 'block';
+        navButtons[view].classList.add('active');
     };
 
     const init = async () => {
         try {
-            const response = await fetch('config.json');
-            if (response.status === 404) {
-                showView(activationView);
-            } else {
-                showView(loginView);
-            }
+            const res = await fetch('config.json');
+            showView(res.ok ? views.login : views.activation);
         } catch (error) {
-            loaderMessage.textContent = '加载失败，请检查网络连接或GitHub Pages配置。';
+            views.loader.innerHTML = '<h1>加载失败</h1>';
         }
     };
-    
+
     const login = async (userToken) => {
         token = userToken;
         try {
             await loadData();
-            showView(adminPanel);
+            showView(views.panel);
+            showMainView('posts');
             renderPostList();
+            populateSettings();
         } catch (error) {
             alert('登录失败！Token无效或仓库无法访问。');
             token = null;
         }
     };
-    
+
     const loadData = async () => {
-        const postsData = await GitHubAPI.getFileContent(token, owner, repo, 'posts.json');
-        if (postsData) {
-            posts = JSON.parse(postsData.content);
-            postsSha = postsData.sha;
-        }
+        const [postsData, configData] = await Promise.all([
+            GitHubAPI.getFileContent(token, owner, repo, 'posts.json'),
+            GitHubAPI.getFileContent(token, owner, repo, 'config.json')
+        ]);
+        posts = JSON.parse(postsData.content);
+        postsSha = postsData.sha;
+        config = JSON.parse(configData.content);
+        configSha = configData.sha;
     };
     
     const renderPostList = () => {
         postList.innerHTML = '';
-        const sortedPosts = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        sortedPosts.forEach(post => {
+        [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(post => {
             const li = document.createElement('li');
-            li.textContent = post.title;
-            li.dataset.id = post.id;
-            const dateSpan = document.createElement('span');
-            dateSpan.textContent = new Date(post.createdAt).toLocaleDateString();
-            li.appendChild(dateSpan);
+            li.innerHTML = `${post.title}<span>${new Date(post.createdAt).toLocaleDateString()}</span>`;
             li.onclick = () => openEditor(post.id);
             postList.appendChild(li);
         });
@@ -74,93 +79,112 @@ document.addEventListener('DOMContentLoaded', () => {
     const openEditor = (postId = null) => {
         editorContainer.style.display = 'block';
         const post = posts.find(p => p.id === postId);
-        document.getElementById('post-id').value = post ? post.id : '';
-        document.getElementById('post-title').value = post ? post.title : '';
-        document.getElementById('post-content').value = post ? post.content : '';
-        document.getElementById('post-tags').value = post ? post.tags.join(', ') : '';
+        document.getElementById('post-id').value = post?.id || '';
+        document.getElementById('post-title').value = post?.title || '';
+        document.getElementById('post-content').value = post?.content || '';
+        document.getElementById('post-tags').value = post?.tags?.join(', ') || '';
         document.getElementById('delete-post-btn').style.display = post ? 'inline-block' : 'none';
     };
-    
-    const closeEditor = () => {
-        editorContainer.style.display = 'none';
-    };
-    
+
     const savePost = async () => {
         const id = document.getElementById('post-id').value;
-        const title = document.getElementById('post-title').value;
-        const content = document.getElementById('post-content').value;
-        const tags = document.getElementById('post-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+        const title = document.getElementById('post-title').value.trim();
+        const content = document.getElementById('post-content').value.trim();
+        if (!title || !content) return alert('标题和内容不能为空！');
         
-        if (!title.trim() || !content.trim()) {
-            alert('标题和内容不能为空！');
-            return;
-        }
-
+        const tags = document.getElementById('post-tags').value.split(',').map(t => t.trim()).filter(Boolean);
         const postIndex = posts.findIndex(p => p.id === id);
+
         if (postIndex > -1) {
-            posts[postIndex] = { ...posts[postIndex], title, content, tags, updatedAt: new Date().toISOString() };
+            Object.assign(posts[postIndex], { title, content, tags, updatedAt: new Date().toISOString() });
         } else {
             posts.push({ id: `post_${Date.now()}`, title, content, tags, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
         }
         
         try {
-            await GitHubAPI.updateFile(token, owner, repo, 'posts.json', JSON.stringify(posts, null, 2), postsSha, 'docs: update posts');
+            const res = await GitHubAPI.updateFile(token, owner, repo, 'posts.json', JSON.stringify(posts, null, 2), postsSha, 'docs: update posts');
+            postsSha = res.content.sha;
             alert('保存成功！');
-            await loadData();
             renderPostList();
-            closeEditor();
+            editorContainer.style.display = 'none';
         } catch (error) {
-            alert('保存失败，请检查Token权限或网络。');
+            alert('保存失败！');
         }
     };
-    
+
     const deletePost = async () => {
         const id = document.getElementById('post-id').value;
         if (!id || !confirm('确定要删除这篇文章吗？')) return;
-
         posts = posts.filter(p => p.id !== id);
-        
         try {
-            await GitHubAPI.updateFile(token, owner, repo, 'posts.json', JSON.stringify(posts, null, 2), postsSha, 'docs: delete post');
+            const res = await GitHubAPI.updateFile(token, owner, repo, 'posts.json', JSON.stringify(posts, null, 2), postsSha, 'docs: delete post');
+            postsSha = res.content.sha;
             alert('删除成功！');
-            await loadData();
             renderPostList();
-            closeEditor();
+            editorContainer.style.display = 'none';
         } catch (error) {
             alert('删除失败！');
         }
     };
     
-    const uploadImage = async (event) => {
-        const file = event.target.files[0];
+    const populateSettings = () => {
+        document.getElementById('setting-title').value = config.site.title;
+        document.getElementById('setting-description').value = config.site.description;
+        document.getElementById('setting-bg-color').value = config.styling.backgroundColor;
+        document.getElementById('setting-text-color').value = config.styling.textColor;
+        document.getElementById('setting-accent-color').value = config.styling.accentColor;
+        document.getElementById('setting-bg-image-url').value = config.styling.backgroundImageUrl;
+    };
+    
+    const saveSettings = async () => {
+        const newConfig = {
+            site: {
+                title: document.getElementById('setting-title').value.trim(),
+                description: document.getElementById('setting-description').value.trim(),
+            },
+            styling: {
+                backgroundColor: document.getElementById('setting-bg-color').value,
+                textColor: document.getElementById('setting-text-color').value,
+                accentColor: document.getElementById('setting-accent-color').value,
+                backgroundImageUrl: document.getElementById('setting-bg-image-url').value,
+            }
+        };
+        try {
+            const res = await GitHubAPI.updateFile(token, owner, repo, 'config.json', JSON.stringify(newConfig, null, 2), configSha, 'docs: update config');
+            configSha = res.content.sha;
+            config = newConfig;
+            alert('网站设置已保存！');
+        } catch (error) {
+            alert('设置保存失败！');
+        }
+    };
+    
+    const uploadFile = async (file, isBgImage = false) => {
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = async (e) => {
             const content = e.target.result.split(',')[1];
-            const timestamp = new Date().toISOString().replace(/[-:.]/g, '');
-            const path = `images/${timestamp}_${file.name}`;
-            
+            const path = `images/${new Date().toISOString().replace(/[-:.]/g, '')}_${file.name}`;
             try {
-                const result = await GitHubAPI.createFile(token, owner, repo, path, content, 'feat: upload image');
+                const result = await GitHubAPI.createFile(token, owner, repo, path, content, 'feat: upload image', true);
                 const url = result.content.download_url;
-                const markdownLink = `![${file.name}](${url})`;
-                const contentTextarea = document.getElementById('post-content');
-                contentTextarea.value += `\n${markdownLink}\n`;
+                if (isBgImage) {
+                    document.getElementById('setting-bg-image-url').value = url;
+                } else {
+                    document.getElementById('post-content').value += `\n![${file.name}](${url})\n`;
+                }
             } catch (error) {
                 alert('图片上传失败！');
             }
         };
         reader.readAsDataURL(file);
-        event.target.value = '';
     };
 
     document.getElementById('activate-btn').onclick = async () => {
         const userToken = document.getElementById('activate-token-input').value;
-        if (!userToken) { alert('请输入Token'); return; }
-        
+        if (!userToken) return alert('请输入Token');
         try {
-            const initialConfig = { title: `${owner}'s Blog`, description: 'A blog powered by a single repo.' };
+            const initialConfig = { site: { title: `${owner}'s Blog`, description: "A blog powered by a single repo." }, styling: { backgroundColor: "#ffffff", textColor: "#333333", accentColor: "#007bff", backgroundImageUrl: "" }};
             await GitHubAPI.createFile(userToken, owner, repo, 'config.json', JSON.stringify(initialConfig, null, 2), 'feat: initialize config');
             await GitHubAPI.createFile(userToken, owner, repo, 'posts.json', '[]', 'feat: initialize posts');
             await GitHubAPI.createFile(userToken, owner, repo, 'images/.gitkeep', '', 'feat: initialize images directory');
@@ -171,17 +195,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    document.getElementById('login-btn').onclick = () => {
-        const userToken = document.getElementById('login-token-input').value;
-        if (!userToken) { alert('请输入Token'); return; }
-        login(userToken);
-    };
-
+    navButtons.posts.onclick = () => showMainView('posts');
+    navButtons.settings.onclick = () => showMainView('settings');
+    document.getElementById('login-btn').onclick = () => login(document.getElementById('login-token-input').value);
+    document.getElementById('new-post-btn').onclick = () => openEditor();
+    document.getElementById('cancel-edit-btn').onclick = () => editorContainer.style.display = 'none';
     document.getElementById('save-post-btn').onclick = savePost;
     document.getElementById('delete-post-btn').onclick = deletePost;
-    document.getElementById('cancel-edit-btn').onclick = closeEditor;
-    document.getElementById('new-post-btn').onclick = () => openEditor();
-    document.getElementById('image-upload').onchange = uploadImage;
+    document.getElementById('save-settings-btn').onclick = saveSettings;
+    document.getElementById('image-upload').onchange = (e) => uploadFile(e.target.files[0], false);
+    document.getElementById('setting-bg-image').onchange = (e) => uploadFile(e.target.files[0], true);
+    document.getElementById('clear-bg-image-btn').onclick = () => { document.getElementById('setting-bg-image-url').value = ''; };
 
     init();
 });
