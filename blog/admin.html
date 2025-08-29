@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>博客管理后台</title>
     <style>
-        :root{--bg-color:#f4f6f8;--sidebar-bg:#2c3e50;--sidebar-text:#ecf0f1;--sidebar-hover-bg:#34495e;--sidebar-active-bg:#1abc9c;--content-bg:#fff;--text-color:#34495e;--accent-color:#3498db;--border-color:#e0e0e0;--danger-color:#e74c3c;--success-color:#2ecc71;--shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)}body{font-family:"Helvetica Neue",Arial,"Hiragino Sans GB","Microsoft YaHei",sans-serif;margin:0;background-color:var(--bg-color);color:var(--text-color)}a{text-decoration:none}input,textarea,button{font-family:inherit}#login-wrapper{display:flex;justify-content:center;align-items:center;height:100vh}.login-box{width:360px;padding:40px;background:var(--content-bg);box-shadow:var(--shadow);border-radius:4px;text-align:center}.login-box h1{margin-bottom:20px}.login-box p{margin-bottom:20px;color:#7f8c8d}.login-box input{width:100%;padding:10px;margin-bottom:20px;border:1px solid var(--border-color);border-radius:4px;box-sizing:border-box}.login-box button{width:100%;padding:10px;background:var(--accent-color);color:#fff;border:0;border-radius:4px;cursor:pointer;transition:background .2s}.login-box button:hover{background:#2980b9}.admin-wrapper{display:flex;min-height:100vh}#admin-sidebar{width:220px;background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;flex-shrink:0}#admin-sidebar .logo{padding:20px;font-size:1.5rem;font-weight:700;text-align:center;background-color:rgba(0,0,0,.2)}#admin-sidebar .nav{flex-grow:1;list-style:none;margin:0;padding:20px 0}#admin-sidebar .nav a{display:block;padding:15px 20px;color:var(--sidebar-text);transition:background .2s}#admin-sidebar .nav a:hover{background:var(--sidebar-hover-bg)}#admin-sidebar .nav a.active{background:var(--sidebar-active-bg)}#admin-content{flex-grow:1;padding:30px}#admin-content h2{border-bottom:1px solid var(--border-color);padding-bottom:10px;margin-top:0}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.admin-table{width:100%;border-collapse:collapse;background:var(--content-bg);box-shadow:var(--shadow)}.admin-table th,.admin-table td{padding:15px;text-align:left;border-bottom:1px solid var(--border-color)}.admin-table th{background:#f9fafb}.admin-table .actions a{margin-right:10px;color:var(--accent-color)}.admin-table .actions .delete{color:var(--danger-color)}button,a.btn{display:inline-block;padding:8px 16px;border:none;border-radius:4px;background:var(--accent-color);color:#fff;cursor:pointer;transition:background .2s}button:hover,a.btn:hover{opacity:.9}.btn-success{background:var(--success-color)}.btn-danger{background:var(--danger-color)}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:700}.form-group input[type=text],.form-group input[type=password],.form-group textarea{width:100%;padding:10px;border:1px solid var(--border-color);border-radius:4px;box-sizing:border-box}.form-group textarea{resize:vertical;min-height:200px}.editor-container{display:none}
+        :root{--bg-color:#f4f6f8;--sidebar-bg:#2c3e50;--sidebar-text:#ecf0f1;--sidebar-hover-bg:#34495e;--sidebar-active-bg:#1abc9c;--content-bg:#fff;--text-color:#34495e;--accent-color:#3498db;--border-color:#e0e0e0;--danger-color:#e74c3c;--success-color:#2ecc71;--shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;margin:0;background-color:var(--bg-color);color:var(--text-color);font-size:14px}a{text-decoration:none}input,textarea,button{font-family:inherit}#login-wrapper{display:flex;justify-content:center;align-items:center;height:100vh}.login-box{width:90%;max-width:360px;padding:40px;background:var(--content-bg);box-shadow:var(--shadow);border-radius:4px;text-align:center}.login-box h1{margin-bottom:20px}.login-box p{margin-bottom:20px;color:#7f8c8d}.login-box input{width:100%;padding:10px;margin-bottom:20px;border:1px solid var(--border-color);border-radius:4px;box-sizing:border-box}.login-box button{width:100%;padding:10px;background:var(--accent-color);color:#fff;border:0;border-radius:4px;cursor:pointer;transition:background .2s}.login-box button:hover{background:#2980b9}.admin-wrapper{display:flex;min-height:100vh}#admin-sidebar{position:fixed;top:0;left:0;height:100%;width:220px;background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;flex-shrink:0;transform:translateX(-100%);transition:transform .3s ease-in-out;z-index:1000}.admin-wrapper.sidebar-visible #admin-sidebar{transform:translateX(0)}.admin-wrapper.sidebar-visible #mobile-overlay{display:block}#admin-sidebar .logo{padding:20px;font-size:1.5rem;font-weight:700;text-align:center;background-color:rgba(0,0,0,.2)}#admin-sidebar .nav{flex-grow:1;list-style:none;margin:0;padding:20px 0}#admin-sidebar .nav a{display:block;padding:15px 20px;color:var(--sidebar-text);transition:background .2s}#admin-sidebar .nav a:hover{background:var(--sidebar-hover-bg)}#admin-sidebar .nav a.active{background:var(--sidebar-active-bg)}#admin-content{width:100%;padding:20px}#mobile-header{display:flex;justify-content:space-between;align-items:center;background:var(--content-bg);padding:10px 20px;box-shadow:var(--shadow);margin-bottom:20px}.mobile-menu-btn{font-size:1.5rem;background:0 0;border:0;cursor:pointer;color:var(--text-color)}.mobile-logo{font-size:1.2rem;font-weight:700}#mobile-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999;display:none}@media(min-width: 768px){#admin-sidebar{position:static;transform:translateX(0)}#admin-content{padding:30px}#mobile-header{display:none}}#admin-content h2{border-bottom:1px solid var(--border-color);padding-bottom:10px;margin-top:0}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.admin-table-wrapper{overflow-x:auto}.admin-table{width:100%;border-collapse:collapse;background:var(--content-bg);box-shadow:var(--shadow)}.admin-table th,.admin-table td{padding:15px;text-align:left;border-bottom:1px solid var(--border-color);white-space:nowrap}.admin-table th{background:#f9fafb}.admin-table .actions a{margin-right:10px;color:var(--accent-color)}.admin-table .actions .delete{color:var(--danger-color)}button,a.btn{display:inline-block;padding:8px 16px;border:none;border-radius:4px;background:var(--accent-color);color:#fff;cursor:pointer;transition:background .2s}button:hover,a.btn:hover{opacity:.9}.btn-success{background:var(--success-color)}.btn-danger{background:var(--danger-color)}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:700}.form-group input[type=text],.form-group input[type=password],.form-group textarea{width:100%;padding:10px;border:1px solid var(--border-color);border-radius:4px;box-sizing:border-box}.form-group textarea{resize:vertical;min-height:200px}.editor-container{display:none}
     </style>
 </head>
 <body>
@@ -21,6 +21,7 @@
     </div>
 
     <div id="admin-wrapper" class="admin-wrapper" style="display: none;">
+        <div id="mobile-overlay"></div>
         <aside id="admin-sidebar">
             <div class="logo">My Blog</div>
             <ul class="nav">
@@ -31,21 +32,28 @@
         </aside>
 
         <main id="admin-content">
+            <header id="mobile-header">
+                <button id="mobile-menu-btn">&#9776;</button>
+                <div class="mobile-logo">管理后台</div>
+            </header>
+
             <div id="posts-view">
                 <div class="page-header">
                     <h2>文章管理</h2>
                     <button id="new-post-btn">撰写新文章</button>
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>标题</th>
-                            <th>发布日期</th>
-                            <th class="actions">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="post-list"></tbody>
-                </table>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>标题</th>
+                                <th>发布日期</th>
+                                <th class="actions">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="post-list"></tbody>
+                    </table>
+                </div>
             </div>
             
             <div id="editor-container">
@@ -56,7 +64,7 @@
                     <input type="text" id="post-title">
                 </div>
                 <div class="form-group">
-                    <label for="post-content">内容 (支持Markdown, 使用 `<!--more-->` 来创建摘要)</label>
+                    <label for="post-content">内容 (支持Markdown, 使用 `&lt;!--more--&gt;` 来创建摘要)</label>
                     <textarea id="post-content" rows="15"></textarea>
                 </div>
                 <div class="form-group">
@@ -162,6 +170,7 @@
                 Object.values(navButtons).forEach(b => b.classList.remove('active'));
                 mainViews[view].style.display = 'block';
                 navButtons[view].classList.add('active');
+                document.querySelector('.admin-wrapper').classList.remove('sidebar-visible');
             };
             const setButtonsDisabled = (disabled) => document.querySelectorAll('button').forEach(b => b.disabled = disabled);
 
@@ -178,12 +187,11 @@
                     repo = `${owner}.github.io`;
                     basePath = window.location.pathname.split('/').filter(p => p && p.toLowerCase() !== 'admin.html').join('/');
 
-                    const configPath = getPath('config.json');
-                    let configData = await GitHubAPI.getFile(token, owner, repo, configPath);
+                    let configData = await GitHubAPI.getFile(token, owner, repo, getPath('config.json'));
 
                     if (!configData || !configData.content) {
                         messageEl.textContent = '未检测到配置，正在为您激活系统...';
-                        const initialConfig = { site: { title: `${user.login}的博客`, description: "由单个仓库驱动的博客" }, styling: { backgroundColor: "#ffffff", textColor: "#333333", accentColor: "#007bff", backgroundImageUrl: "" } };
+                        const initialConfig = { site: { title: `${user.login}的博客`, description: "由单个仓库驱动的博客" }, styling: { backgroundColor: "#f8f9fa", textColor: "#212529", accentColor: "#0d6efd", backgroundImageUrl: "" } };
                         const [configRes, postsRes] = await Promise.all([
                              GitHubAPI.createFile(token, owner, repo, getPath('config.json'), JSON.stringify(initialConfig, null, 2), 'feat: initialize config'),
                              GitHubAPI.createFile(token, owner, repo, getPath('posts.json'), '[]', 'feat: initialize posts'),
@@ -346,6 +354,8 @@
             document.getElementById('image-upload').onchange = (e) => uploadFile(e.target.files[0], false);
             document.getElementById('setting-bg-image').onchange = (e) => uploadFile(e.target.files[0], true);
             document.getElementById('clear-bg-image-btn').onclick = () => { document.getElementById('setting-bg-image-url').value = ''; };
+            document.getElementById('mobile-menu-btn').onclick = () => document.getElementById('admin-wrapper').classList.toggle('sidebar-visible');
+            document.getElementById('mobile-overlay').onclick = () => document.getElementById('admin-wrapper').classList.remove('sidebar-visible');
         });
     </script>
 </body>
