@@ -439,10 +439,14 @@
                 try {
                     const user = await GitHubAPI.getUser(userToken);
                     const pathSegments = window.location.pathname.split('/').filter(v => v);
-                    const repoName = pathSegments[1] || 'your-repo';
+                    const repoName = pathSegments[0];
+                    if (!repoName) {
+                        throw new Error("无法从URL中自动识别仓库名称。请确保您的URL格式为 'username.github.io/repo-name/'.");
+                    }
+                    
                     const initialConfig = {
                         repo: { owner: user.login, name: repoName },
-                        site: { title: `${user.login}'s Blog`, description: "A blog powered by a single repo." },
+                        site: { title: `${user.login}的博客`, description: "由单个仓库驱动的博客" },
                         styling: { backgroundColor: "#ffffff", textColor: "#333333", accentColor: "#007bff", backgroundImageUrl: "" }
                     };
                     await GitHubAPI.createFile(userToken, user.login, repoName, 'config.json', JSON.stringify(initialConfig, null, 2), 'feat: initialize config');
