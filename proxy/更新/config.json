@@ -4,6 +4,12 @@
   "announcementEnabled": true,
   "announcements": [
     {
+      "title": "老表。",
+      "type": "通知",
+      "content": "你真帅。",
+      "link": ""
+    },
+    {
       "title": "新版本发布！",
       "type": "更新",
       "content": "我们很高兴地发布了 3.4 版本，带来了全新的用户界面和性能提升。",
@@ -14,7 +20,7 @@
     {
       "version": "3.4",
       "releaseDate": "2025/8/28",
-      "optimizedFunctions": "1. 全面重构了UI，提升了视觉一致性和美观度。\n2. 优化了数据加载速度，启动更快。\n3. 减少了内存占用。\n",
+      "optimizedFunctions": "1. 全面重构了UI，提升了视觉一致性和美观度。\n2. 优化了数据加载速度，启动更快。\n3. 减少了内存占用。",
       "newFunctions": "1. 新增深色模式，保护您的眼睛。\n2. 引入了多文件管理功能。\n3. 增加了带二次确认的版本删除功能。",
       "downloadUrl": "https://example."
     },
