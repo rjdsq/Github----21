@@ -24,6 +24,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
     <script>
+        const b64_to_utf8 = (str) => {
+            try {
+                return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+            } catch (e) {
+                console.error("Failed to decode base64 string:", e);
+                return atob(str); 
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
             const converter = new showdown.Converter();
             const body = document.body;
@@ -33,15 +42,11 @@
 
             const getFileFromApi = async (owner, repo, path) => {
                 const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`无法从API获取文件: ${path}`);
-                }
+                const response = await fetch(url, { cache: "no-store" });
+                if (!response.ok) throw new Error(`无法从API获取文件: ${path}`);
                 const data = await response.json();
-                if (typeof data.content !== 'string') {
-                     throw new Error(`API返回的文件内容格式不正确: ${path}`);
-                }
-                return atob(data.content);
+                if (typeof data.content !== 'string') throw new Error(`API返回的文件内容格式不正确: ${path}`);
+                return b64_to_utf8(data.content);
             };
 
             try {
@@ -58,10 +63,9 @@
                 blogDescriptionEl.textContent = config.site.description;
 
                 const { backgroundColor, textColor, accentColor, backgroundImageUrl } = config.styling;
-                const root = document.documentElement;
-                root.style.setProperty('--bg-color', backgroundColor);
-                root.style.setProperty('--text-color', textColor);
-                root.style.setProperty('--accent-color', accentColor);
+                if (backgroundColor) body.style.backgroundColor = backgroundColor;
+                if (textColor) body.style.color = textColor;
+                if (accentColor) document.documentElement.style.setProperty('--accent-color', accentColor);
                 if (backgroundImageUrl) {
                     body.style.backgroundImage = `url(${backgroundImageUrl})`;
                 } else {
