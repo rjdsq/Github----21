@@ -20,10 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let posts = [], postsSha = '';
     let config = {}, configSha = '';
 
-    const pathSegments = window.location.pathname.split('/').filter(v => v);
-    owner = pathSegments[0] || 'your-username';
-    repo = pathSegments[1] || 'your-repo';
-
     const showView = (view) => Object.values(views).forEach(v => v.style.display = v === view ? 'block' : 'none');
     const showMainView = (view) => {
         Object.values(mainViews).forEach(v => v.style.display = 'none');
@@ -31,18 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
         mainViews[view].style.display = 'block';
         navButtons[view].classList.add('active');
     };
+    const setButtonsDisabled = (disabled) => document.querySelectorAll('button').forEach(b => b.disabled = disabled);
 
     const init = async () => {
         try {
-            const res = await fetch('config.json');
-            showView(res.ok ? views.login : views.activation);
+            const res = await fetch('config.json?t=' + new Date().getTime());
+            if (res.ok) {
+                const configData = await res.json();
+                owner = configData.repo.owner;
+                repo = configData.repo.name;
+                showView(views.login);
+            } else {
+                showView(views.activation);
+            }
         } catch (error) {
-            views.loader.innerHTML = '<h1>加载失败</h1>';
+            views.loader.innerHTML = '<h1>加载失败，请检查网络和控制台错误。</h1>';
         }
     };
 
     const login = async (userToken) => {
         token = userToken;
+        setButtonsDisabled(true);
         try {
             await loadData();
             showView(views.panel);
@@ -50,15 +55,17 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPostList();
             populateSettings();
         } catch (error) {
-            alert('登录失败！Token无效或仓库无法访问。');
+            alert(`登录失败: ${error.message}`);
             token = null;
+        } finally {
+            setButtonsDisabled(false);
         }
     };
 
     const loadData = async () => {
         const [postsData, configData] = await Promise.all([
-            GitHubAPI.getFileContent(token, owner, repo, 'posts.json'),
-            GitHubAPI.getFileContent(token, owner, repo, 'config.json')
+            GitHubAPI.getFile(token, owner, repo, 'posts.json'),
+            GitHubAPI.getFile(token, owner, repo, 'config.json')
         ]);
         posts = JSON.parse(postsData.content);
         postsSha = postsData.sha;
@@ -92,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = document.getElementById('post-content').value.trim();
         if (!title || !content) return alert('标题和内容不能为空！');
         
+        setButtonsDisabled(true);
         const tags = document.getElementById('post-tags').value.split(',').map(t => t.trim()).filter(Boolean);
         const postIndex = posts.findIndex(p => p.id === id);
 
@@ -108,13 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPostList();
             editorContainer.style.display = 'none';
         } catch (error) {
-            alert('保存失败！');
+            alert(`保存失败: ${error.message}`);
+        } finally {
+            setButtonsDisabled(false);
         }
     };
 
     const deletePost = async () => {
         const id = document.getElementById('post-id').value;
         if (!id || !confirm('确定要删除这篇文章吗？')) return;
+        setButtonsDisabled(true);
         posts = posts.filter(p => p.id !== id);
         try {
             const res = await GitHubAPI.updateFile(token, owner, repo, 'posts.json', JSON.stringify(posts, null, 2), postsSha, 'docs: delete post');
@@ -123,7 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPostList();
             editorContainer.style.display = 'none';
         } catch (error) {
-            alert('删除失败！');
+            alert(`删除失败: ${error.message}`);
+        } finally {
+            setButtonsDisabled(false);
         }
     };
     
@@ -137,30 +150,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const saveSettings = async () => {
-        const newConfig = {
-            site: {
-                title: document.getElementById('setting-title').value.trim(),
-                description: document.getElementById('setting-description').value.trim(),
-            },
-            styling: {
-                backgroundColor: document.getElementById('setting-bg-color').value,
-                textColor: document.getElementById('setting-text-color').value,
-                accentColor: document.getElementById('setting-accent-color').value,
-                backgroundImageUrl: document.getElementById('setting-bg-image-url').value,
-            }
-        };
+        setButtonsDisabled(true);
+        const newConfig = { ...config };
+        newConfig.site.title = document.getElementById('setting-title').value.trim();
+        newConfig.site.description = document.getElementById('setting-description').value.trim();
+        newConfig.styling.backgroundColor = document.getElementById('setting-bg-color').value;
+        newConfig.styling.textColor = document.getElementById('setting-text-color').value;
+        newConfig.styling.accentColor = document.getElementById('setting-accent-color').value;
+        newConfig.styling.backgroundImageUrl = document.getElementById('setting-bg-image-url').value;
         try {
             const res = await GitHubAPI.updateFile(token, owner, repo, 'config.json', JSON.stringify(newConfig, null, 2), configSha, 'docs: update config');
             configSha = res.content.sha;
             config = newConfig;
             alert('网站设置已保存！');
         } catch (error) {
-            alert('设置保存失败！');
+            alert(`设置保存失败: ${error.message}`);
+        } finally {
+            setButtonsDisabled(false);
         }
     };
     
     const uploadFile = async (file, isBgImage = false) => {
         if (!file) return;
+        setButtonsDisabled(true);
         const reader = new FileReader();
         reader.onload = async (e) => {
             const content = e.target.result.split(',')[1];
@@ -174,7 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('post-content').value += `\n![${file.name}](${url})\n`;
                 }
             } catch (error) {
-                alert('图片上传失败！');
+                alert(`图片上传失败: ${error.message}`);
+            } finally {
+                setButtonsDisabled(false);
             }
         };
         reader.readAsDataURL(file);
@@ -183,15 +197,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('activate-btn').onclick = async () => {
         const userToken = document.getElementById('activate-token-input').value;
         if (!userToken) return alert('请输入Token');
+        setButtonsDisabled(true);
         try {
-            const initialConfig = { site: { title: `${owner}'s Blog`, description: "A blog powered by a single repo." }, styling: { backgroundColor: "#ffffff", textColor: "#333333", accentColor: "#007bff", backgroundImageUrl: "" }};
-            await GitHubAPI.createFile(userToken, owner, repo, 'config.json', JSON.stringify(initialConfig, null, 2), 'feat: initialize config');
-            await GitHubAPI.createFile(userToken, owner, repo, 'posts.json', '[]', 'feat: initialize posts');
-            await GitHubAPI.createFile(userToken, owner, repo, 'images/.gitkeep', '', 'feat: initialize images directory');
+            const user = await GitHubAPI.getUser(userToken);
+            const pathSegments = window.location.pathname.split('/').filter(v => v);
+            const repoName = pathSegments[1] || 'your-repo';
+            const initialConfig = {
+                repo: { owner: user.login, name: repoName },
+                site: { title: `${user.login}'s Blog`, description: "A blog powered by a single repo." },
+                styling: { backgroundColor: "#ffffff", textColor: "#333333", accentColor: "#007bff", backgroundImageUrl: "" }
+            };
+            await GitHubAPI.createFile(userToken, user.login, repoName, 'config.json', JSON.stringify(initialConfig, null, 2), 'feat: initialize config');
+            await GitHubAPI.createFile(userToken, user.login, repoName, 'posts.json', '[]', 'feat: initialize posts');
+            await GitHubAPI.createFile(userToken, user.login, repoName, 'images/.gitkeep', '', 'feat: initialize images directory');
             alert('系统激活成功！页面将自动刷新。');
             window.location.reload();
         } catch (error) {
             alert(`激活失败: ${error.message}`);
+        } finally {
+            setButtonsDisabled(false);
         }
     };
     
