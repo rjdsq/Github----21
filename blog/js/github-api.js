@@ -9,18 +9,19 @@ const GitHubAPI = {
             ...options.headers,
         };
         const response = await fetch(url, { ...options, headers });
-        if (response.status === 404) return null;
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'GitHub API request failed' }));
-            throw new Error(errorData.message);
+            const errorData = await response.json().catch(() => ({ message: `HTTP Error: ${response.statusText}` }));
+            throw new Error(errorData.message || 'GitHub API request failed');
         }
         if (response.status === 204 || response.headers.get("Content-Length") === "0") {
             return null;
         }
         return response.json();
     },
+    
+    getUser: (token) => GitHubAPI.request(token, '/user'),
 
-    async getFileContent(token, owner, repo, path) {
+    async getFile(token, owner, repo, path) {
         const result = await this.request(token, `/repos/${owner}/${repo}/contents/${path}`);
         if (!result) return null;
         const content = atob(result.content);
