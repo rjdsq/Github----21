@@ -4,8 +4,8 @@
     "description": "个人博客"
   },
   "styling": {
-    "backgroundColor": "#ffffff",
-    "textColor": "#333333",
+    "backgroundColor": "#ffff00",
+    "textColor": "#000000",
     "accentColor": "#007bff",
     "backgroundImageUrl": "https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/blog/images/20250829T144158774Z_1000026984.png"
   }
