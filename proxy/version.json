@@ -2,5 +2,5 @@
   "version": "3.4",
   "forceUpdate": true,
   "downloadUrl": "https://ghproxy.net/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/proxy/edition/Github%20King_3.4_20250902_224158.apk",
-  "updateLog": "主题全面优化，优化令牌获取介绍，增加界面动效，优化编辑功能，优化代理加载逻辑，优化排序功能和类型排序逻辑，修复网格图片异常显示，修复点击关闭长按菜单异常，仪表盘新增反馈和赞助，新增账号管理切换功能，增加退出登陆确认提示框，优化底层逻辑增强性能"
+  "updateLog": "增加zip压缩包在线解压缩，优化返回逻辑，优化完善设置网站功能支持分支选择。优化仓库加载逻辑，新增部署了网站的仓库文件/文件夹支持复制文件本身网站地址，优化仪表盘图片加载逻辑。"
 }
