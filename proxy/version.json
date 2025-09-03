@@ -2,5 +2,5 @@
   "version": "3.5",
   "forceUpdate": true,
   "downloadUrl": "https://ghproxy.net/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/proxy/edition/Github%20King_3.5_20250903_115226.apk",
-  "updateLog": "增加主题切换功能，修复分支删除取消后无法点击新建分支的窗口按钮\n\n上版本:增加zip压缩包在线解压缩，优化返回逻辑，优化完善设置网站功能支持分支选择。优化仓库加载逻辑，新增部署了网站的仓库文件/文件夹支持复制文件本身网站地址，优化仪表盘图片加载逻辑。"
+  "updateLog": "增加主题切换功能，修复分支删除取消后无法点击新建分支的窗口按钮\n\n3.4版本:增加zip压缩包在线解压缩，优化返回逻辑，优化完善设置网站功能支持分支选择。优化仓库加载逻辑，新增部署了网站的仓库文件/文件夹支持复制文件本身网站地址，优化仪表盘图片加载逻辑。"
 }
