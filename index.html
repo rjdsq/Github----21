@@ -27,7 +27,7 @@ fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u005
 d.reverse().forEach(f=>{
 if(f.name.endsWith('.webp')){
 const img=document.createElement('img');
-img.src='https://gh-proxy.com/'+f.download_url;
+img.src='https://ghproxy.net/'+f.download_url;
 img.addEventListener('click',e=>{
 e.preventDefault();
 v.style.display='flex';
