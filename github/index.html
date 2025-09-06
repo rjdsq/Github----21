@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理面板</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2; --secondary-color: #f5f7fa; --text-color: #333;
+            --border-color: #e0e0e0; --success-color: #4caf50; --error-color: #f44336;
+            --white: #fff; --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--secondary-color); color: var(--text-color); line-height: 1.5; font-size: 0.8rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        .card { background: var(--white); border-radius: 8px; box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; padding-bottom: 80px; }
+        .login-view, .main-view { display: none; }
+        .login-view.active, .main-view.active { display: block; }
+        h1 { font-size: 1.2rem; } h2 { font-size: 1rem; }
+        h3 { font-size: 0.9rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; }
+        .form-group input[type="text"], .form-group input[type="password"], .form-group textarea { width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.8rem; }
+        .form-group textarea { min-height: 120px; resize: vertical; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        .btn { display: inline-block; background-color: var(--primary-color); color: var(--white); padding: 0.6rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; text-align: center; text-decoration: none; transition: background-color 0.3s ease; margin: 0; }
+        .btn:hover { background-color: #357abd; }
+        .btn-logout { background-color: var(--error-color); }
+        .btn-danger { background-color: var(--error-color); }
+        .btn-success { background-color: var(--success-color); }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 2rem auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .editor-view { display: none; } .editor-view.active { display: block; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(22px); }
+        .proxy-list { list-style: none; padding: 0; margin-top: 1rem; }
+        .proxy-list-item { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.5rem; background: var(--white); }
+        .proxy-list-item > div { display: flex; align-items: center; width: 100%; }
+        .proxy-list-item .proxy-text { flex-grow: 1; word-break: break-all; margin-right: 1rem; }
+        .proxy-list-item .proxy-input { flex-grow: 1; margin-right: 1rem; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 4px; }
+        .changelog-list { list-style: none; padding: 0; }
+        .changelog-card { border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.5rem; background: var(--white); overflow: hidden; }
+        .changelog-header { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 1rem; background-color: var(--secondary-color); cursor: pointer; }
+        .changelog-header .version-title { font-weight: 600; }
+        .changelog-body { padding: 1rem; border-top: 1px solid var(--border-color); display: none; }
+        .changelog-card.active .changelog-body { display: block; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; padding: 0.5rem; background-color: var(--white); box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); gap: 0.5rem; z-index: 1000; }
+        .bottom-nav .nav-btn { flex-grow: 1; }
+        .bottom-nav .nav-btn.active { background-color: #357abd; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .bottom-nav #nav-save { flex-grow: 0; min-width: 90px; }
+        #toast-notification { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 10px 20px; border-radius: 5px; z-index: 2000; visibility: hidden; opacity: 0; transition: opacity 0.5s, visibility 0.5s; }
+        #toast-notification.show { visibility: visible; opacity: 1; }
+        #toast-notification.success { background-color: var(--success-color); }
+        #toast-notification.error { background-color: var(--error-color); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-view" class="login-view active">
+            <div class="card" style="padding-bottom: 1.5rem;">
+                <h1>后台管理登录</h1>
+                <p style="margin-bottom: 1rem; color: #666;">管理 rjdsq/rjdsq.github.io 仓库</p>
+                <div class="form-group"><label for="github-token">GitHub Personal Access Token</label><input type="password" id="github-token" placeholder="输入您的Token"></div>
+                <div class="form-group"><input type="checkbox" id="remember-token" style="margin-right: 0.5rem;"><label for="remember-token">记住Token</label></div>
+                <button id="login-btn" class="btn">登录</button>
+            </div>
+        </div>
+        <div id="main-view" class="main-view">
+            <header><h1 id="welcome-message"></h1><button id="logout-btn" class="btn btn-logout">退出</button></header>
+            <div class="card">
+                <div class="loader" id="loader"></div>
+                <div id="update-json-editor" class="editor-view">
+                    <h3>基础信息</h3>
+                    <div class="form-group"><label for="json-version">版本</label><input type="text" id="json-version"></div>
+                    <div class="form-group"><label for="json-announcement">公告</label><input type="text" id="json-announcement"></div>
+                    <div class="form-group"><label for="json-download-url">下载地址</label><input type="text" id="json-download-url"></div>
+                    <div class="form-group"><label for="json-copy-content">复制内容</label><input type="text" id="json-copy-content"></div>
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                        <div class="form-group"><label>公告开关</label><label class="switch"><input type="checkbox" id="json-announcement-switch"><span class="slider"></span></label></div>
+                        <div class="form-group"><label>强制更新</label><label class="switch"><input type="checkbox" id="json-force-update"><span class="slider"></span></label></div>
+                    </div>
+                    <hr style="border:none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+                    <h3>更新日志管理</h3>
+                    <button id="add-changelog-btn" class="btn">添加新版本日志</button>
+                    <div id="changelog-editor-container" class="changelog-list"></div>
+                </div>
+                <div id="proxy-txt-editor" class="editor-view">
+                    <h3>代理列表</h3>
+                    <div id="proxy-list-container"></div>
+                    <h3 style="margin-top: 2rem;">添加代理 (一行一个)</h3>
+                    <div class="form-group"><textarea id="new-proxy-textarea" placeholder="在此处粘贴一个或多个代理地址..."></textarea><button id="add-proxy-btn" class="btn">添加</button></div>
+                </div>
+            </div>
+            <div id="bottom-nav" class="bottom-nav">
+                <button id="nav-update" class="btn nav-btn">更新</button>
+                <button id="nav-proxy" class="btn nav-btn">代理</button>
+                <button id="nav-save" class="btn btn-success">保存</button>
+            </div>
+        </div>
+    </div>
+    <div id="toast-notification"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const GITHUB_OWNER = 'rjdsq', GITHUB_REPO = 'rjdsq.github.io', API_BASE_URL = 'https://api.github.com';
+            const state = { currentToken: '', currentUser: null, files: { 'github/更新.json': { sha: '', content: {} }, 'github/代理.txt': { sha: '', content: [] } }, changelogEntries: [], activeEditor: '' };
+            const $ = (s) => document.querySelector(s), $$ = (s) => document.querySelectorAll(s);
+            const loginView = $('#login-view'), mainView = $('#main-view'), loginBtn = $('#login-btn'), logoutBtn = $('#logout-btn'), tokenInput = $('#github-token'), rememberTokenCheckbox = $('#remember-token');
+            const welcomeMessage = $('#welcome-message'), loader = $('#loader'), toast = $('#toast-notification'), jsonVersion = $('#json-version'), jsonAnnouncement = $('#json-announcement');
+            const jsonDownloadUrl = $('#json-download-url'), jsonCopyContent = $('#json-copy-content'), jsonAnnouncementSwitch = $('#json-announcement-switch'), jsonForceUpdate = $('#json-force-update');
+            const changelogEditorContainer = $('#changelog-editor-container'), addChangelogBtn = $('#add-changelog-btn'), proxyListContainer = $('#proxy-list-container'), newProxyTextarea = $('#new-proxy-textarea');
+            const addProxyBtn = $('#add-proxy-btn'), navUpdate = $('#nav-update'), navProxy = $('#nav-proxy'), navSave = $('#nav-save');
+
+            loginBtn.addEventListener('click', handleLogin);
+            logoutBtn.addEventListener('click', handleLogout);
+            addProxyBtn.addEventListener('click', addProxy);
+            addChangelogBtn.addEventListener('click', addNewChangelogEntry);
+            proxyListContainer.addEventListener('click', handleProxyListClicks);
+            changelogEditorContainer.addEventListener('click', handleAccordionClick);
+            navUpdate.addEventListener('click', () => switchEditorView('update-json'));
+            navProxy.addEventListener('click', () => switchEditorView('proxy-txt'));
+            navSave.addEventListener('click', handleUniversalSave);
+
+            const savedToken = localStorage.getItem('githubToken');
+            if (savedToken) { tokenInput.value = savedToken; rememberTokenCheckbox.checked = true; handleLogin(); }
+
+            async function handleLogin() {
+                const token = tokenInput.value.trim(); if (!token) return showToast('请输入您的GitHub Token。', 'error');
+                state.currentToken = token; showLoader(true);
+                try {
+                    state.currentUser = await fetchAuthenticatedUser(); welcomeMessage.textContent = `欢迎, ${state.currentUser.login}`;
+                    if (rememberTokenCheckbox.checked) localStorage.setItem('githubToken', token); else localStorage.removeItem('githubToken');
+                    loginView.classList.remove('active'); mainView.classList.add('active');
+                    await switchEditorView('update-json');
+                } catch (error) { console.error('登录失败:', error); showToast(`登录失败: ${error.message}`, 'error'); } 
+                finally { showLoader(false); }
+            }
+            function handleLogout() { state.currentToken = ''; state.currentUser = null; localStorage.removeItem('githubToken'); tokenInput.value = ''; mainView.classList.remove('active'); loginView.classList.add('active'); }
+            async function switchEditorView(editorName) {
+                state.activeEditor = editorName; $$('.editor-view').forEach(v => v.classList.remove('active'));
+                navUpdate.classList.toggle('active', editorName === 'update-json'); navProxy.classList.toggle('active', editorName === 'proxy-txt');
+                const filePath = editorName === 'update-json' ? 'github/更新.json' : 'github/代理.txt';
+                await loadFile(filePath); $(`#${editorName}-editor`).classList.add('active');
+            }
+            async function handleUniversalSave() { const filePath = state.activeEditor === 'update-json' ? 'github/更新.json' : 'github/代理.txt'; await saveFile(filePath); }
+            async function loadFile(filePath) {
+                showLoader(true);
+                try {
+                    const response = await githubApiRequest(`/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`);
+                    if (response.status === 404) {
+                        showToast('文件不存在，将为您创建一个新文件。', 'info');
+                        state.files[filePath].sha = null;
+                        if (filePath.endsWith('.json')) { state.files[filePath].content = {}; parseAndRenderChangelog(''); populateJsonForm(); } 
+                        else { state.files[filePath].content = []; renderProxyList(); }
+                        return;
+                    }
+                    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    const data = await response.json();
+                    state.files[filePath].sha = data.sha; const content = decodeBase64(data.content);
+                    if (filePath.endsWith('.json')) {
+                        const jsonData = JSON.parse(content); state.files[filePath].content = jsonData;
+                        parseAndRenderChangelog(jsonData['更新日志'] || ''); populateJsonForm();
+                    } else { state.files[filePath].content = content.split('\n').filter(Boolean); renderProxyList(); }
+                } catch (error) { console.error(`加载文件 ${filePath} 失败:`, error); showToast(`加载文件失败: ${error.message}`, 'error'); } 
+                finally { showLoader(false); }
+            }
+            async function saveFile(filePath) {
+                showLoader(true); let contentString;
+                if (filePath.endsWith('.json')) {
+                    updateChangelogStateFromUI();
+                    const jsonData = { "版本": jsonVersion.value, "公告": jsonAnnouncement.value, "公告开关": jsonAnnouncementSwitch.checked ? "开" : "关", "强制更新": jsonForceUpdate.checked ? "开" : "关", "下载地址": jsonDownloadUrl.value, "复制内容": jsonCopyContent.value, "更新日志": compileChangelogToString() };
+                    contentString = JSON.stringify(jsonData, null, 2);
+                } else { contentString = state.files[filePath].content.join('\n'); }
+                try {
+                    const payload = { message: `[Admin Panel] Update ${filePath}`, content: encodeBase64(contentString) };
+                    if (state.files[filePath].sha) { payload.sha = state.files[filePath].sha; }
+                    const response = await githubApiRequest(`/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, { method: 'PUT', body: JSON.stringify(payload) });
+                    if (!response.ok) { const errData = await response.json(); throw new Error(errData.message); }
+                    const data = await response.json();
+                    state.files[filePath].sha = data.content.sha; showToast('文件保存成功！', 'success');
+                } catch (error) { console.error(`保存文件 ${filePath} 失败:`, error); showToast(`保存失败: ${error.message}`, 'error'); } 
+                finally { showLoader(false); }
+            }
+            function populateJsonForm() {
+                const data = state.files['github/更新.json'].content;
+                jsonVersion.value = data['版本'] || ''; jsonAnnouncement.value = data['公告'] || ''; jsonDownloadUrl.value = data['下载地址'] || '';
+                jsonCopyContent.value = data['复制内容'] || ''; jsonAnnouncementSwitch.checked = data['公告开关'] === '开'; jsonForceUpdate.checked = data['强制更新'] === '开';
+            }
+            function parseAndRenderChangelog(logString) {
+                state.changelogEntries = []; const regex = /v(\d+\.\d+(\.\d+)?)介绍：\n([\s\S]*?)(?=\n\nv|\s*$)/g; let match;
+                while ((match = regex.exec(logString)) !== null) { state.changelogEntries.push({ version: match[1], description: match[3].trim() }); }
+                renderChangelogEditor();
+            }
+            function renderChangelogEditor() {
+                changelogEditorContainer.innerHTML = '';
+                state.changelogEntries.forEach((entry, index) => {
+                    const card = document.createElement('div'); card.className = 'changelog-card';
+                    if (index === 0) card.classList.add('active');
+                    card.innerHTML = `<div class="changelog-header"><span class="version-title">v${entry.version}</span><button class="btn btn-danger btn-sm delete-changelog-btn">删除</button></div><div class="changelog-body"><div class="form-group"><label>版本号</label><input type="text" class="changelog-version-input" value="${entry.version}"></div><div class="form-group"><label>更新介绍</label><textarea class="changelog-desc-textarea" placeholder="输入更新介绍...">${entry.description}</textarea></div></div>`;
+                    card.querySelector('.delete-changelog-btn').addEventListener('click', (e) => { e.stopPropagation(); state.changelogEntries.splice(index, 1); renderChangelogEditor(); });
+                    changelogEditorContainer.appendChild(card);
+                });
+            }
+            function handleAccordionClick(e) { const header = e.target.closest('.changelog-header'); if (header) header.parentElement.classList.toggle('active'); }
+            function getNextVersion(version) { if (!version) return '1.0'; const parts = version.split('.').map(Number); parts[parts.length - 1]++; return parts.join('.'); }
+            function addNewChangelogEntry() { const latestVersion = state.changelogEntries.length > 0 ? state.changelogEntries[0].version : '0.0'; state.changelogEntries.unshift({ version: getNextVersion(latestVersion), description: '' }); renderChangelogEditor(); }
+            function updateChangelogStateFromUI() { const cards = $$('#changelog-editor-container .changelog-card'); state.changelogEntries = Array.from(cards).map(card => ({ version: card.querySelector('.changelog-version-input').value, description: card.querySelector('.changelog-desc-textarea').value })); }
+            function compileChangelogToString() { return state.changelogEntries.map(entry => `v${entry.version}介绍：\n${entry.description}`).join('\n\n'); }
+            function renderProxyList() { proxyListContainer.innerHTML = state.files['github/代理.txt'].content.map((proxy, index) => `<li class="proxy-list-item" data-index="${index}"><div class="view-mode"><span class="proxy-text">${proxy}</span><div><button class="btn btn-secondary btn-sm edit-btn">编辑</button><button class="btn btn-danger btn-sm delete-btn">删除</button></div></div><div class="edit-mode" style="display:none;"><input type="text" class="proxy-input" value="${proxy}"><div><button class="btn btn-success btn-sm save-btn">保存</button><button class="btn btn-sm cancel-btn">取消</button></div></div></li>`).join(''); }
+            function addProxy() {
+                const newProxies = newProxyTextarea.value.trim().split('\n').map(p => p.trim()).filter(Boolean); if (newProxies.length === 0) return;
+                const combined = [...state.files['github/代理.txt'].content, ...newProxies]; state.files['github/代理.txt'].content = [...new Set(combined)];
+                newProxyTextarea.value = ''; renderProxyList();
+            }
+            function handleProxyListClicks(e) {
+                const listItem = e.target.closest('.proxy-list-item'); if (!listItem) return;
+                const index = parseInt(listItem.dataset.index, 10), viewMode = listItem.querySelector('.view-mode'), editMode = listItem.querySelector('.edit-mode');
+                if (e.target.classList.contains('delete-btn')) { state.files['github/代理.txt'].content.splice(index, 1); renderProxyList(); } 
+                else if (e.target.classList.contains('edit-btn')) { viewMode.style.display = 'none'; editMode.style.display = 'flex'; } 
+                else if (e.target.classList.contains('cancel-btn')) { viewMode.style.display = 'flex'; editMode.style.display = 'none'; editMode.querySelector('.proxy-input').value = state.files['github/代理.txt'].content[index]; } 
+                else if (e.target.classList.contains('save-btn')) { const newValue = editMode.querySelector('.proxy-input').value.trim(); if (newValue) { state.files['github/代理.txt'].content[index] = newValue; renderProxyList(); } }
+            }
+            async function githubApiRequest(endpoint, options = {}) { const headers = { 'Authorization': `token ${state.currentToken}`, 'Accept': 'application/vnd.github.v3+json' }; const config = { ...options, headers: { ...headers, ...options.headers } }; return await fetch(`${API_BASE_URL}${endpoint}`, config); }
+            async function fetchAuthenticatedUser() { const response = await githubApiRequest('/user'); if (!response.ok) throw new Error("无效的Token或网络错误"); return response.json(); }
+            function encodeBase64(s) { return btoa(unescape(encodeURIComponent(s))); }
+            function decodeBase64(s) { return decodeURIComponent(escape(atob(s))); }
+            function showLoader(show) { loader.style.display = show ? 'block' : 'none'; }
+            function showToast(message, type = 'info') { toast.textContent = message; toast.className = type; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+        });
+    </script>
+</body>
+</html>
