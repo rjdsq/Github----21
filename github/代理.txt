@@ -9,10 +9,6 @@ https://git.yylx.win/
 https://github.dpik.top/
 https://gh.dpik.top/
 https://ghfile.geekertao.top/
-https://edgeone.gh-proxy.com/
-http://gitproxy.click/
-https://hk.gh-proxy.com/
-https://gh.b52m.cn/
 https://gh.felicity.ac.cn/
 https://gh.927223.xyz/
 https://github-proxy.teach-english.tech/
@@ -30,4 +26,3 @@ https://hub.gitmirror.com/
 https://ghproxy.fangkuai.fun/
 https://gh.bugdey.us.kg/
 https://gh.wsmdn.dpdns.org/
-https://gh-proxy.com/
