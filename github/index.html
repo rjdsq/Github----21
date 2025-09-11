@@ -4,233 +4,523 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>后台管理面板</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4a90e2; --secondary-color: #f5f7fa; --text-color: #333;
-            --border-color: #e0e0e0; --success-color: #4caf50; --error-color: #f44336;
-            --white: #fff; --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --bg-main: #f0f2f5;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-input: #f9fafb;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --text-light: #111827;
+            --text-secondary: #4b5563;
+            --border-color: #d1d5db;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --border-radius: 0.6rem;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { font-size: 16px; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--secondary-color); color: var(--text-color); line-height: 1.5; font-size: 0.8rem; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-        .card { background: var(--white); border-radius: 8px; box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; padding-bottom: 80px; }
-        .login-view, .main-view { display: none; }
-        .login-view.active, .main-view.active { display: block; }
-        h1 { font-size: 1.2rem; } h2 { font-size: 1rem; }
-        h3 { font-size: 0.9rem; color: var(--primary-color); margin-bottom: 1rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; }
-        .form-group input[type="text"], .form-group input[type="password"], .form-group textarea { width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.8rem; }
-        .form-group textarea { min-height: 120px; resize: vertical; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        .btn { display: inline-block; background-color: var(--primary-color); color: var(--white); padding: 0.6rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; text-align: center; text-decoration: none; transition: background-color 0.3s ease; margin: 0; }
-        .btn:hover { background-color: #357abd; }
-        .btn-logout { background-color: var(--error-color); }
-        .btn-danger { background-color: var(--error-color); }
-        .btn-success { background-color: var(--success-color); }
-        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; }
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 2rem auto; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .editor-view { display: none; } .editor-view.active { display: block; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            line-height: 1.5;
+            font-size: 0.9rem;
+            min-height: 100vh;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+        .login-view.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .login-card {
+            width: 100%; max-width: 360px; padding: 2rem;
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color); border-radius: var(--border-radius);
+            box-shadow: var(--shadow); text-align: center;
+        }
+        .login-card .auth-header i { font-size: 2.5rem; color: var(--primary-color); text-shadow: 0 0 10px color-mix(in srgb, var(--primary-color) 30%, transparent); margin-bottom: 0.8rem; }
+        .login-card .auth-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-light); }
+        .login-card .auth-header p { font-size: 0.85rem; color: var(--text-secondary); }
+        
+        .card {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow);
+            padding: 1.5rem; margin-bottom: 1rem; padding-bottom: 90px;
+        }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; margin-bottom: 1rem; }
+        header h1 { font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary); font-size: 0.8rem; }
+        .form-group input[type="text"], .form-group input[type="password"], .form-group textarea {
+            width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--border-color);
+            border-radius: 0.4rem; font-size: 0.9rem; background-color: var(--bg-input); color: var(--text-light);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .checkbox-container { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+        .checkbox-container label { color: var(--text-secondary); cursor: pointer; }
+        
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            background: var(--primary-color); color: white; padding: 0.7rem 1.2rem;
+            border: none; border-radius: 0.4rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+            text-align: center; text-decoration: none; transition: all 0.3s ease;
+        }
+        .btn:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 30%, transparent); }
+        .btn-success { background: var(--success-color); }
+        .btn-success:hover { background: #16a34a; }
+        .btn-danger { background: var(--error-color); }
+        .btn-danger:hover { background: #dc2626; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .spinner-small { flex-shrink: 0; width: 1em; height: 1em; border-top: 2px solid currentColor; border-right: 2px solid transparent; border-radius: 50%; animation: spin 0.6s linear infinite; }
+
+        .loader { border: 4px solid var(--border-color); border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 2rem auto; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #bdc3c7; transition: .4s; border-radius: 28px; }
         .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(22px); }
-        .proxy-list { list-style: none; padding: 0; margin-top: 1rem; }
-        .proxy-list-item { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.5rem; background: var(--white); }
-        .proxy-list-item > div { display: flex; align-items: center; width: 100%; }
-        .proxy-list-item .proxy-text { flex-grow: 1; word-break: break-all; margin-right: 1rem; }
-        .proxy-list-item .proxy-input { flex-grow: 1; margin-right: 1rem; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 4px; }
-        .changelog-list { list-style: none; padding: 0; }
-        .changelog-card { border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.5rem; background: var(--white); overflow: hidden; }
-        .changelog-header { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 1rem; background-color: var(--secondary-color); cursor: pointer; }
-        .changelog-header .version-title { font-weight: 600; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .proxy-header-actions { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .proxy-footer-toolbar { display: flex; gap: 0.5rem; }
+        .proxy-list-container { display: flex; flex-direction: column; gap: 0.8rem; max-height: 400px; overflow-y: auto; padding: 0.5rem; background-color: var(--bg-input); border-radius: 0.4rem; border: 1px solid var(--border-color); }
+        .proxy-item { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.4rem; }
+        .proxy-item .proxy-identity { display: flex; flex: 1; align-items: center; gap: 0.8rem; min-width: 0; }
+        .proxy-item .status-dot { flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #6b7280; }
+        .proxy-item .status-dot.green { background-color: #22c55e; } .proxy-item .status-dot.yellow { background-color: #f59e0b; } .proxy-item .status-dot.red { background-color: #ef4444; }
+        .proxy-item .proxy-url { flex: 1; overflow: hidden; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+        .proxy-item .latency-text { font-size: 0.8rem; color: var(--text-secondary); text-align: right; min-width: 60px; }
+        .proxy-item .latency-text.green { color: #22c55e; } .proxy-item .latency-text.yellow { color: #f59e0b; } .proxy-item .latency-text.red { color: #ef4444; }
+        .proxy-item .proxy-actions { display: flex; flex-shrink: 0; gap: 0.3rem; }
+        .btn-icon-sm { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; font-size: 0.9rem; color: var(--text-secondary); background: transparent; border: none; border-radius: 50%; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+        .btn-icon-sm:hover { background-color: rgba(127, 127, 127, 0.1); color: var(--text-light); }
+        .btn-icon-sm.danger:hover { background-color: color-mix(in srgb, var(--error-color) 20%, transparent); color: var(--error-color); }
+        
+        .changelog-card { border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.5rem; background: var(--bg-input); overflow: hidden; }
+        .changelog-header { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 1rem; background-color: color-mix(in srgb, var(--border-color) 30%, transparent); cursor: pointer; }
         .changelog-body { padding: 1rem; border-top: 1px solid var(--border-color); display: none; }
         .changelog-card.active .changelog-body { display: block; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; padding: 0.5rem; background-color: var(--white); box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); gap: 0.5rem; z-index: 1000; }
-        .bottom-nav .nav-btn { flex-grow: 1; }
-        .bottom-nav .nav-btn.active { background-color: #357abd; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
-        .bottom-nav #nav-save { flex-grow: 0; min-width: 90px; }
-        #toast-notification { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 10px 20px; border-radius: 5px; z-index: 2000; visibility: hidden; opacity: 0; transition: opacity 0.5s, visibility 0.5s; }
-        #toast-notification.show { visibility: visible; opacity: 1; }
-        #toast-notification.success { background-color: var(--success-color); }
-        #toast-notification.error { background-color: var(--error-color); }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; padding: 0.8rem 1rem; background-color: var(--bg-card); backdrop-filter: blur(8px); box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); gap: 1rem; z-index: 1000; }
+        .bottom-nav .nav-btn { flex-grow: 1; background: var(--border-color); }
+        .bottom-nav .nav-btn:hover { background-color: color-mix(in srgb, var(--text-secondary) 50%, transparent); }
+        .bottom-nav .nav-btn.active { background: var(--primary-color); font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .bottom-nav .nav-btn.active:hover { background: var(--primary-hover); }
+        .bottom-nav #nav-save { flex-grow: 0; min-width: 100px; }
+        
+        #toast-notification { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--bg-card); backdrop-filter: blur(10px); color: var(--text-light); padding: 0.6rem 1rem; border-radius: var(--border-radius); z-index: 2000; border-left: 4px solid transparent; box-shadow: var(--shadow); opacity: 0; transition: transform 0.4s cubic-bezier(0.21, 1.02, 0.73, 1), opacity 0.4s ease; }
+        #toast-notification.show { opacity: 1; transform: translate(-50%, -90px); }
+        #toast-notification.success { border-left-color: var(--success-color); }
+        #toast-notification.error { border-left-color: var(--error-color); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--bg-card); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 90%; max-width: 400px; transform: scale(0.9); transition: transform 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .modal-header h3 { font-size: 1.1rem; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 0.8rem; margin-top: 1.5rem; }
+        
+        .hidden { display: none !important; }
+        .grid-2-col { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 登录视图 -->
         <div id="login-view" class="login-view active">
-            <div class="card" style="padding-bottom: 1.5rem;">
-                <h1>后台管理登录</h1>
-                <p style="margin-bottom: 1rem; color: #666;">管理 rjdsq/rjdsq.github.io 仓库</p>
-                <div class="form-group"><label for="github-token">GitHub Personal Access Token</label><input type="password" id="github-token" placeholder="输入您的Token"></div>
-                <div class="form-group"><input type="checkbox" id="remember-token" style="margin-right: 0.5rem;"><label for="remember-token">记住Token</label></div>
-                <button id="login-btn" class="btn">登录</button>
+            <div class="login-card">
+                <div class="auth-header">
+                    <i class="fa-brands fa-github"></i>
+                    <h1>后台管理面板</h1>
+                    <p>管理 rjdsq/rjdsq.github.io 仓库</p>
+                </div>
+                <div class="form-group">
+                    <label for="github-token">GitHub Personal Access Token</label>
+                    <input type="password" id="github-token" placeholder="输入您的Token">
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="remember-token" checked>
+                    <label for="remember-token">记住Token</label>
+                </div>
+                <button id="login-btn" class="btn" style="width: 100%; margin-top: 1rem;">
+                    <i class="fa-solid fa-right-to-bracket"></i> 登录
+                </button>
             </div>
         </div>
-        <div id="main-view" class="main-view">
-            <header><h1 id="welcome-message"></h1><button id="logout-btn" class="btn btn-logout">退出</button></header>
+
+        <!-- 主视图 -->
+        <div id="main-view" class="hidden">
+            <header>
+                <h1 id="welcome-message"><i class="fa-regular fa-user"></i></h1>
+                <button id="logout-btn" class="btn-icon-sm danger" title="退出登录"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </header>
+            
             <div class="card">
                 <div class="loader" id="loader"></div>
-                <div id="update-json-editor" class="editor-view">
+
+                <!-- 更新JSON编辑器 -->
+                <div id="update-json-editor" class="hidden">
                     <h3>基础信息</h3>
-                    <div class="form-group"><label for="json-version">版本</label><input type="text" id="json-version"></div>
-                    <div class="form-group"><label for="json-announcement">公告</label><input type="text" id="json-announcement"></div>
+                    <div class="form-group"><label for="json-version">版本号</label><input type="text" id="json-version"></div>
                     <div class="form-group"><label for="json-download-url">下载地址</label><input type="text" id="json-download-url"></div>
-                    <div class="form-group"><label for="json-copy-content">复制内容</label><input type="text" id="json-copy-content"></div>
-                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                    <div class="form-group"><label for="json-announcement">公告内容</label><textarea id="json-announcement"></textarea></div>
+                    
+                    <h3>公告扩展设置</h3>
+                    <div class="grid-2-col">
+                        <div class="form-group"><label for="json-announcement-link">公告链接</label><input type="text" id="json-announcement-link"></div>
+                        <div class="form-group"><label for="json-copy-content">公告复制内容</label><input type="text" id="json-copy-content"></div>
+                        <div class="form-group"><label for="json-link-btn-text">链接按钮文本</label><input type="text" id="json-link-btn-text"></div>
+                        <div class="form-group"><label for="json-copy-btn-text">复制按钮文本</label><input type="text" id="json-copy-btn-text"></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-bottom: 1.5rem;">
                         <div class="form-group"><label>公告开关</label><label class="switch"><input type="checkbox" id="json-announcement-switch"><span class="slider"></span></label></div>
                         <div class="form-group"><label>强制更新</label><label class="switch"><input type="checkbox" id="json-force-update"><span class="slider"></span></label></div>
                     </div>
                     <hr style="border:none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+                    
                     <h3>更新日志管理</h3>
-                    <button id="add-changelog-btn" class="btn">添加新版本日志</button>
-                    <div id="changelog-editor-container" class="changelog-list"></div>
+                    <button id="add-changelog-btn" class="btn" style="margin-bottom: 1rem;"><i class="fa fa-plus"></i> 添加新版本日志</button>
+                    <div id="changelog-editor-container"></div>
                 </div>
-                <div id="proxy-txt-editor" class="editor-view">
-                    <h3>代理列表</h3>
-                    <div id="proxy-list-container"></div>
-                    <h3 style="margin-top: 2rem;">添加代理 (一行一个)</h3>
-                    <div class="form-group"><textarea id="new-proxy-textarea" placeholder="在此处粘贴一个或多个代理地址..."></textarea><button id="add-proxy-btn" class="btn">添加</button></div>
+
+                <!-- 代理TXT编辑器 -->
+                <div id="proxy-txt-editor" class="hidden">
+                    <div class="proxy-header-actions">
+                        <h3>代理管理</h3>
+                        <div class="proxy-footer-toolbar">
+                            <button id="proxy-test-all-btn" class="btn"><i class="fa-solid fa-bolt"></i> 测试全部</button>
+                            <button id="proxy-clear-all-btn" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i> 清空</button>
+                            <button id="proxy-add-btn" class="btn btn-success"><i class="fa fa-plus"></i> 添加</button>
+                        </div>
+                    </div>
+                    <div id="proxy-list-container" class="proxy-list-container">
+                        <!-- 代理条目将在这里动态生成 -->
+                    </div>
                 </div>
             </div>
+
             <div id="bottom-nav" class="bottom-nav">
-                <button id="nav-update" class="btn nav-btn">更新</button>
-                <button id="nav-proxy" class="btn nav-btn">代理</button>
-                <button id="nav-save" class="btn btn-success">保存</button>
+                <button id="nav-update" class="btn nav-btn"><i class="fa-solid fa-arrows-rotate"></i> 更新</button>
+                <button id="nav-proxy" class="btn nav-btn"><i class="fa-solid fa-server"></i> 代理</button>
+                <button id="nav-save" class="btn btn-success"><i class="fa-solid fa-check"></i> 保存更改</button>
             </div>
         </div>
     </div>
+    
     <div id="toast-notification"></div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const GITHUB_OWNER = 'rjdsq', GITHUB_REPO = 'rjdsq.github.io', API_BASE_URL = 'https://api.github.com';
-            const state = { currentToken: '', currentUser: null, files: { 'github/更新.json': { sha: '', content: {} }, 'github/代理.txt': { sha: '', content: [] } }, changelogEntries: [], activeEditor: '' };
-            const $ = (s) => document.querySelector(s), $$ = (s) => document.querySelectorAll(s);
-            const loginView = $('#login-view'), mainView = $('#main-view'), loginBtn = $('#login-btn'), logoutBtn = $('#logout-btn'), tokenInput = $('#github-token'), rememberTokenCheckbox = $('#remember-token');
-            const welcomeMessage = $('#welcome-message'), loader = $('#loader'), toast = $('#toast-notification'), jsonVersion = $('#json-version'), jsonAnnouncement = $('#json-announcement');
-            const jsonDownloadUrl = $('#json-download-url'), jsonCopyContent = $('#json-copy-content'), jsonAnnouncementSwitch = $('#json-announcement-switch'), jsonForceUpdate = $('#json-force-update');
-            const changelogEditorContainer = $('#changelog-editor-container'), addChangelogBtn = $('#add-changelog-btn'), proxyListContainer = $('#proxy-list-container'), newProxyTextarea = $('#new-proxy-textarea');
-            const addProxyBtn = $('#add-proxy-btn'), navUpdate = $('#nav-update'), navProxy = $('#nav-proxy'), navSave = $('#nav-save');
 
-            loginBtn.addEventListener('click', handleLogin);
-            logoutBtn.addEventListener('click', handleLogout);
-            addProxyBtn.addEventListener('click', addProxy);
-            addChangelogBtn.addEventListener('click', addNewChangelogEntry);
-            proxyListContainer.addEventListener('click', handleProxyListClicks);
-            changelogEditorContainer.addEventListener('click', handleAccordionClick);
-            navUpdate.addEventListener('click', () => switchEditorView('update-json'));
-            navProxy.addEventListener('click', () => switchEditorView('proxy-txt'));
-            navSave.addEventListener('click', handleUniversalSave);
+    <!-- 添加/编辑代理模态框 -->
+    <div id="add-edit-proxy-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="proxy-modal-title">添加代理</h3>
+                <button class="btn-icon-sm" id="proxy-modal-close-btn"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="form-group">
+                <label for="proxy-url-input">代理地址 (一行一个)</label>
+                <textarea id="proxy-url-input" placeholder="例如：https://ghproxy.net/"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn" id="proxy-modal-cancel-btn" style="background: var(--text-secondary);">取消</button>
+                <button class="btn btn-success" id="proxy-modal-save-btn">保存</button>
+            </div>
+        </div>
+    </div>
 
-            const savedToken = localStorage.getItem('githubToken');
-            if (savedToken) { tokenInput.value = savedToken; rememberTokenCheckbox.checked = true; handleLogin(); }
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const GITHUB_OWNER = 'rjdsq', GITHUB_REPO = 'rjdsq.github.io', API_BASE_URL = 'https://api.github.com';
+        const state = { currentToken: '', currentUser: null, files: { 'github/更新/更新2.0.json': { sha: '', content: {} }, 'github/代理.txt': { sha: '', content: [] } }, changelogEntries: [], activeEditor: '', proxies: [] };
 
-            async function handleLogin() {
-                const token = tokenInput.value.trim(); if (!token) return showToast('请输入您的GitHub Token。', 'error');
-                state.currentToken = token; showLoader(true);
-                try {
-                    state.currentUser = await fetchAuthenticatedUser(); welcomeMessage.textContent = `欢迎, ${state.currentUser.login}`;
-                    if (rememberTokenCheckbox.checked) localStorage.setItem('githubToken', token); else localStorage.removeItem('githubToken');
-                    loginView.classList.remove('active'); mainView.classList.add('active');
-                    await switchEditorView('update-json');
-                } catch (error) { console.error('登录失败:', error); showToast(`登录失败: ${error.message}`, 'error'); } 
-                finally { showLoader(false); }
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
+
+        const loginView = $('#login-view'), mainView = $('#main-view');
+        const updateEditor = $('#update-json-editor'), proxyEditor = $('#proxy-txt-editor');
+        const loginBtn = $('#login-btn'), logoutBtn = $('#logout-btn'), tokenInput = $('#github-token'), rememberTokenCheckbox = $('#remember-token');
+        const welcomeMessage = $('#welcome-message'), loader = $('#loader'), toast = $('#toast-notification');
+        const jsonVersion = $('#json-version'), jsonAnnouncement = $('#json-announcement'), jsonDownloadUrl = $('#json-download-url');
+        const jsonCopyContent = $('#json-copy-content'), jsonAnnouncementSwitch = $('#json-announcement-switch'), jsonForceUpdate = $('#json-force-update');
+        const jsonLink = $('#json-announcement-link'), jsonLinkBtnText = $('#json-link-btn-text'), jsonCopyBtnText = $('#json-copy-btn-text');
+        const changelogEditorContainer = $('#changelog-editor-container'), addChangelogBtn = $('#add-changelog-btn');
+        const proxyListContainer = $('#proxy-list-container');
+        const navUpdate = $('#nav-update'), navProxy = $('#nav-proxy'), navSave = $('#nav-save');
+        const proxyTestAllBtn = $('#proxy-test-all-btn'), proxyClearAllBtn = $('#proxy-clear-all-btn'), proxyAddBtn = $('#proxy-add-btn');
+        const proxyModal = $('#add-edit-proxy-modal'), proxyModalTitle = $('#proxy-modal-title'), proxyUrlInput = $('#proxy-url-input');
+        const proxyModalCloseBtn = $('#proxy-modal-close-btn'), proxyModalCancelBtn = $('#proxy-modal-cancel-btn'), proxyModalSaveBtn = $('#proxy-modal-save-btn');
+        
+        let editingProxyIndex = null;
+        
+        loginBtn.addEventListener('click', handleLogin);
+        logoutBtn.addEventListener('click', handleLogout);
+        addChangelogBtn.addEventListener('click', addNewChangelogEntry);
+        changelogEditorContainer.addEventListener('click', handleAccordionClick);
+        navUpdate.addEventListener('click', () => switchEditorView('update-json'));
+        navProxy.addEventListener('click', () => switchEditorView('proxy-txt'));
+        navSave.addEventListener('click', handleUniversalSave);
+        
+        proxyAddBtn.addEventListener('click', () => openProxyModal());
+        proxyModalCloseBtn.addEventListener('click', closeProxyModal);
+        proxyModalCancelBtn.addEventListener('click', closeProxyModal);
+        proxyModalSaveBtn.addEventListener('click', handleSaveProxy);
+        proxyClearAllBtn.addEventListener('click', handleClearAllProxies);
+        proxyTestAllBtn.addEventListener('click', testAllProxies);
+        proxyListContainer.addEventListener('click', handleProxyListClicks);
+
+        const savedToken = localStorage.getItem('githubToken');
+        if (savedToken) { tokenInput.value = savedToken; rememberTokenCheckbox.checked = true; handleLogin(); }
+
+        async function handleLogin() {
+            const token = tokenInput.value.trim(); if (!token) return showToast('请输入GitHub Token', 'error');
+            showLoader(true);
+            state.currentToken = token;
+            try {
+                state.currentUser = await fetchAuthenticatedUser();
+                welcomeMessage.innerHTML = `<i class="fa-regular fa-user"></i> 欢迎, ${state.currentUser.login}`;
+                if (rememberTokenCheckbox.checked) localStorage.setItem('githubToken', token); else localStorage.removeItem('githubToken');
+                loginView.classList.add('hidden');
+                mainView.classList.remove('hidden');
+                await switchEditorView('update-json');
+            } catch (error) { showToast(`登录失败: ${error.message}`, 'error'); } 
+            finally { showLoader(false); }
+        }
+
+        function handleLogout() {
+            state.currentToken = ''; state.currentUser = null;
+            if (!rememberTokenCheckbox.checked) localStorage.removeItem('githubToken');
+            mainView.classList.add('hidden');
+            loginView.classList.remove('hidden');
+        }
+
+        async function switchEditorView(editorName) {
+            state.activeEditor = editorName;
+            updateEditor.classList.add('hidden'); proxyEditor.classList.add('hidden');
+            navUpdate.classList.remove('active'); navProxy.classList.remove('active');
+            const viewToShow = editorName === 'update-json' ? updateEditor : proxyEditor;
+            const navToActivate = editorName === 'update-json' ? navUpdate : navProxy;
+            const filePath = editorName === 'update-json' ? 'github/更新/更新2.0.json' : 'github/代理.txt';
+            await loadFile(filePath);
+            viewToShow.classList.remove('hidden');
+            navToActivate.classList.add('active');
+        }
+
+        async function handleUniversalSave() {
+            showLoader(true);
+            const filePath = state.activeEditor === 'update-json' ? 'github/更新/更新2.0.json' : 'github/代理.txt';
+            let contentString;
+            if (filePath.endsWith('.json')) {
+                updateChangelogStateFromUI();
+                const jsonData = {
+                    "版本": jsonVersion.value, "强制更新": jsonForceUpdate.checked ? "开" : "关",
+                    "公告开关": jsonAnnouncementSwitch.checked ? "开" : "关", "公告": jsonAnnouncement.value,
+                    "公告复制按钮文本": jsonCopyBtnText.value, "公告链接按钮文本": jsonLinkBtnText.value,
+                    "公告复制内容": jsonCopyContent.value, "公告链接": jsonLink.value,
+                    "下载地址": jsonDownloadUrl.value, "更新日志": compileChangelogToString()
+                };
+                contentString = JSON.stringify(jsonData, null, 2);
+            } else {
+                contentString = state.proxies.map(p => p.url).join('\n');
             }
-            function handleLogout() { state.currentToken = ''; state.currentUser = null; localStorage.removeItem('githubToken'); tokenInput.value = ''; mainView.classList.remove('active'); loginView.classList.add('active'); }
-            async function switchEditorView(editorName) {
-                state.activeEditor = editorName; $$('.editor-view').forEach(v => v.classList.remove('active'));
-                navUpdate.classList.toggle('active', editorName === 'update-json'); navProxy.classList.toggle('active', editorName === 'proxy-txt');
-                const filePath = editorName === 'update-json' ? 'github/更新.json' : 'github/代理.txt';
-                await loadFile(filePath); $(`#${editorName}-editor`).classList.add('active');
-            }
-            async function handleUniversalSave() { const filePath = state.activeEditor === 'update-json' ? 'github/更新.json' : 'github/代理.txt'; await saveFile(filePath); }
-            async function loadFile(filePath) {
-                showLoader(true);
-                try {
-                    const response = await githubApiRequest(`/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`);
-                    if (response.status === 404) {
-                        showToast('文件不存在，将为您创建一个新文件。', 'info');
-                        state.files[filePath].sha = null;
-                        if (filePath.endsWith('.json')) { state.files[filePath].content = {}; parseAndRenderChangelog(''); populateJsonForm(); } 
-                        else { state.files[filePath].content = []; renderProxyList(); }
-                        return;
-                    }
-                    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    const data = await response.json();
-                    state.files[filePath].sha = data.sha; const content = decodeBase64(data.content);
-                    if (filePath.endsWith('.json')) {
-                        const jsonData = JSON.parse(content); state.files[filePath].content = jsonData;
-                        parseAndRenderChangelog(jsonData['更新日志'] || ''); populateJsonForm();
-                    } else { state.files[filePath].content = content.split('\n').filter(Boolean); renderProxyList(); }
-                } catch (error) { console.error(`加载文件 ${filePath} 失败:`, error); showToast(`加载文件失败: ${error.message}`, 'error'); } 
-                finally { showLoader(false); }
-            }
-            async function saveFile(filePath) {
-                showLoader(true); let contentString;
+            try {
+                const payload = { message: `[Admin Panel] Update ${filePath}`, content: encodeBase64(contentString) };
+                const existingFile = state.files[filePath];
+                if (existingFile.sha) { payload.sha = existingFile.sha; }
+                const response = await githubApiRequest(`/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, { method: 'PUT', body: JSON.stringify(payload) });
+                if (!response.ok) { const errData = await response.json(); throw new Error(errData.message); }
+                const data = await response.json();
+                existingFile.sha = data.content.sha;
+                showToast('文件保存成功！', 'success');
+            } catch (error) { showToast(`保存失败: ${error.message}`, 'error'); } 
+            finally { showLoader(false); }
+        }
+
+        async function loadFile(filePath) {
+            showLoader(true);
+            try {
+                const response = await githubApiRequest(`/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`);
+                if (response.status === 404) {
+                    state.files[filePath].sha = null;
+                    if (filePath.endsWith('.json')) { state.files[filePath].content = {}; parseAndRenderChangelog(''); populateJsonForm(); } 
+                    else { state.proxies = []; renderProxyList(); }
+                    return;
+                }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                state.files[filePath].sha = data.sha;
+                const content = decodeBase64(data.content);
                 if (filePath.endsWith('.json')) {
-                    updateChangelogStateFromUI();
-                    const jsonData = { "版本": jsonVersion.value, "公告": jsonAnnouncement.value, "公告开关": jsonAnnouncementSwitch.checked ? "开" : "关", "强制更新": jsonForceUpdate.checked ? "开" : "关", "下载地址": jsonDownloadUrl.value, "复制内容": jsonCopyContent.value, "更新日志": compileChangelogToString() };
-                    contentString = JSON.stringify(jsonData, null, 2);
-                } else { contentString = state.files[filePath].content.join('\n'); }
-                try {
-                    const payload = { message: `[Admin Panel] Update ${filePath}`, content: encodeBase64(contentString) };
-                    if (state.files[filePath].sha) { payload.sha = state.files[filePath].sha; }
-                    const response = await githubApiRequest(`/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, { method: 'PUT', body: JSON.stringify(payload) });
-                    if (!response.ok) { const errData = await response.json(); throw new Error(errData.message); }
-                    const data = await response.json();
-                    state.files[filePath].sha = data.content.sha; showToast('文件保存成功！', 'success');
-                } catch (error) { console.error(`保存文件 ${filePath} 失败:`, error); showToast(`保存失败: ${error.message}`, 'error'); } 
-                finally { showLoader(false); }
+                    const jsonData = JSON.parse(content); state.files[filePath].content = jsonData;
+                    parseAndRenderChangelog(jsonData['更新日志'] || ''); populateJsonForm();
+                } else {
+                    state.proxies = content.split('\n').filter(Boolean).map(url => ({ url, status: 'untested', latency: null }));
+                    renderProxyList();
+                }
+            } catch (error) { showToast(`加载文件失败: ${error.message}`, 'error'); } 
+            finally { showLoader(false); }
+        }
+
+        function populateJsonForm() {
+            const data = state.files['github/更新/更新2.0.json'].content;
+            jsonVersion.value = data['版本'] || '';
+            jsonDownloadUrl.value = data['下载地址'] || '';
+            jsonAnnouncement.value = data['公告'] || '';
+            jsonLink.value = data['公告链接'] || '';
+            jsonCopyContent.value = data['公告复制内容'] || '';
+            jsonLinkBtnText.value = data['公告链接按钮文本'] || '';
+            jsonCopyBtnText.value = data['公告复制按钮文本'] || '';
+            jsonAnnouncementSwitch.checked = data['公告开关'] === '开';
+            jsonForceUpdate.checked = data['强制更新'] === '开';
+        }
+
+        function parseAndRenderChangelog(logString) {
+            state.changelogEntries = [];
+            const regex = /v?(\d+\.\d+(\.\d+)?)\s*介绍：\n([\s\S]*?)(?=\n\nv?(\d+\.\d+(\.\d+)?)\s*介绍：|\s*$)/g;
+            let match;
+            while ((match = regex.exec(logString)) !== null) { state.changelogEntries.push({ version: match[1], description: match[3].trim() }); }
+            renderChangelogEditor();
+        }
+        
+        function renderChangelogEditor() {
+            changelogEditorContainer.innerHTML = state.changelogEntries.map((entry, index) => `
+                <div class="changelog-card">
+                    <div class="changelog-header"><span class="version-title">v${entry.version}</span><button class="btn-icon-sm danger delete-changelog-btn" data-index="${index}"><i class="fa-regular fa-trash-can"></i></button></div>
+                    <div class="changelog-body">
+                        <div class="form-group"><label>版本号</label><input type="text" class="changelog-version-input" value="${entry.version}"></div>
+                        <div class="form-group"><label>更新介绍</label><textarea class="changelog-desc-textarea">${entry.description}</textarea></div>
+                    </div></div>`).join('');
+            $$('.delete-changelog-btn').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); state.changelogEntries.splice(parseInt(e.currentTarget.dataset.index), 1); renderChangelogEditor(); }));
+        }
+        
+        function handleAccordionClick(e) { const header = e.target.closest('.changelog-header'); if (header) { const card = header.parentElement; card.classList.toggle('active'); card.querySelector('.changelog-body').style.display = card.classList.contains('active') ? 'block' : 'none'; } }
+        function getNextVersion(version) { if (!version) return '1.0'; const parts = version.split('.').map(Number); parts[parts.length - 1]++; return parts.join('.'); }
+        function addNewChangelogEntry() { const latestVersion = state.changelogEntries.length > 0 ? state.changelogEntries[0].version : '0.0'; state.changelogEntries.unshift({ version: getNextVersion(latestVersion), description: '' }); renderChangelogEditor(); }
+        function updateChangelogStateFromUI() { state.changelogEntries = Array.from($$('#changelog-editor-container .changelog-card')).map(card => ({ version: card.querySelector('.changelog-version-input').value, description: card.querySelector('.changelog-desc-textarea').value })); }
+        function compileChangelogToString() { return state.changelogEntries.map(entry => `${entry.version}介绍：\n${entry.description}`).join('\n\n'); }
+        
+        function renderProxyList() {
+            proxyListContainer.innerHTML = state.proxies.length === 0 ? `<p style="text-align:center; color: var(--text-secondary); padding: 1rem;">暂无代理，点击“添加”来创建。</p>` : state.proxies.map((proxy, index) => {
+                let statusClass = '', latencyText = '未测试';
+                if (proxy.status === 'testing') {
+                    latencyText = `<span class="spinner-small" style="display:inline-block;"></span>`;
+                } else if (proxy.status === 'ok') {
+                    latencyText = `${proxy.latency} ms`;
+                    statusClass = proxy.latency <= 500 ? 'green' : (proxy.latency <= 2000 ? 'yellow' : 'red');
+                } else if (proxy.status === 'fail') {
+                    statusClass = 'red'; latencyText = '失败';
+                }
+                return `
+                    <div class="proxy-item" data-index="${index}">
+                        <div class="proxy-identity"><span class="status-dot ${statusClass}"></span><span class="proxy-url">${proxy.url}</span></div>
+                        <div class="latency-text ${statusClass}">${latencyText}</div>
+                        <div class="proxy-actions"><button class="btn-icon-sm edit-btn"><i class="fa fa-pencil"></i></button><button class="btn-icon-sm danger delete-btn"><i class="fa-regular fa-trash-can"></i></button></div>
+                    </div>`;
+            }).join('');
+        }
+
+        function handleProxyListClicks(e) {
+            const editBtn = e.target.closest('.edit-btn');
+            const deleteBtn = e.target.closest('.delete-btn');
+            if (editBtn) openProxyModal(parseInt(editBtn.closest('.proxy-item').dataset.index));
+            if (deleteBtn) {
+                const index = parseInt(deleteBtn.closest('.proxy-item').dataset.index);
+                state.proxies.splice(index, 1);
+                renderProxyList();
+                showToast('代理已删除');
             }
-            function populateJsonForm() {
-                const data = state.files['github/更新.json'].content;
-                jsonVersion.value = data['版本'] || ''; jsonAnnouncement.value = data['公告'] || ''; jsonDownloadUrl.value = data['下载地址'] || '';
-                jsonCopyContent.value = data['复制内容'] || ''; jsonAnnouncementSwitch.checked = data['公告开关'] === '开'; jsonForceUpdate.checked = data['强制更新'] === '开';
+        }
+
+        function openProxyModal(index = null) {
+            editingProxyIndex = index;
+            proxyModalTitle.textContent = index === null ? '添加代理' : '编辑代理';
+            proxyUrlInput.value = index === null ? '' : state.proxies[index].url;
+            proxyUrlInput.placeholder = index === null ? "一行一个代理地址" : "https://...";
+            proxyModal.classList.add('active');
+        }
+
+        function closeProxyModal() {
+            proxyModal.classList.remove('active');
+            editingProxyIndex = null;
+        }
+
+        function handleSaveProxy() {
+            const urls = proxyUrlInput.value.trim().split('\n').map(u => u.trim()).filter(Boolean);
+            if (urls.length === 0) return;
+            if (editingProxyIndex !== null) {
+                state.proxies[editingProxyIndex].url = urls[0];
+                state.proxies[editingProxyIndex].status = 'untested';
+            } else {
+                const newUrls = urls.filter(u => !state.proxies.some(p => p.url === u));
+                const newProxies = newUrls.map(url => ({ url, status: 'untested', latency: null }));
+                state.proxies.push(...newProxies);
             }
-            function parseAndRenderChangelog(logString) {
-                state.changelogEntries = []; const regex = /v(\d+\.\d+(\.\d+)?)介绍：\n([\s\S]*?)(?=\n\nv|\s*$)/g; let match;
-                while ((match = regex.exec(logString)) !== null) { state.changelogEntries.push({ version: match[1], description: match[3].trim() }); }
-                renderChangelogEditor();
+            renderProxyList();
+            closeProxyModal();
+        }
+
+        function handleClearAllProxies() {
+            if (confirm('确定要清空所有代理吗？此操作不可撤销。')) {
+                state.proxies = [];
+                renderProxyList();
+                showToast('所有代理已清空');
             }
-            function renderChangelogEditor() {
-                changelogEditorContainer.innerHTML = '';
-                state.changelogEntries.forEach((entry, index) => {
-                    const card = document.createElement('div'); card.className = 'changelog-card';
-                    if (index === 0) card.classList.add('active');
-                    card.innerHTML = `<div class="changelog-header"><span class="version-title">v${entry.version}</span><button class="btn btn-danger btn-sm delete-changelog-btn">删除</button></div><div class="changelog-body"><div class="form-group"><label>版本号</label><input type="text" class="changelog-version-input" value="${entry.version}"></div><div class="form-group"><label>更新介绍</label><textarea class="changelog-desc-textarea" placeholder="输入更新介绍...">${entry.description}</textarea></div></div>`;
-                    card.querySelector('.delete-changelog-btn').addEventListener('click', (e) => { e.stopPropagation(); state.changelogEntries.splice(index, 1); renderChangelogEditor(); });
-                    changelogEditorContainer.appendChild(card);
-                });
+        }
+        
+        async function testProxyConnectivity(proxyUrl) {
+            const start = performance.now();
+            try {
+                const strippedUrl = proxyUrl.replace(/^https?:\/\//, '');
+                const testUrl = `https://${strippedUrl}/rjdsq/rjdsq.github.io/raw/main/README.md?t=${Date.now()}`;
+                const response = await fetch(testUrl, { method: 'HEAD', cache: 'no-store', signal: AbortSignal.timeout(5000) });
+                if (!response.ok) throw new Error('Response not OK');
+                return { status: 'ok', latency: Math.round(performance.now() - start) };
+            } catch {
+                return { status: 'fail', latency: null };
             }
-            function handleAccordionClick(e) { const header = e.target.closest('.changelog-header'); if (header) header.parentElement.classList.toggle('active'); }
-            function getNextVersion(version) { if (!version) return '1.0'; const parts = version.split('.').map(Number); parts[parts.length - 1]++; return parts.join('.'); }
-            function addNewChangelogEntry() { const latestVersion = state.changelogEntries.length > 0 ? state.changelogEntries[0].version : '0.0'; state.changelogEntries.unshift({ version: getNextVersion(latestVersion), description: '' }); renderChangelogEditor(); }
-            function updateChangelogStateFromUI() { const cards = $$('#changelog-editor-container .changelog-card'); state.changelogEntries = Array.from(cards).map(card => ({ version: card.querySelector('.changelog-version-input').value, description: card.querySelector('.changelog-desc-textarea').value })); }
-            function compileChangelogToString() { return state.changelogEntries.map(entry => `v${entry.version}介绍：\n${entry.description}`).join('\n\n'); }
-            function renderProxyList() { proxyListContainer.innerHTML = state.files['github/代理.txt'].content.map((proxy, index) => `<li class="proxy-list-item" data-index="${index}"><div class="view-mode"><span class="proxy-text">${proxy}</span><div><button class="btn btn-secondary btn-sm edit-btn">编辑</button><button class="btn btn-danger btn-sm delete-btn">删除</button></div></div><div class="edit-mode" style="display:none;"><input type="text" class="proxy-input" value="${proxy}"><div><button class="btn btn-success btn-sm save-btn">保存</button><button class="btn btn-sm cancel-btn">取消</button></div></div></li>`).join(''); }
-            function addProxy() {
-                const newProxies = newProxyTextarea.value.trim().split('\n').map(p => p.trim()).filter(Boolean); if (newProxies.length === 0) return;
-                const combined = [...state.files['github/代理.txt'].content, ...newProxies]; state.files['github/代理.txt'].content = [...new Set(combined)];
-                newProxyTextarea.value = ''; renderProxyList();
-            }
-            function handleProxyListClicks(e) {
-                const listItem = e.target.closest('.proxy-list-item'); if (!listItem) return;
-                const index = parseInt(listItem.dataset.index, 10), viewMode = listItem.querySelector('.view-mode'), editMode = listItem.querySelector('.edit-mode');
-                if (e.target.classList.contains('delete-btn')) { state.files['github/代理.txt'].content.splice(index, 1); renderProxyList(); } 
-                else if (e.target.classList.contains('edit-btn')) { viewMode.style.display = 'none'; editMode.style.display = 'flex'; } 
-                else if (e.target.classList.contains('cancel-btn')) { viewMode.style.display = 'flex'; editMode.style.display = 'none'; editMode.querySelector('.proxy-input').value = state.files['github/代理.txt'].content[index]; } 
-                else if (e.target.classList.contains('save-btn')) { const newValue = editMode.querySelector('.proxy-input').value.trim(); if (newValue) { state.files['github/代理.txt'].content[index] = newValue; renderProxyList(); } }
-            }
-            async function githubApiRequest(endpoint, options = {}) { const headers = { 'Authorization': `token ${state.currentToken}`, 'Accept': 'application/vnd.github.v3+json' }; const config = { ...options, headers: { ...headers, ...options.headers } }; return await fetch(`${API_BASE_URL}${endpoint}`, config); }
-            async function fetchAuthenticatedUser() { const response = await githubApiRequest('/user'); if (!response.ok) throw new Error("无效的Token或网络错误"); return response.json(); }
-            function encodeBase64(s) { return btoa(unescape(encodeURIComponent(s))); }
-            function decodeBase64(s) { return decodeURIComponent(escape(atob(s))); }
-            function showLoader(show) { loader.style.display = show ? 'block' : 'none'; }
-            function showToast(message, type = 'info') { toast.textContent = message; toast.className = type; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
-        });
-    </script>
+        }
+        
+        async function testAllProxies() {
+            proxyTestAllBtn.disabled = true;
+            proxyTestAllBtn.innerHTML = '<span class="spinner-small"></span> 测试中';
+            
+            await Promise.all(state.proxies.map(async (proxy) => {
+                proxy.status = 'testing';
+                renderProxyList();
+                const result = await testProxyConnectivity(proxy.url);
+                proxy.status = result.status;
+                proxy.latency = result.latency;
+            }));
+            
+            state.proxies.sort((a, b) => (a.latency ?? Infinity) - (b.latency ?? Infinity));
+            renderProxyList();
+            proxyTestAllBtn.disabled = false;
+            proxyTestAllBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> 测试全部';
+            showToast('所有代理测试完成');
+        }
+
+        async function githubApiRequest(endpoint, options = {}) { const headers = { 'Authorization': `token ${state.currentToken}`, 'Accept': 'application/vnd.github.v3+json' }; const config = { ...options, headers: { ...headers, ...options.headers } }; return await fetch(`${API_BASE_URL}${endpoint}`, config); }
+        async function fetchAuthenticatedUser() { const response = await githubApiRequest('/user'); if (!response.ok) throw new Error("无效的Token或网络错误"); return response.json(); }
+        function encodeBase64(s) {
+            const uint8Array = new TextEncoder().encode(s);
+            const binString = Array.from(uint8Array, (byte) => String.fromCharCode(byte)).join('');
+            return btoa(binString);
+        }
+        function decodeBase64(s) {
+            const binString = atob(s);
+            const uint8Array = Uint8Array.from(binString, (char) => char.charCodeAt(0));
+            return new TextDecoder().decode(uint8Array);
+        }
+        function showLoader(show) { loader.style.display = show ? 'block' : 'none'; }
+        function showToast(message, type = 'info') { toast.textContent = message; toast.className = ``; toast.classList.add(type, 'show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    });
+</script>
 </body>
 </html>
