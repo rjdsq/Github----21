@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GitHub Pages 一键部署</title>
+    <style>
+        :root {
+            --bg-color: #101418;
+            --card-bg: #1a1f24;
+            --text-color: #e6edf3;
+            --text-secondary: #7d8590;
+            --border-color: #30363d;
+            --accent-color: #2f81f7;
+            --accent-hover: #4895fd;
+            --error-color: #f85149;
+            --success-color: #238636;
+        }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            min-height: 100vh;
+        }
+        #app-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: opacity 0.3s ease;
+        }
+        .card.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .card-header .step-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.8rem;
+            transition: background-color 0.3s ease;
+        }
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .card-header .status-icon {
+            margin-left: auto;
+            color: var(--success-color);
+            display: none;
+        }
+        .card.connected .card-header .step-circle {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .card.connected .card-header .status-icon {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.3);
+        }
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%237d8590' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1em;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--accent-hover);
+        }
+        .btn:disabled {
+            background-color: var(--border-color);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .status-message {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            height: 1.2em;
+        }
+        .error { color: var(--error-color); }
+        .success { color: var(--success-color); }
+        .help-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: 0.5rem;
+        }
+        .help-text a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+        #log-output {
+            width: 100%;
+            height: 150px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            padding: 0.8rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--text-secondary);
+        }
+        #toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.8rem 1.5rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: bottom 0.4s ease-in-out;
+        }
+        #toast.show {
+            bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <div id="github-card" class="card">
+            <div class="card-header">
+                <span class="step-circle">1</span>
+                <h2>连接 GitHub</h2>
+                <span class="status-icon">✓</span>
+            </div>
+            <div class="form-group">
+                <label for="github-token-input">GitHub Token</label>
+                <input type="password" id="github-token-input" placeholder="粘贴您的 Personal Access Token">
+                 <p class="help-text">需要 `repo` 和 `user` 权限。 <a href="https://github.com/settings/tokens/new" target="_blank">在这里创建</a></p>
+            </div>
+            <button id="load-repos-btn" class="btn btn-primary">加载仓库</button>
+            <div class="form-group" id="repo-list-container" style="display: none; margin-top: 1rem;">
+                <label for="repo-select">选择一个仓库</label>
+                <select id="repo-select"></select>
+            </div>
+            <p id="github-status" class="status-message"></p>
+        </div>
+
+        <div id="cloudflare-card" class="card disabled">
+            <div class="card-header">
+                <span class="step-circle">2</span>
+                <h2>连接 Cloudflare</h2>
+                <span class="status-icon">✓</span>
+            </div>
+            <div class="form-group">
+                <label for="cloudflare-token-input">Cloudflare API Token</label>
+                <input type="password" id="cloudflare-token-input" placeholder="粘贴您的 API 令牌">
+                <p class="help-text">需要 `Zone:Read` 和 `Pages:Edit` 权限。 <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">在这里创建</a></p>
+            </div>
+            <button id="connect-cf-btn" class="btn btn-primary">连接 & 加载域名</button>
+            <div class="form-group" id="zone-list-container" style="display: none; margin-top: 1rem;">
+                <label for="zone-select">选择一个域名</label>
+                <select id="zone-select"></select>
+            </div>
+            <p id="cloudflare-status" class="status-message"></p>
+        </div>
+
+        <div id="deploy-card" class="card disabled">
+            <div class="card-header">
+                <span class="step-circle">3</span>
+                <h2>部署配置</h2>
+            </div>
+            <div class="form-group">
+                <label for="subdomain-input">设置访问地址</label>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="text" id="subdomain-input" placeholder="例如: my-app">
+                    <span id="domain-suffix" style="color: var(--text-secondary); white-space: nowrap;">.example.com</span>
+                </div>
+            </div>
+            <button id="deploy-btn" class="btn btn-primary" disabled>一键部署</button>
+        </div>
+
+        <div id="status-card" class="card">
+             <div class="card-header" style="margin-bottom: 0.5rem;">
+                <h2 style="font-size: 1rem;">部署状态</h2>
+            </div>
+            <pre id="log-output">等待操作...</pre>
+        </div>
+    </div>
+    <div id="toast"></div>
+
+    <script>
+        const el = {
+            githubCard: document.getElementById('github-card'),
+            cloudflareCard: document.getElementById('cloudflare-card'),
+            deployCard: document.getElementById('deploy-card'),
+            githubTokenInput: document.getElementById('github-token-input'),
+            loadReposBtn: document.getElementById('load-repos-btn'),
+            repoListContainer: document.getElementById('repo-list-container'),
+            repoSelect: document.getElementById('repo-select'),
+            githubStatus: document.getElementById('github-status'),
+            cloudflareTokenInput: document.getElementById('cloudflare-token-input'),
+            connectCfBtn: document.getElementById('connect-cf-btn'),
+            zoneListContainer: document.getElementById('zone-list-container'),
+            zoneSelect: document.getElementById('zone-select'),
+            cloudflareStatus: document.getElementById('cloudflare-status'),
+            subdomainInput: document.getElementById('subdomain-input'),
+            domainSuffix: document.getElementById('domain-suffix'),
+            deployBtn: document.getElementById('deploy-btn'),
+            logOutput: document.getElementById('log-output'),
+            toast: document.getElementById('toast'),
+        };
+
+        const state = {
+            githubToken: '',
+            cloudflareToken: '',
+            repos: [],
+            zones: [],
+            accountId: null,
+            selectedRepo: null,
+            selectedZone: null,
+        };
+        
+        const showLoading = (button, text = '加载中...') => {
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.innerHTML = `<div class="spinner"></div> ${text}`;
+            return () => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            };
+        };
+
+        const showToast = (message) => {
+            el.toast.textContent = message;
+            el.toast.classList.add('show');
+            setTimeout(() => {
+                el.toast.classList.remove('show');
+            }, 3000);
+        };
+
+        const log = (message) => {
+            const timestamp = new Date().toLocaleTimeString();
+            el.logOutput.textContent += `[${timestamp}] ${message}\n`;
+            el.logOutput.scrollTop = el.logOutput.scrollHeight;
+        };
+
+        const checkDeployability = () => {
+            const isReady = state.selectedRepo && state.selectedZone && el.subdomainInput.value.trim() !== '';
+            el.deployBtn.disabled = !isReady;
+        };
+
+        async function fetchGithubRepos() {
+            state.githubToken = el.githubTokenInput.value.trim();
+            if (!state.githubToken) {
+                el.githubStatus.textContent = 'Token 不能为空';
+                el.githubStatus.className = 'status-message error';
+                return;
+            }
+            const done = showLoading(el.loadReposBtn);
+            el.githubStatus.textContent = '';
+            try {
+                const response = await fetch('https://api.github.com/user/repos?type=owner&sort=updated&per_page=100', {
+                    headers: { 'Authorization': `token ${state.githubToken}` }
+                });
+                if (!response.ok) throw new Error(`GitHub API 错误 (${response.status})`);
+                state.repos = await response.json();
+                
+                if (state.repos.length === 0) {
+                   el.githubStatus.textContent = '未找到任何仓库';
+                   el.githubStatus.className = 'status-message';
+                   return;
+                }
+                
+                el.repoSelect.innerHTML = '<option value="">-- 请选择一个仓库 --</option>';
+                state.repos.forEach(repo => {
+                    const option = document.createElement('option');
+                    option.value = repo.full_name;
+                    option.textContent = repo.name;
+                    el.repoSelect.appendChild(option);
+                });
+                el.repoListContainer.style.display = 'block';
+                el.githubCard.classList.add('connected');
+                el.cloudflareCard.classList.remove('disabled');
+            } catch (error) {
+                el.githubStatus.textContent = error.message;
+                el.githubStatus.className = 'status-message error';
+            } finally {
+                done();
+            }
+        }
+        
+        async function fetchCloudflareZones() {
+            state.cloudflareToken = el.cloudflareTokenInput.value.trim();
+            if (!state.cloudflareToken) {
+                el.cloudflareStatus.textContent = 'Token 不能为空';
+                el.cloudflareStatus.className = 'status-message error';
+                return;
+            }
+            const done = showLoading(el.connectCfBtn);
+            el.cloudflareStatus.textContent = '';
+
+            try {
+                const response = await fetch('https://api.cloudflare.com/client/v4/zones', {
+                    headers: { 'Authorization': `Bearer ${state.cloudflareToken}` }
+                });
+                const data = await response.json();
+                if (!data.success) throw new Error(data.errors[0].message);
+                
+                state.zones = data.result;
+                if (state.zones.length === 0) {
+                   el.cloudflareStatus.textContent = '未找到任何域名';
+                   el.cloudflareStatus.className = 'status-message';
+                   return;
+                }
+                
+                state.accountId = state.zones[0].account.id;
+                el.zoneSelect.innerHTML = '<option value="">-- 请选择一个域名 --</option>';
+                state.zones.forEach(zone => {
+                    const option = document.createElement('option');
+                    option.value = zone.id;
+                    option.textContent = zone.name;
+                    el.zoneSelect.appendChild(option);
+                });
+                el.zoneListContainer.style.display = 'block';
+                el.cloudflareCard.classList.add('connected');
+                el.deployCard.classList.remove('disabled');
+            } catch (error) {
+                el.cloudflareStatus.textContent = error.message;
+                el.cloudflareStatus.className = 'status-message error';
+            } finally {
+                done();
+            }
+        }
+        
+        async function startDeployment() {
+            const done = showLoading(el.deployBtn, '部署中...');
+            el.logOutput.textContent = '';
+            log('部署流程已启动...');
+            
+            try {
+                const repoFullName = state.selectedRepo.full_name;
+                const [owner, repoName] = repoFullName.split('/');
+                const subdomain = el.subdomainInput.value.trim();
+                const zoneName = state.selectedZone.name;
+                const fullDomain = `${subdomain}.${zoneName}`;
+
+                log(`仓库: ${repoFullName}`);
+                log(`域名: ${fullDomain}`);
+
+                log('正在创建 Cloudflare Pages 项目...');
+                const createProjectResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${state.accountId}/pages/projects`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${state.cloudflareToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: repoName,
+                        production_branch: state.selectedRepo.default_branch,
+                        source: { type: 'github', config: { owner, repo_name: repoName, production_branch: state.selectedRepo.default_branch } }
+                    })
+                });
+                const projectData = await createProjectResponse.json();
+                
+                if (!projectData.success) {
+                    if (projectData.errors[0]?.code === 8000041) {
+                        log('项目已存在，将继续绑定域名...');
+                    } else {
+                        throw new Error(projectData.errors[0]?.message || '创建 Pages 项目失败');
+                    }
+                } else {
+                    log('项目创建成功！');
+                }
+
+                log('正在绑定自定义域名...');
+                const bindDomainResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${state.accountId}/pages/projects/${repoName}/domains`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${state.cloudflareToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: fullDomain })
+                });
+
+                const domainData = await bindDomainResponse.json();
+                if (!domainData.success) throw new Error(domainData.errors[0]?.message || '绑定域名失败');
+                
+                log('✅ 部署指令已成功发送！');
+                log(`Cloudflare 正在后台为您的网站进行首次构建。`);
+                log(`请稍后访问: https://${fullDomain}`);
+                showToast('部署成功！');
+
+            } catch (error) {
+                log(`❌ 部署失败: ${error.message}`);
+                showToast('部署失败，请查看日志');
+            } finally {
+                done();
+            }
+        }
+        
+        el.loadReposBtn.addEventListener('click', fetchGithubRepos);
+        el.connectCfBtn.addEventListener('click', fetchCloudflareZones);
+        el.deployBtn.addEventListener('click', startDeployment);
+        
+        el.repoSelect.addEventListener('change', (e) => {
+            state.selectedRepo = state.repos.find(repo => repo.full_name === e.target.value) || null;
+            checkDeployability();
+        });
+        
+        el.zoneSelect.addEventListener('change', (e) => {
+            state.selectedZone = state.zones.find(zone => zone.id === e.target.value) || null;
+            if (state.selectedZone) {
+                el.domainSuffix.textContent = `.${state.selectedZone.name}`;
+            } else {
+                el.domainSuffix.textContent = '';
+            }
+            checkDeployability();
+        });
+
+        el.subdomainInput.addEventListener('input', checkDeployability);
+
+    </script>
+</body>
+</html>
