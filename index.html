@@ -56,4 +56,7 @@ then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
 
 t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
 </script>
+
+
+<script src="https://cdn.jsdelivr.net/gh/rjdsq/rjdsq.github.io@main/file/樱花1.js"></script>
 </html>
