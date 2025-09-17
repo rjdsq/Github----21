@@ -2,499 +2,1392 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GitHub Pages 一键部署</title>
-    <style>
-        :root {
-            --bg-color: #101418;
-            --card-bg: #1a1f24;
-            --text-color: #e6edf3;
-            --text-secondary: #7d8590;
-            --border-color: #30363d;
-            --accent-color: #2f81f7;
-            --accent-hover: #4895fd;
-            --error-color: #f85149;
-            --success-color: #238636;
-        }
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            padding: 1rem;
-            min-height: 100vh;
-        }
-        #app-container {
-            width: 100%;
-            max-width: 420px;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.2rem;
-            transition: opacity 0.3s ease;
-        }
-        .card.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .card-header .step-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: var(--border-color);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-right: 0.8rem;
-            transition: background-color 0.3s ease;
-        }
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-        .card-header .status-icon {
-            margin-left: auto;
-            color: var(--success-color);
-            display: none;
-        }
-        .card.connected .card-header .step-circle {
-            background-color: var(--success-color);
-            color: white;
-        }
-        .card.connected .card-header .status-icon {
-            display: block;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        label {
-            display: block;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-        input[type="text"], input[type="password"], select {
-            width: 100%;
-            padding: 0.7rem;
-            font-size: 0.95rem;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        input[type="text"]:focus, input[type="password"]:focus, select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.3);
-        }
-        select {
-            -webkit-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%237d8590' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.7rem center;
-            background-size: 1em;
-        }
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0.7rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .btn-primary:hover:not(:disabled) {
-            background-color: var(--accent-hover);
-        }
-        .btn:disabled {
-            background-color: var(--border-color);
-            color: var(--text-secondary);
-            cursor: not-allowed;
-        }
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .status-message {
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            height: 1.2em;
-        }
-        .error { color: var(--error-color); }
-        .success { color: var(--success-color); }
-        .help-text {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-top: 0.5rem;
-        }
-        .help-text a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-        .help-text a:hover {
-            text-decoration: underline;
-        }
-        #log-output {
-            width: 100%;
-            height: 150px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            padding: 0.8rem;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-            color: var(--text-secondary);
-        }
-        #toast {
-            position: fixed;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0.8rem 1.5rem;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: bottom 0.4s ease-in-out;
-        }
-        #toast.show {
-            bottom: 2rem;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 </head>
+    <title>阚双雪 | 时光的礼物 - 致最爱的你</title>
+    <meta name="description" content="写给阚双雪的深情告白，记录我们共同的回忆、成长与情感历程，传递真挚爱意与思念">
+    <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
+    <link rel="preload" as="style" crossorigin
+    href="https://fontsapi.zeoseven.com/488/main/result.css"
+    onload="this.rel='stylesheet'"
+    onerror="this.href='https://fontsapi-storage.zeoseven.com/488/main/result.css'" />
+<noscript>
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/488/main/result.css" />
+</noscript>
+<style>
+    body {
+       
+        font-family: "STDongGuanTi";
+        font-weight: normal;
+    }
+    
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #3498db;
+    --primary-green: #2ecc71;
+    --accent-1: #9b59b6;
+    --accent-2: #f1c40f;
+    --accent-3: #e74c3c;
+    --light-gray: #ecf0f1;
+    --dark-gray: #34495e;
+}
+
+body {
+    line-height: 1.6;
+    color: #333;
+    background-color: var(--light-gray);
+}
+
+/* 导航栏样式 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 520;
+    padding: 0.5rem 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1000px;
+    height: 36px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(45, 216, 136, 0.815);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.nav-logo:hover {
+    transform: rotate(15deg) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.nav-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    background: linear-gradient(to right, var(--primary-blue), var(--primary-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: #444; /* 默认状态使用深色 */
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    background: linear-gradient(to right, #2980b9, #27ae60);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:hover::before {
+    width: 60%;
+}
+
+.nav-link.active {
+    background: linear-gradient(to right, #2471a3, #229954);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-link.active::before {
+    width: 60%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+    
+    .nav-menu {
+        gap: 0.8rem;
+    }
+    
+    .nav-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-brand {
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+        min-width: 0;
+        min-height: 36px;
+    }
+    
+    .nav-title {
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 120px;
+        background: linear-gradient(to right, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .nav-logo {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+    }
+    
+    .nav-container {
+        gap: 0.5rem;
+        position: relative;
+       
+    }
+    
+    .hamburger {
+        display: inline-block;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        margin: 0;
+        padding: 10px;
+        z-index: 100;
+    }
+    
+    .hamburger-box {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        position: relative;
+    }
+    
+    .hamburger-inner {
+        display: block;
+        top: 50%;
+        margin-top: -2px;
+    }
+    
+    .hamburger-inner,
+    .hamburger-inner::before,
+    .hamburger-inner::after {
+        width: 24px;
+        height: 1px;
+        background:linear-gradient(to right, #3498db, #2ecc71);
+        border-radius: 3px;
+        position: absolute;
+        transition: transform 0.2s ease;
+    }
+    
+    .hamburger-inner::before,
+    .hamburger-inner::after {
+        content: "";
+        display: block;
+    }
+    
+    .hamburger-inner::before {
+        top: -8px;
+    }
+    
+    .hamburger-inner::after {
+        bottom: -8px;
+    }
+    
+    .nav-menu {
+        position: absolute;
+        top: calc(100% + 5px);
+        right: 10px;
+        width: 140px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        flex-direction: column;
+        padding: 0.3rem 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 6px;
+        display: none;
+        overflow: hidden;
+        transform: translateY(-10px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .nav-menu.active {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+        animation: fadeInUp 0.3s ease forwards;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+        color: #444;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+    
+    .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #3498db;
+        transform: translateX(4px);
+    }
+    
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+    
+    .hamburger.active .hamburger-inner {
+        transform: rotate(45deg);
+    }
+    
+    .hamburger.active .hamburger-inner::before {
+        transform: rotate(-90deg) translate(-8px, 0);
+    }
+    
+    .hamburger.active .hamburger-inner::after {
+        opacity: 0;
+    }
+}
+
+/* 主要内容区域 */
+
+/* 轮播图样式 */
+.carousel-container {
+    position: relative;
+    width: 98%;
+    margin: 0 auto;
+    height: 400px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    border-radius: 8px;
+   box-shadow: 2px 2px 16px rgb(63 85 133 / 53%);
+}
+
+.carousel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 33px;
+    left: 15px;
+    color: white;
+    padding: 5px;
+    text-align: left;
+    font-size: 0.9rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    box-shadow: 4px 1px 20px rgb(222 221 225 / 24%);
+}
+
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.0);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.carousel-container:hover .carousel-button {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.carousel-button.prev {
+    left: 20px;
+}
+
+.carousel-button.next {
+    right: 20px;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.carousel-dot.active {
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .carousel-container {
+        height: 320px;
+    }
+    
+    .carousel-button {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 194px;
+    }
+    
+    .carousel-button {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+}
+
+/* 选项卡样式 */
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    padding: 5px;
+    flex-wrap: nowrap;
+    width: 96%;
+    margin:  auto;
+}
+
+.tab-button {
+    padding: 15px 0;
+    background-color: transparent;
+    color: #555;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+    margin: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tab-button:hover {
+    color: #2ecc71;
+    background-color: rgba(46, 204, 113, 0.05);
+}
+
+.tab-button.active {
+    color: #fff;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    transform: translateY(-2px);
+}
+
+.tab-button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    opacity: 0;
+}
+
+.tab-button:hover::after {
+    width: 70%;
+    opacity: 1;
+}
+
+.tab-button.active::after {
+    opacity: 0;
+}
+
+.tab-content {
+    font-size: 1.1rem;
+    color: #144238;
+   margin-top: 15px;
+    
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.01);
+    
+    display: none;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    /*border: 1px solid rgba(0, 0, 0, 0.05); */
+}
+
+.tab-content.active {
+    display: block;
+    transform: translateY(0);
+    opacity: 1;
+    animation: fadeInUp 0.5s ease forwards;
+    padding: 12px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.tab-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    transition: width 0.3s ease;
+}
+
+.tab-content.active h2::after {
+    width: 100px;
+}
+
+.tab-content p {
+    color:#144238;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    text-align: justify;
+    letter-spacing: 0.3px;
+}
+
+.tab-content ul, .tab-content ol {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.tab-content li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.tab-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.tab-content img:hover {
+    transform: scale(1.02);
+}
+
+.tab-content a {
+    color: #3498db;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-content a:hover {
+    color: #2ecc71;
+    border-bottom-color: #2ecc71;
+}
+
+/* 图片展示区域样式 */
+#message {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 0px 0;
+    margin:  0 auto;
+    border-radius: 5px;
+    width:100% ;
+    margin-bottom: 30px;
+    display: none;
+    margin-top: 30px;
+    align-items: center;
+}
+
+#message.active {
+    display: grid;
+}
+
+.image-container {
+    margin: auto;
+    width: 100%;
+    background-color:rgb(49 90 169 / 3%);
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: 4px 5px 10px rgb(178 195 185 / 70%);
+}
+
+.landscape-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+   
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: #144238;
+    margin: 8px 0px 16px;
+    text-align: center;
+    
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .tabs {
+        padding: 5px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .tab-button {
+        padding: 12px 10px;
+        font-size: 0.9rem;
+        margin: 0 3px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tab-content {
+        padding: 20px;
+    }
+
+    #message {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabs {
+        padding: 4px;
+    }
+    
+    .tab-button {
+        padding: 10px 5px;
+        font-size: 0.9rem;
+        margin: 0 2px;
+    }
+    
+    .tab-content {
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .tab-content h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* 页面整体美化 */
+.main-content {
+    max-width: 1000px;
+    margin: 70px auto 30px auto; /* 调整上边距适应新导航栏 */
+    padding: 30px 0px;
+  /*  background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);*/
+    border-radius: 15px;
+    
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+/* 美化滚动条 */
+::-webkit-scrollbar {
+    width: 2px;
+}
+
+::-webkit-scrollbar-track {
+    background:#19d367;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to right, #2980b9, #27ae60);
+}
+
+/* 文本选择样式 */
+::selection {
+    background: rgba(52, 152, 219, 0.2);
+    color: #2c3e50;
+}
+
+/* 页面背景 */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 添加页面过渡效果 */
+.main-content {
+    animation: pageLoad 0.6s ease-out;
+}
+
+@keyframes pageLoad {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .main-content {
+            margin: 58px auto 15px auto; /* 在小屏幕上保持足够的上边距 */
+            padding: 20px 15px;
+        }
+    
+    body {
+        padding: 10px;
+    }
+}
+
+/* 音乐播放按钮样式 */
+.music-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #3498db, #2ecc71);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 920;
+    transition: all 0.3s ease;
+}
+.music-button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #2980b9, #27ae60);
+}
+
+.music-button i {
+    font-size: 24px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.music-button.playing {
+    animation: pulse 2s infinite;
+    background: linear-gradient(to right, #2ecc71, #3498db);
+    
+}
+
+/* 添加图标字体 */
+.icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* 播放暂停按钮样式 */
+.icon-play {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+}
+
+.icon-pause {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
+}
+
+
+    
+    .loader-container {
+        position: relative; /* 改为相对定位 */
+        width: 100%; /* 宽度100% */
+        height: 100%; /* 高度100% */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10; 
+        transition: opacity 0.5s ease;
+    }
+    
+
+    
+    /* 现代化加载动画主体 */
+    .modern-loader {
+        position: relative;
+        width: 120px;
+        height: 120px;
+    }
+    
+    /* 中心圆 */
+    .modern-loader::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        border-radius: 50%;
+        animation: pulse 1.5s ease-in-out infinite;
+        box-shadow: 0 0 20px rgba(107, 142, 251, 0.5);
+    }
+    
+    /* 粒子效果 */
+    .particle {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        border-radius: 50%;
+        animation: particle-animation 2s ease-in-out infinite;
+    }
+    
+    /* 8个粒子位置 */
+    .particle:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.2s; }
+    .particle:nth-child(3) { top: 60%; left: 90%; animation-delay: 0.4s; }
+    .particle:nth-child(4) { top: 85%; left: 50%; animation-delay: 0.6s; }
+    .particle:nth-child(5) { top: 60%; left: 10%; animation-delay: 0.8s; }
+    .particle:nth-child(6) { top: 25%; left: 15%; animation-delay: 1s; }
+    .particle:nth-child(7) { top: 10%; left: 50%; animation-delay: 1.2s; }
+    .particle:nth-child(8) { top: 40%; left: 85%; animation-delay: 1.4s; }
+    
+    /* 加载文字 */
+    .loader-text {
+        position: absolute;
+        margin-top: 140px;
+        color: #555;
+        font-size: 16px;
+        letter-spacing: 2px;
+        font-weight: 500;
+    }
+    
+    /* 脉冲动画 */
+    @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -50%) scale(1.1); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    /* 粒子动画 */
+    @keyframes particle-animation {
+        0% { 
+            transform: scale(0.8) translate(0, 0); 
+            opacity: 0.5;
+        }
+        50% { 
+            transform: scale(1.2) translate(20px, -20px); 
+            opacity: 1;
+        }
+        100% { 
+            transform: scale(0.8) translate(0, 0); 
+            opacity: 0.5;
+        }
+    }
+    
+
+
+</style>
+ <!-- https://fonts.zeoseven.com/ -->
+</head>
+
 <body>
-    <div id="app-container">
-        <div id="github-card" class="card">
-            <div class="card-header">
-                <span class="step-circle">1</span>
-                <h2>连接 GitHub</h2>
-                <span class="status-icon">✓</span>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                
+                <span class="nav-title">❄️</span>
             </div>
-            <div class="form-group">
-                <label for="github-token-input">GitHub Token</label>
-                <input type="password" id="github-token-input" placeholder="粘贴您的 Personal Access Token">
-                 <p class="help-text">需要 `repo` 和 `user` 权限。 <a href="https://github.com/settings/tokens/new" target="_blank">在这里创建</a></p>
+            <button class="hamburger" aria-label="菜单">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">首页</a>
+                <a href="" class="nav-link">1.0最初版</a>
+                <a href="" class="nav-link">1.0开发版</a>
+                <a href="" class="nav-link">1.0发行版</a>
+                                <a href="" class="nav-link">2.0最初版</a>
+                <a href="" class="nav-link">2.0开发版</a>
+                <a href="" class="nav-link">2.0发行版</a>
             </div>
-            <button id="load-repos-btn" class="btn btn-primary">加载仓库</button>
-            <div class="form-group" id="repo-list-container" style="display: none; margin-top: 1rem;">
-                <label for="repo-select">选择一个仓库</label>
-                <select id="repo-select"></select>
-            </div>
-            <p id="github-status" class="status-message"></p>
         </div>
+    </nav>
+    
+    
 
-        <div id="cloudflare-card" class="card disabled">
-            <div class="card-header">
-                <span class="step-circle">2</span>
-                <h2>连接 Cloudflare</h2>
-                <span class="status-icon">✓</span>
-            </div>
-            <div class="form-group">
-                <label for="cloudflare-token-input">Cloudflare API Token</label>
-                <input type="password" id="cloudflare-token-input" placeholder="粘贴您的 API 令牌">
-                <p class="help-text">需要 `Zone:Read` 和 `Pages:Edit` 权限。 <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">在这里创建</a></p>
-            </div>
-            <button id="connect-cf-btn" class="btn btn-primary">连接 & 加载域名</button>
-            <div class="form-group" id="zone-list-container" style="display: none; margin-top: 1rem;">
-                <label for="zone-select">选择一个域名</label>
-                <select id="zone-select"></select>
-            </div>
-            <p id="cloudflare-status" class="status-message"></p>
-        </div>
-
-        <div id="deploy-card" class="card disabled">
-            <div class="card-header">
-                <span class="step-circle">3</span>
-                <h2>部署配置</h2>
-            </div>
-            <div class="form-group">
-                <label for="subdomain-input">设置访问地址</label>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="text" id="subdomain-input" placeholder="例如: my-app">
-                    <span id="domain-suffix" style="color: var(--text-secondary); white-space: nowrap;">.example.com</span>
+    <div class="main-content">
+    
+        <!-- 轮播图 -->
+        <div class="carousel-container">
+        <div class="loader-container" id="loaderContainer">
+    <div class="modern-loader">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="loader-text">系统加载中...</div>
+</div>
+            <div class="carousel-wrapper">
+                
+                <div class="carousel-slides">
+                
                 </div>
             </div>
-            <button id="deploy-btn" class="btn btn-primary" disabled>一键部署</button>
+            <button class="carousel-button prev" aria-label="上一张">&lt;</button>
+            <button class="carousel-button next" aria-label="下一张">&gt;</button>
+            <div class="carousel-dots">
+                
+            </div>
         </div>
 
-        <div id="status-card" class="card">
-             <div class="card-header" style="margin-bottom: 0.5rem;">
-                <h2 style="font-size: 1rem;">部署状态</h2>
-            </div>
-            <pre id="log-output">等待操作...</pre>
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('text1')">随笔</button>
+            <button class="tab-button" onclick="showTab('text2')">理解</button>
+            <button class="tab-button" onclick="showTab('text3')">故事</button>
+            <button class="tab-button" onclick="showTab('message')">相册</button>
+        </div>
+
+        <div id="text1" class="tab-content active">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="text2" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="text3" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载相关内容...</p>
+        </div>
+
+        <div id="message" class="tab-content">
+            <h2>请稍等...</h2>
+            <p>正在加载图片内容...</p>
         </div>
     </div>
-    <div id="toast"></div>
 
+    <!-- 音乐播放器 -->
+    <audio id="music-player" loop>
+        <source src="https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 音乐播放按钮 -->
+    <button id="music-button" class="music-button" title="播放/暂停音乐">
+        <span class="icon icon-play"></span>
+    </button>
     <script>
-        const el = {
-            githubCard: document.getElementById('github-card'),
-            cloudflareCard: document.getElementById('cloudflare-card'),
-            deployCard: document.getElementById('deploy-card'),
-            githubTokenInput: document.getElementById('github-token-input'),
-            loadReposBtn: document.getElementById('load-repos-btn'),
-            repoListContainer: document.getElementById('repo-list-container'),
-            repoSelect: document.getElementById('repo-select'),
-            githubStatus: document.getElementById('github-status'),
-            cloudflareTokenInput: document.getElementById('cloudflare-token-input'),
-            connectCfBtn: document.getElementById('connect-cf-btn'),
-            zoneListContainer: document.getElementById('zone-list-container'),
-            zoneSelect: document.getElementById('zone-select'),
-            cloudflareStatus: document.getElementById('cloudflare-status'),
-            subdomainInput: document.getElementById('subdomain-input'),
-            domainSuffix: document.getElementById('domain-suffix'),
-            deployBtn: document.getElementById('deploy-btn'),
-            logOutput: document.getElementById('log-output'),
-            toast: document.getElementById('toast'),
-        };
-
-        const state = {
-            githubToken: '',
-            cloudflareToken: '',
-            repos: [],
-            zones: [],
-            accountId: null,
-            selectedRepo: null,
-            selectedZone: null,
-        };
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            this.classList.toggle('active');
+        });
         
-        const showLoading = (button, text = '加载中...') => {
-            button.disabled = true;
-            const originalText = button.textContent;
-            button.innerHTML = `<div class="spinner"></div> ${text}`;
-            return () => {
-                button.disabled = false;
-                button.innerHTML = originalText;
-            };
-        };
-
-        const showToast = (message) => {
-            el.toast.textContent = message;
-            el.toast.classList.add('show');
-            setTimeout(() => {
-                el.toast.classList.remove('show');
-            }, 3000);
-        };
-
-        const log = (message) => {
-            const timestamp = new Date().toLocaleTimeString();
-            el.logOutput.textContent += `[${timestamp}] ${message}\n`;
-            el.logOutput.scrollTop = el.logOutput.scrollHeight;
-        };
-
-        const checkDeployability = () => {
-            const isReady = state.selectedRepo && state.selectedZone && el.subdomainInput.value.trim() !== '';
-            el.deployBtn.disabled = !isReady;
-        };
-
-        async function fetchGithubRepos() {
-            state.githubToken = el.githubTokenInput.value.trim();
-            if (!state.githubToken) {
-                el.githubStatus.textContent = 'Token 不能为空';
-                el.githubStatus.className = 'status-message error';
-                return;
+        document.addEventListener('click', function(event) {
+            if (!navMenu.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
             }
-            const done = showLoading(el.loadReposBtn);
-            el.githubStatus.textContent = '';
-            try {
-                const response = await fetch('https://api.github.com/user/repos?type=owner&sort=updated&per_page=100', {
-                    headers: { 'Authorization': `token ${state.githubToken}` }
-                });
-                if (!response.ok) throw new Error(`GitHub API 错误 (${response.status})`);
-                state.repos = await response.json();
-                
-                if (state.repos.length === 0) {
-                   el.githubStatus.textContent = '未找到任何仓库';
-                   el.githubStatus.className = 'status-message';
-                   return;
-                }
-                
-                el.repoSelect.innerHTML = '<option value="">-- 请选择一个仓库 --</option>';
-                state.repos.forEach(repo => {
-                    const option = document.createElement('option');
-                    option.value = repo.full_name;
-                    option.textContent = repo.name;
-                    el.repoSelect.appendChild(option);
-                });
-                el.repoListContainer.style.display = 'block';
-                el.githubCard.classList.add('connected');
-                el.cloudflareCard.classList.remove('disabled');
-            } catch (error) {
-                el.githubStatus.textContent = error.message;
-                el.githubStatus.className = 'status-message error';
-            } finally {
-                done();
-            }
+        });
+    }
+});
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content, #message').forEach(element => {
+        element.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    document.getElementById(tabId).classList.add('active');
+    
+    document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    showTab('text1');
+    const musicPlayer = document.getElementById('music-player');
+    const musicButton = document.getElementById('music-button');
+    const musicIcon = musicButton.querySelector('.icon');
+    
+    musicPlayer.loop = true;
+    
+    musicButton.addEventListener('click', function() {
+        if (musicPlayer.paused) {
+            musicPlayer.play().then(() => {
+                musicIcon.classList.remove('icon-play');
+                musicIcon.classList.add('icon-pause');
+                musicButton.classList.add('playing');
+            }).catch(error => {
+                console.error('播放失败:', error);
+            });
+        } else {
+            musicPlayer.pause();
+            musicIcon.classList.remove('icon-pause');
+            musicIcon.classList.add('icon-play');
+            musicButton.classList.remove('playing');
         }
-        
-        async function fetchCloudflareZones() {
-            state.cloudflareToken = el.cloudflareTokenInput.value.trim();
-            if (!state.cloudflareToken) {
-                el.cloudflareStatus.textContent = 'Token 不能为空';
-                el.cloudflareStatus.className = 'status-message error';
-                return;
-            }
-            const done = showLoading(el.connectCfBtn);
-            el.cloudflareStatus.textContent = '';
-
-            try {
-                const response = await fetch('https://api.cloudflare.com/client/v4/zones', {
-                    headers: { 'Authorization': `Bearer ${state.cloudflareToken}` }
-                });
-                const data = await response.json();
-                if (!data.success) throw new Error(data.errors[0].message);
-                
-                state.zones = data.result;
-                if (state.zones.length === 0) {
-                   el.cloudflareStatus.textContent = '未找到任何域名';
-                   el.cloudflareStatus.className = 'status-message';
-                   return;
-                }
-                
-                state.accountId = state.zones[0].account.id;
-                el.zoneSelect.innerHTML = '<option value="">-- 请选择一个域名 --</option>';
-                state.zones.forEach(zone => {
-                    const option = document.createElement('option');
-                    option.value = zone.id;
-                    option.textContent = zone.name;
-                    el.zoneSelect.appendChild(option);
-                });
-                el.zoneListContainer.style.display = 'block';
-                el.cloudflareCard.classList.add('connected');
-                el.deployCard.classList.remove('disabled');
-            } catch (error) {
-                el.cloudflareStatus.textContent = error.message;
-                el.cloudflareStatus.className = 'status-message error';
-            } finally {
-                done();
-            }
+    });
+    musicPlayer.addEventListener('ended', function() {
+        musicIcon.classList.remove('icon-pause');
+        musicIcon.classList.add('icon-play');
+        musicButton.classList.remove('playing');
+    });
+});
+</script>
+    
+<script>
+    // 加载动画
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.loaderAnimated) {
+            window.loaderAnimated = true;
+            window.addEventListener('load', function() {
+                clearTimeout(window.loaderTimeout);
+                hideLoader();
+            });
+            window.loaderTimeout = setTimeout(function() {
+                hideLoader();
+            }, 15000); // 最多等待5秒
         }
+    });
+    
+    // 隐藏加载动画的函数
+    function hideLoader() {
+        var loaderContainer = document.getElementById('loaderContainer');
+        var carouselContainer = document.querySelector('.carousel-container');
         
-        async function startDeployment() {
-            const done = showLoading(el.deployBtn, '部署中...');
-            el.logOutput.textContent = '';
-            log('部署流程已启动...');
+        if (loaderContainer && carouselContainer) {
+            loaderContainer.style.opacity = '0';
+            setTimeout(function() {
+                if (loaderContainer) {
+                    loaderContainer.style.display = 'none';
+                }
+                // 显示轮播图
+                if (carouselContainer) {
+                    carouselContainer.style.opacity = '1';
+                }
+            }, 500);
+        }
+    }
+</script>
+
+
+<script>
+//相册
+
+
+const imageConfig = {
+    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
+    imagePath: 'img/yunnan/',
+    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
+};
+function fetchWithToken(url) {
+    return fetch(url, {
+        headers: {
+            Authorization: `token ${imageConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    });
+}
+function loadImageGallery(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error('图片容器元素不存在');
+        return;
+    }
+    
+    container.innerHTML = '<p class="loading">正在加载图片...</p>';
+    
+    fetchWithToken(`${imageConfig.baseUrl}${imageConfig.imagePath}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`API请求失败: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            container.innerHTML = '';
+            const imageFiles = data.filter(item => 
+                item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)
+            );
             
-            try {
-                const repoFullName = state.selectedRepo.full_name;
-                const [owner, repoName] = repoFullName.split('/');
-                const subdomain = el.subdomainInput.value.trim();
-                const zoneName = state.selectedZone.name;
-                const fullDomain = `${subdomain}.${zoneName}`;
-
-                log(`仓库: ${repoFullName}`);
-                log(`域名: ${fullDomain}`);
-
-                log('正在创建 Cloudflare Pages 项目...');
-                const createProjectResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${state.accountId}/pages/projects`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${state.cloudflareToken}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: repoName,
-                        production_branch: state.selectedRepo.default_branch,
-                        source: { type: 'github', config: { owner, repo_name: repoName, production_branch: state.selectedRepo.default_branch } }
-                    })
-                });
-                const projectData = await createProjectResponse.json();
-                
-                if (!projectData.success) {
-                    if (projectData.errors[0]?.code === 8000041) {
-                        log('项目已存在，将继续绑定域名...');
-                    } else {
-                        throw new Error(projectData.errors[0]?.message || '创建 Pages 项目失败');
-                    }
-                } else {
-                    log('项目创建成功！');
-                }
-
-                log('正在绑定自定义域名...');
-                const bindDomainResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${state.accountId}/pages/projects/${repoName}/domains`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${state.cloudflareToken}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: fullDomain })
-                });
-
-                const domainData = await bindDomainResponse.json();
-                if (!domainData.success) throw new Error(domainData.errors[0]?.message || '绑定域名失败');
-                
-                log('✅ 部署指令已成功发送！');
-                log(`Cloudflare 正在后台为您的网站进行首次构建。`);
-                log(`请稍后访问: https://${fullDomain}`);
-                showToast('部署成功！');
-
-            } catch (error) {
-                log(`❌ 部署失败: ${error.message}`);
-                showToast('部署失败，请查看日志');
-            } finally {
-                done();
+            if (imageFiles.length === 0) {
+                container.innerHTML = '<p class="empty">没有找到图片</p>';
+                return;
             }
+            
+            imageFiles.reverse().forEach(item => {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'image-container';
+                
+                const img = document.createElement('img');
+                img.src = 'https://goppx.com/' + item.download_url;
+                img.alt = item.name.replace(/\.\w+$/, '');
+                img.loading = 'lazy';
+                img.className = 'landscape-image';
+                
+                const subtitle = document.createElement('div');
+                subtitle.className = 'subtitle';
+                subtitle.textContent = item.name.replace(/\.\w+$/, '');
+                
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(subtitle);
+                container.appendChild(imgContainer);
+            });
+        })
+        .catch(error => {
+            console.error('图片加载错误:', error);
+            container.innerHTML = '<p class="error">无法加载图片，请检查网络连接或令牌有效性</p>';
+        });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    loadImageGallery('message');
+});
+</script>
+<script>
+//轮播
+const carouselConfig = {
+    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
+    carouselPath: 'img/lunbo/',
+    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
+};
+function fetchWithToken(url) {
+    return fetch(url, {
+        headers: {
+            Authorization: `token ${carouselConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
         }
-        
-        el.loadReposBtn.addEventListener('click', fetchGithubRepos);
-        el.connectCfBtn.addEventListener('click', fetchCloudflareZones);
-        el.deployBtn.addEventListener('click', startDeployment);
-        
-        el.repoSelect.addEventListener('change', (e) => {
-            state.selectedRepo = state.repos.find(repo => repo.full_name === e.target.value) || null;
-            checkDeployability();
-        });
-        
-        el.zoneSelect.addEventListener('change', (e) => {
-            state.selectedZone = state.zones.find(zone => zone.id === e.target.value) || null;
-            if (state.selectedZone) {
-                el.domainSuffix.textContent = `.${state.selectedZone.name}`;
-            } else {
-                el.domainSuffix.textContent = '';
+    });
+}
+function initCarousel() {
+    const slidesContainer = document.querySelector('.carousel-slides');
+    const dotsContainer = document.querySelector('.carousel-dots');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
+    
+    if (!slidesContainer || !dotsContainer) return;
+    
+    
+    
+    fetchWithToken(`${carouselConfig.baseUrl}${carouselConfig.carouselPath}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`轮播图API请求失败: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            slidesContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            const carouselImages = data
+                .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif)$/i.test(item.name))
+                .reverse()
+                .slice(0, 5);
+            
+            if (carouselImages.length === 0) {
+                slidesContainer.innerHTML = '<p class="empty">没有找到轮播图图片</p>';
+                return;
             }
-            checkDeployability();
+            
+            carouselImages.forEach((imgItem, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                
+                const img = document.createElement('img');
+                img.src = 'https://goppx.com/' + imgItem.download_url;
+                img.alt = imgItem.name.replace(/\.\w+$/, '');
+                img.className = 'carousel-slide-img';
+                img.loading = 'lazy';
+                
+                const caption = document.createElement('div');
+                caption.className = 'carousel-caption';
+                caption.textContent = imgItem.name.replace(/\.\w+$/, '');
+                
+                slide.appendChild(img);
+                slide.appendChild(caption);
+                slidesContainer.appendChild(slide);
+                
+                const dot = document.createElement('div');
+                dot.className = `carousel-dot${index === 0 ? ' active' : ''}`;
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+            
+            currentSlide = 0;
+            updateCarousel();
+            startSlideShow();
+            
+            if (prevButton) prevButton.addEventListener('click', prevSlide);
+            if (nextButton) nextButton.addEventListener('click', nextSlide);
+        })
+        .catch(error => {
+            console.error('轮播图加载错误:', error);
+            slidesContainer.innerHTML = '<p class="error">无法加载轮播图，请检查网络连接</p>';
         });
+}
+let currentSlide = 0;
+let slideInterval;
+const slideDelay = 5000;
+function updateCarousel() {
+    const slides = document.querySelector('.carousel-slides');
+    if (!slides) return;
+    
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+    resetSlideShow();
+}
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % document.querySelectorAll('.carousel-slide').length;
+    updateCarousel();
+    resetSlideShow();
+}
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + document.querySelectorAll('.carousel-slide').length) % document.querySelectorAll('.carousel-slide').length;
+    updateCarousel();
+    resetSlideShow();
+}
+function startSlideShow() {
+    if (slideInterval) clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, slideDelay);
+}
+function stopSlideShow() {
+    if (slideInterval) clearInterval(slideInterval);
+}
+function resetSlideShow() {
+    stopSlideShow();
+    startSlideShow();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    initCarousel();
+    
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', stopSlideShow);
+        carouselContainer.addEventListener('mouseleave', startSlideShow);
+    }
+});
+</script>
+<script>
+const textFileUrls = {
+    'text1': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
+    'text2': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
+    'text3': 'https://goppx.com/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
+};
 
-        el.subdomainInput.addEventListener('input', checkDeployability);
+function loadText(elementId, fileKey) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
 
-    </script>
+    element.innerHTML = '<p class="loading">正在加载内容...</p>';
+    const url = textFileUrls[fileKey];
+    if (!url) {
+        element.innerHTML = `<p class="error">文件路径不存在</p>`;
+        return;
+    }
+
+    fetch(url)
+        .then(response => response.ok ? response.text() : Promise.reject(new Error(`请求失败: ${response.status}`)))
+        .then(text => {
+            // 处理换行逻辑：
+            // 1. 先将2次换行(\n\n)转换为段落分隔符</p><p>
+            // 2. 将单次换行(\n)转换为<br>
+            // 3. 超过2次的换行(\n{3,})保持原样
+            // 4. 首尾添加段落标签
+            const htmlContent = text
+                .replace(/\n{3,}/g, '\n\n')  // 超过2次的换行保持为2次
+                .replace(/\n\n/g, '</p><p>')  // 2次换行转段落分隔
+                .replace(/\n/g, '<br>')       // 单次换行转<br>
+                .replace(/(^\s*|<br>\s*)|(\s*$|\s*<br>)/g, '')  // 移除首尾空白和<br>
+                .replace(/^/, '<p>')           // 开头添加<p>
+                .replace(/$/, '</p>');         // 结尾添加</p>
+            
+            element.innerHTML = htmlContent;
+        })
+        .catch(error => {
+            element.innerHTML = `<p class="error">加载失败: ${error.message}</p>`;
+            console.error('文本加载错误:', error);
+        });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadText('text1', 'text1');
+    loadText('text2', 'text2');
+    loadText('text3', 'text3');
+});
+</script>
+
+
 </body>
 </html>
